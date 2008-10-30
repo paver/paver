@@ -1,6 +1,6 @@
-===================================================
-Paver: Build, Distribute and Deploy Python Projects
-===================================================
+===========================================
+Paver: Easy Scripting for Software Projects
+===========================================
 
 .. image:: _static/paver_banner.jpg
 
@@ -64,11 +64,11 @@ Help and Development
 
 You can get help from the `mailing list`_.
 
-If you'd like to help out with Paver, you can check the code out from Launchpad:
+If you'd like to help out with Paver, you can check the code out from Googlecode:
 
-``bzr branch http://bazaar.launchpad.net/~dangoor/paver/main``
+``svn checkout http://paver.googlecode.com/svn/trunk/ paver-read-only``
 
-You can also take a look at `Paver's project page on Launchpad <https://launchpad.net/paver/>`_.
+You can also take a look at `Paver's project page on Googlecode <http://code.google.com/p/paver/>`_.
 
 .. _mailing list: http://groups.google.com/group/paver
 
