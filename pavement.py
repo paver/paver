@@ -1,4 +1,4 @@
-from paver.tasks import task, needs, environment
+from paver.tasks import task, needs, environment, cmdopts
 from paver.runtime import sh, log, dry
 from paver.path import path
 from paver.options import Bunch
@@ -106,8 +106,8 @@ def commit():
     sh("bzr commit")
     
 @task
-#@cmdopts([("username=", "u", "Username for remote server"),
-#          ("server=", "s", "Server to deploy to")])
+@cmdopts([("username=", "u", "Username for remote server"),
+          ("server=", "s", "Server to deploy to")])
 def deploy():
     """Copy the Paver website up."""
     htmlfiles = path("paver/docs")

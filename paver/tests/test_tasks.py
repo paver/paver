@@ -176,3 +176,14 @@ def test_shortname_access():
     task = environment.get_task("help")
     assert task is not None
     
+
+def test_task_command_line_options():
+    @tasks.task
+    @tasks.cmdopts([('foo=', 'f', 'Foobeedoobee!')])
+    def t1(options):
+        assert options.foo == "1"
+    
+    environment = _set_environment(t1=t1)
+    tasks._process_commands(['t1', '--foo', '1'])
+    assert t1.called
+    
