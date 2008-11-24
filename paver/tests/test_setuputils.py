@@ -1,7 +1,8 @@
 from pprint import pprint
 from distutils.core import Command
 
-from paver.setuputils import Distribution
+from paver.setuputils import Distribution, install_distutils_tasks, \
+                            DistutilsTaskFinder
 from paver import runtime, tasks
 from paver.runtime import *
 
@@ -30,25 +31,44 @@ class _sdist(Command):
         cls.foo_set = False
         cls.fin = None
 
+class FakeModule(object):
+    def __init__(self, **kw):
+        for name, value in kw.items():
+            setattr(self, name, value)
+            
+def _set_environment(**kw):
+    pavement = FakeModule(**kw)
+    tasks.environment = tasks.Environment(pavement)
+    return tasks.environment
+
 
 #----------------------------------------------------------------------
-def test_override_distutils_command():
-    @task
+def tst_override_distutils_command():
+    @tasks.task
     def sdist():
-        sdist.called = True
-    sdist.called = False
+        pass
     
-    d = Distribution()
+    env = _set_environment(sdist=sdist)
+    
+    install_distutils_tasks()
+    
+    d = env.distribution
     d.cmdclass['sdist'] = _sdist
-    d.script_args = ['sdist', 'paver.tests.test_setuputils.sdist', '-f']
-    pprint(d.cmdclass)
-    assert d.parse_command_line()
-    assert d.commands == ['sdist', 'paver.tests.test_setuputils.sdist']
-    d.run_commands()
+    tasks._process_commands(['sdist', 'paver.tests.test_setuputils.sdist', '-f'])
     assert sdist.called
     assert _sdist.called
     assert _sdist.foo_set
     assert isinstance(_sdist.fin, _sdist)
+
+def test_distutils_task_finder():
+    dist = Distribution()
+    dutf = DistutilsTaskFinder(dist)
+    task = dutf.get_task('distutils.command.install')
+    assert task
+    task = dutf.get_task('install')
+    assert task
+    task = dutf.get_task('foo')
+    assert task is None
 
 def test_task_with_distutils_dep():
     reset_runtime()

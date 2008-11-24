@@ -10,6 +10,8 @@ import paver.doctools
 import paver.virtual
 import paver.setuputils
 
+paver.setuputils.install_distutils_tasks()
+
 options = environment.options
 
 options(

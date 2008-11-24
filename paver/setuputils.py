@@ -7,6 +7,7 @@ import distutils
 from fnmatch import fnmatchcase
 from distutils.util import convert_path
 from distutils import dist
+from distutils.errors import DistutilsModuleError
 
 try:
     import setuptools
@@ -24,7 +25,7 @@ dist.command_re = re.compile (r'^[a-zA-Z]([a-zA-Z0-9_\.]*)$')
 from distutils.core import Distribution as _Distribution
     
 from paver.runtime import *
-from paver import runtime
+from paver import runtime, tasks
 
 __ALL__ = ['find_package_data', "setup"]
 
@@ -287,6 +288,25 @@ def find_package_data(
                     continue
                 out.setdefault(package, []).append(prefix+name)
     return out
+
+class DistutilsTaskFinder(object):
+    def __init__(self, distribution):
+        self.distribution = distribution
+        
+    def get_task(self, taskname):
+        dotindex = taskname.rfind(".")
+        if dotindex > -1:
+            command_name = taskname[dotindex+1:]
+        else:
+            command_name = taskname
+        try:
+            command_class = self.distribution.get_command_class(command_name)
+        except DistutilsModuleError:
+            return None
+        return command_class
+
+def install_distutils_tasks():
+    tasks.environment.distribution = dist.Distribution()
 
 if has_setuptools:
     __ALL__.extend(["find_packages"])
