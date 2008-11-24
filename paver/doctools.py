@@ -4,6 +4,7 @@ documentation."""
 import re
 
 from paver.runtime import *
+from paver.tasks import task
 
 try:
     import sphinx
