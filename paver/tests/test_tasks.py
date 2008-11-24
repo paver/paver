@@ -163,9 +163,7 @@ def test_add_options_to_environment():
         assert env.options == options
         
     environment = _set_environment(t1=t1, t2=t2)
-    opt = options.Namespace()
-    opt.foo = 1
-    environment.options = opt
+    environment.options.foo = 1
     
     t1()
     t2()

@@ -1,4 +1,5 @@
 from paver.defaults import *
+from paver.tasks import task, needs
 
 from paver.release import setup_meta
 
@@ -42,7 +43,7 @@ if setuputils.has_setuptools:
         zip_safe=False,
         entry_points="""
 [console_scripts]
-paver = paver.command:main
+paver = paver.tasks:main
 """
     ))
 else:
@@ -97,7 +98,7 @@ def clean():
 @needs("uncog")
 def commit():
     """Removes the generated code from the docs and then commits to bzr."""
-    sh("svn commit")
+    sh("bzr commit")
     
 @task
 @cmdopts([("username=", "u", "Username for remote server"),

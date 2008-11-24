@@ -4,7 +4,7 @@ from paver.runtime import Bunch
 
 setup_meta=Bunch(
     name='Paver',
-    version="0.9.0a0",
+    version="1.0a0",
     description='Easy build, distribution and deployment scripting',
     long_description="""Paver is a Python-based build/distribution/deployment scripting tool along the
 lines of Make or Rake. What makes Paver unique is its integration with 

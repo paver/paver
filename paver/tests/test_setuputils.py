@@ -2,7 +2,7 @@ from pprint import pprint
 from distutils.core import Command
 
 from paver.setuputils import Distribution
-from paver import runtime
+from paver import runtime, tasks
 from paver.runtime import *
 
 from paver.tests.utils import reset_runtime

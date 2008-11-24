@@ -18,6 +18,13 @@ class BuildFailure(Exception):
 class Environment(object):
     def __init__(self, pavement):
         self.pavement = pavement
+        try:
+            # for the time being, at least, tasks.py can be used on its
+            # own!
+            from paver import options
+            self.options = options.Namespace()
+        except ImportError:
+            pass
     
     def log(self, message, *args):
         print message % args

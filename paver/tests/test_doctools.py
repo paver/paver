@@ -125,14 +125,14 @@ print sys.path
 """, "Second was '%s'" % (second)
     
 def test_cogging():
-    opt = options.Namespace()
+    env = tasks.Environment(doctools)
+    tasks.environment = env
+    opt = env.options
     opt.cog = options.Bunch()
     basedir = path(__file__).dirname()
     opt.cog.basedir = basedir
     opt.cog.pattern = "*.rst"
     opt.cog.includedir = basedir / "data"
-    env = tasks.Environment(doctools)
-    tasks.environment = env
     env.options = opt
     doctools.cog()
     textfile = basedir / "data/textfile.rst"
@@ -144,15 +144,15 @@ def test_cogging():
     assert "print sys.path" not in data
     
 def test_cogging_with_markers_removed():
-    opt = options.Namespace()
+    env = tasks.Environment(doctools)
+    tasks.environment = env
+    opt = env.options
     opt.cog = Bunch()
     basedir = path(__file__).dirname()
     opt.cog.basedir = basedir
     opt.cog.pattern = "*.rst"
     opt.cog.includedir = basedir / "data"
     opt.cog.delete_code = True
-    env = tasks.Environment(doctools)
-    tasks.environment = env
     env.options = opt
     textfile = basedir / "data/textfile.rst"
     original_data = open(textfile).read()
