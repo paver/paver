@@ -1,5 +1,5 @@
 from paver.runtime import *
-from paver import doctools
+from paver import doctools, tasks, options
 
 from paver.setuputils import Distribution
 
@@ -125,36 +125,42 @@ print sys.path
 """, "Second was '%s'" % (second)
     
 def test_cogging():
-    options.cog = Bunch()
+    opt = options.Namespace()
+    opt.cog = options.Bunch()
     basedir = path(__file__).dirname()
-    options.cog.basedir = basedir
-    options.cog.pattern = "*.rst"
-    options.cog.includedir = basedir / "data"
-    d = Distribution()
-    call_task('cog')
+    opt.cog.basedir = basedir
+    opt.cog.pattern = "*.rst"
+    opt.cog.includedir = basedir / "data"
+    env = tasks.Environment(doctools)
+    tasks.environment = env
+    env.options = opt
+    doctools.cog()
     textfile = basedir / "data/textfile.rst"
     data = open(textfile).read()
     print data
     assert "print sys.path" in data
-    call_task('uncog')
+    doctools.uncog()
     data = open(textfile).read()
     assert "print sys.path" not in data
     
 def test_cogging_with_markers_removed():
-    options.cog = Bunch()
+    opt = options.Namespace()
+    opt.cog = Bunch()
     basedir = path(__file__).dirname()
-    options.cog.basedir = basedir
-    options.cog.pattern = "*.rst"
-    options.cog.includedir = basedir / "data"
-    options.cog.delete_code = True
-    d = Distribution()
+    opt.cog.basedir = basedir
+    opt.cog.pattern = "*.rst"
+    opt.cog.includedir = basedir / "data"
+    opt.cog.delete_code = True
+    env = tasks.Environment(doctools)
+    tasks.environment = env
+    env.options = opt
     textfile = basedir / "data/textfile.rst"
     original_data = open(textfile).read()
     try:
-        call_task('cog')
+        doctools.cog()
         data = open(textfile).read()
         print data
         assert "[[[cog" not in data
     finally:
         open(textfile, "w").write(original_data)
-        
+    

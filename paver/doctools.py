@@ -259,7 +259,7 @@ def _cogsh(cog):
             cog.gen.out(output)
     return shfunc
 
-def _runcog(uncog=False):
+def _runcog(options, uncog=False):
     """Common function for the cog and runcog tasks."""
     
     from paver.cog import Cog
@@ -296,7 +296,7 @@ def _runcog(uncog=False):
     
 
 @task
-def cog():
+def cog(options):
     """Runs the cog code generator against the files matching your 
     specification. By default, cog will run against any .rst files
     in your Sphinx document root. Full documentation for Cog is
@@ -361,10 +361,10 @@ def cog():
         will be displayed. You can also pass in your own
         extension -> include marker settings.
     """
-    _runcog()
+    _runcog(options)
     
 @task
-def uncog():
+def uncog(options):
     """Remove the Cog generated code from files. Often, you will want to
     do this before committing code under source control, because you
     don't generally want generated code in your version control system.
@@ -372,4 +372,4 @@ def uncog():
     This takes the same options as the cog task. Look there for
     more information.
     """
-    _runcog(True)
+    _runcog(options, True)
