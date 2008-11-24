@@ -1,11 +1,16 @@
-from paver.defaults import *
-from paver.tasks import task, needs
+from paver.tasks import task, needs, environment
+from paver.runtime import sh, log, dry
+from paver.path import path
+from paver.options import Bunch
+from paver import setuputils
 
 from paver.release import setup_meta
 
 import paver.doctools
 import paver.virtual
 import paver.setuputils
+
+options = environment.options
 
 options(
     setup = setup_meta,
@@ -101,8 +106,8 @@ def commit():
     sh("bzr commit")
     
 @task
-@cmdopts([("username=", "u", "Username for remote server"),
-          ("server=", "s", "Server to deploy to")])
+#@cmdopts([("username=", "u", "Username for remote server"),
+#          ("server=", "s", "Server to deploy to")])
 def deploy():
     """Copy the Paver website up."""
     htmlfiles = path("paver/docs")

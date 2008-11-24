@@ -1,7 +1,7 @@
 """Miscellaneous tasks that don't fit into one of the other groupings."""
 
-from paver.runtime import *
-from paver import runtime
+from paver.tasks import task
+from paver.path import path
 
 def _task_list(userdef_only):
     """Pull together a string list of tasks for help command output.
@@ -27,9 +27,9 @@ def _task_list(userdef_only):
             continue
         print(fmt % (taskname, task.description))
 
-@task
-@consume_args
-def help():
+#@task
+#@consume_args
+def help(options):
     """Displays the list of commands and the details."""
     args = options.args
     from paver import release
@@ -80,7 +80,7 @@ if _docsdir.exists():
         webbrowser.open("file://" + (_docsdir.abspath() / 'index.html'))
         
 @task
-def minilib():
+def minilib(options):
     """Create a Paver mini library that contains enough for a simple
     pavement.py to be installed using a generated setup.py. This
     is a good temporary measure until more people have deployed paver.

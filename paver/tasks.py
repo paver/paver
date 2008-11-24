@@ -16,7 +16,9 @@ class BuildFailure(Exception):
 
 
 class Environment(object):
-    def __init__(self, pavement):
+    _all_tasks = None
+    
+    def __init__(self, pavement=None):
         self.pavement = pavement
         try:
             # for the time being, at least, tasks.py can be used on its
@@ -31,8 +33,22 @@ class Environment(object):
         
     def get_task(self, taskname):
         task = getattr(self.pavement, taskname, None)
+        # try to look up by full name
         if not task:
             task = _import_task(taskname)
+            
+        # if there's nothing by full name, look up by
+        # short name
+        if not task:
+            all_tasks = self.get_tasks()
+            matches = [t for t in all_tasks
+                        if t.shortname == taskname]
+            if len(matches) > 1:
+                matched_names = [t.name for t in matches]
+                raise BuildFailure("Ambiguous task name %s (%s)" %
+                                    (taskname, matched_names))
+            elif matches:
+                task = matches[0]
         return task
         
     def call_task(self, task_name, needs, func):
@@ -62,6 +78,8 @@ class Environment(object):
         return func(**kw)
     
     def get_tasks(self):
+        if self._all_tasks:
+            return self._all_tasks
         result = set()
         modules = set()
         def scan_module(module):
@@ -73,6 +91,7 @@ class Environment(object):
                 if isinstance(item, types.ModuleType) and item not in modules:
                     scan_module(item)
         scan_module(self.pavement)
+        self._all_tasks = result
         return result
     
 def _import_task(taskname):
@@ -96,6 +115,7 @@ class Task(object):
         self.func = func
         self.needs = []
         self.__name__ = func.__name__
+        self.shortname = func.__name__
         self.name = "%s.%s" % (func.__module__, func.__name__)
         try:
             self.__doc__ = func.__doc__
@@ -174,8 +194,9 @@ def main(args=None):
             args = sys.argv[1:]
         else:
             args = []
+    environment = Environment()
     mod = __import__("pavement")
-    environment = Environment(mod)
+    environment.pavement = mod
     while True:
         task, args = _parse_command_line(args)
         if task is None:

@@ -120,6 +120,7 @@ def test_basic_command_line():
     _set_environment(t1=t1)
     try:
         tr, args = tasks._parse_command_line(['foo'])
+        print tr
         assert False, "Expected BuildFailure exception for unknown task"
     except tasks.BuildFailure:
         pass
@@ -170,4 +171,8 @@ def test_add_options_to_environment():
     assert t1.called
     assert t2.called
     
+def test_shortname_access():
+    environment = _set_environment(tasks=tasks)
+    task = environment.get_task("help")
+    assert task is not None
     
