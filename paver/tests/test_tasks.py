@@ -187,3 +187,18 @@ def test_task_command_line_options():
     tasks._process_commands(['t1', '--foo', '1'])
     assert t1.called
     
+def test_setting_of_options_with_equals():
+    @tasks.task
+    def t1(options):
+        assert options.foo == '1'
+        assert not hasattr(options, 'bar')
+    
+    @tasks.task
+    def t2(options):
+        assert options.foo == '1'
+        assert options.bar == '2'
+    
+    environment = _set_environment(t1=t1, t2=t2)
+    tasks._process_commands(['foo=1', 't1', 'bar=2', 't2'])
+    assert t1.called
+    assert t2.called

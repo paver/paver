@@ -224,7 +224,7 @@ def _preparse(args):
     task = None
     while args:
         arg = args.pop(0)
-        if '=' in args:
+        if '=' in arg:
             key, value = arg.split("=")
             try:
                 environment.options.setdotted(key, value)
