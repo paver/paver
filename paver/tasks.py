@@ -169,8 +169,11 @@ class Task(object):
         parser = optparse.OptionParser()
         parser.disable_interspersed_args()
         
-        needs_tasks = [environment.get_task(task) for task in self.needs]
-        for task in itertools.chain([self], needs_tasks):
+        needs_tasks = [(environment.get_task(task), task) for task in self.needs]
+        for task, task_name in itertools.chain([(self, self.name)], needs_tasks):
+            if not task:
+                raise PavementError("Task %s needed by %s does not exist"
+                    % (task_name, self))
             for option in task.user_options:
                 try:
                     longname = option[0]

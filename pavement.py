@@ -1,14 +1,11 @@
-from paver.tasks import task, needs, environment, cmdopts
-from paver.runtime import sh, log, dry
-from paver.path import path
-from paver.options import Bunch
-from paver import setuputils
+from paver.easy import *
 
 from paver.release import setup_meta
 
 import paver.doctools
 import paver.virtual
 import paver.setuputils
+import paver.misctasks
 
 paver.setuputils.install_distutils_tasks()
 
@@ -42,7 +39,7 @@ options(
 
 # not only does paver bootstrap itself, but it should work even with just 
 # distutils
-if setuputils.has_setuptools:
+if paver.setuputils.has_setuptools:
     old_sdist = "setuptools.command.sdist"
     options.setup.update(dict(
         install_requires=[],
@@ -57,7 +54,7 @@ else:
     old_sdist = "distutils.command.sdist"
     options.setup.scripts = ['scripts/paver']
 
-options.setup.package_data=setuputils.find_package_data("paver", package="paver",
+options.setup.package_data=paver.setuputils.find_package_data("paver", package="paver",
                                                 only_in_packages=False)
 
 if paver.doctools.has_sphinx:

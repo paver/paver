@@ -1,7 +1,6 @@
 """Miscellaneous tasks that don't fit into one of the other groupings."""
 
-from paver.tasks import task
-from paver.path import path
+from paver.easy import *
 
 def _task_list(userdef_only):
     """Pull together a string list of tasks for help command output.
@@ -95,7 +94,7 @@ def minilib(options):
     import paver
     paverdir = path(paver.__file__).dirname()
     filelist = ['__init__', 'command', 'defaults', 'path', 'release',
-                'runtime', 'setuputils', "misctasks"]
+                'setuputils', "misctasks", "tasks", "easy"]
     filelist.extend(options.get('extra_files', []))
     output_file = 'paver-minilib.zip'
 
