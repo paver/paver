@@ -18,6 +18,7 @@ class BuildFailure(Exception):
 
 class Environment(object):
     _all_tasks = None
+    _dry_run = False
     
     def __init__(self, pavement=None):
         self.pavement = pavement
@@ -27,6 +28,7 @@ class Environment(object):
             # own!
             from paver import options
             self.options = options.Namespace()
+            self.options.dry_run = False
         except ImportError:
             pass
     
@@ -38,6 +40,18 @@ class Environment(object):
     
     def error(self, message, *args):
         print message % args
+        
+    def _set_dry_run(self, dr):
+        self._dry_run = dr
+        try:
+            self.options.dry_run = dr
+        except AttributeError:
+            pass
+    
+    def _get_dry_run(self):
+        return self._dry_run
+        
+    dry_run = property(_get_dry_run, _set_dry_run)
         
     def get_task(self, taskname):
         task = getattr(self.pavement, taskname, None)
@@ -197,8 +211,9 @@ by another task in the dependency chain.""" % (self, option, task))
             except KeyError:
                 optholder = paver.options.Bunch()
                 environment.options[task_name] = optholder
-            print "Task name %s for option %s" % (task_name, option_name)
-            optholder[option_name] = getattr(options, option_name)
+            value = getattr(options, option_name)
+            if value is not None:
+                optholder[option_name] = getattr(options, option_name)
         return args
 
 def task(func):
@@ -284,8 +299,12 @@ def _parse_command_line(args):
     if not task:
         # this is where global options should be dealt with
         parser = optparse.OptionParser()
+        parser.add_option('-n', '--dry-run', action='store_true',
+                        help="don't actually do anything")
         parser.disable_interspersed_args()
         options, args = parser.parse_args(args)
+        if options.dry_run:
+            environment.dry_run = True
         if not args:
             return None, []
         

@@ -3,8 +3,8 @@ documentation."""
 
 import re
 
-from paver.runtime import *
-from paver.tasks import task
+from paver.path import path
+from paver.easy import *
 
 try:
     import sphinx

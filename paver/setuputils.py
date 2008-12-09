@@ -11,6 +11,7 @@ try:
 except ImportError:
     from distutils import dist
 from distutils.errors import DistutilsModuleError
+_Distribution = dist.Distribution
 
 try:
     import setuptools
@@ -23,10 +24,6 @@ except ImportError:
 # expression
 dist.command_re = re.compile (r'^[a-zA-Z]([a-zA-Z0-9_\.]*)$')
 
-# this has to come after the setuptools import to make sure
-# we get the setuptools Distribution class
-from distutils.core import Distribution as _Distribution
-    
 from paver.runtime import *
 from paver import runtime, tasks
 
@@ -63,7 +60,6 @@ class _cmddict(dict):
                 key = self._replacement_name(key, value)
             else:
                 nkey = self._replacement_name(key, current)
-                print "Bligger: " + nkey
                 self[nkey] = current
         dict.__setitem__(self, key, value)
     
@@ -306,7 +302,6 @@ class DistutilsTask(tasks.Task):
         opt_dict = self.distribution.get_option_dict(self.command_name)
         for (name, value) in options.items():
             opt_dict[name] = ("command line", value)
-        print "Opt dict is now: %s" % (opt_dict,)
         self.distribution.run_command(self.command_name)
         
 def _get_shortname(taskname):

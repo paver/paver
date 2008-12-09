@@ -12,6 +12,8 @@ class _sdist(Command):
     foo_set = False
     fin = None
     user_options = [("foo", "f", "Foo")]
+    boolean_options = ['foo']
+    negative_opt = {}
     
     def initialize_options(self):
         self.foo = False
@@ -88,3 +90,16 @@ def test_task_with_distutils_dep():
     assert cmd.foo
     assert _sdist.foo_set
     
+def test_distutils_tasks_should_not_get_extra_options():
+    _sdist.reset()
+    env = _set_environment()
+    env.options = options.Bunch(setup=options.Bunch())
+    install_distutils_tasks()
+    d = _get_distribution()
+    d.cmdclass['sdist'] = _sdist
+    
+    tasks._process_commands(['sdist'])
+    assert _sdist.called
+    assert not _sdist.foo_set
+    opts = d.get_option_dict('sdist')
+    assert 'foo' not in opts

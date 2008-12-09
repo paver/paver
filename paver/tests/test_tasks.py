@@ -234,3 +234,8 @@ def test_dotted_options():
     environment = _set_environment()
     tasks._process_commands(['this.is.cool=1'])
     assert environment.options.this['is'].cool == '1'
+
+def test_dry_run():
+    environment = _set_environment()
+    tasks._process_commands(['-n'])
+    assert environment.dry_run

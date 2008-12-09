@@ -1,0 +1,57 @@
+import subprocess
+
+from paver import tasks
+
+def dry(message, func, *args, **kw):
+    """Wraps a function that performs a destructive operation, so that
+    nothing will happen when a dry run is requested.
+
+    Runs func with the given arguments and keyword arguments. If this
+    is a dry run, print the message rather than running the function."""
+    info(message)
+    if tasks.environment.dry_run:
+        return
+    return func(*args, **kw)
+
+def error(message, *args):
+    """Displays an error message to the user."""
+    tasks.environment.error(message, *args)
+
+def info(message, *args):
+    """Displays a message to the user. If the quiet option is specified, the
+    message will not be displayed."""
+    tasks.environment.log(message, *args)
+
+def debug(message, *args):
+    """Displays a message to the user, but only if the verbose flag is
+    set."""
+    tasks.environment.debug(message, *args)
+
+def sh(command, capture=False, ignore_error=False):
+    """Runs an external command. If capture is True, the output of the
+    command will be captured and returned as a string.  If the command 
+    has a non-zero return code raise a BuildFailure. You can pass
+    ignore_error=True to allow non-zero return codes to be allowed to
+    pass silently, silently into the night.
+    
+    If the dry_run option is True, the command will not
+    actually be run."""
+    def runpipe():
+        p = subprocess.Popen(command, shell=True, 
+                stdout=subprocess.PIPE)
+        
+        p.wait()
+        if p.returncode and not ignore_error:
+            raise BuildFailure(p.returncode)
+
+        return p.stdout.read()
+
+    if capture:
+        return dry(command, runpipe)
+    else:
+        returncode = dry(command, subprocess.call, command, shell=True)
+        if returncode and not ignore_error:
+            raise BuildFailure(returncode)
+
+task = tasks.task
+BuildFailure = tasks.BuildFailure
