@@ -1,14 +1,14 @@
-from paver import runtime
+from paver import easy
 from paver.tests.mock import patch, Mock
-import subprocess # for runtime.sh tests
+import subprocess # for easy.sh tests
 
 
 @patch(subprocess, "call")
 def test_sh_raises_BuildFailure(call):
     call.return_value = 1
     try:
-        runtime.sh('foo')
-    except runtime.BuildFailure, e:
+        easy.sh('foo')
+    except easy.BuildFailure, e:
         assert e.args == (1, )
     else:
         assert False, 'Failed to raise BuildFailure'
@@ -22,8 +22,8 @@ def test_sh_with_capture_raises_BuildFailure(popen):
     popen.return_value = Mock()
     popen.return_value.returncode = 1
     try:
-        runtime.sh('foo', capture=True)
-    except runtime.BuildFailure, e:
+        easy.sh('foo', capture=True)
+    except easy.BuildFailure, e:
         assert e.args == (1, )
     else:
         assert False, 'Failed to raise BuildFailure'
@@ -36,7 +36,7 @@ def test_sh_with_capture_raises_BuildFailure(popen):
 @patch(subprocess, "call")
 def test_sh_ignores_error(call):
     call.return_value = 1
-    runtime.sh('foo', ignore_error=True)
+    easy.sh('foo', ignore_error=True)
 
     assert call.called
     assert call.call_args[0][0] == 'foo'
@@ -46,7 +46,7 @@ def test_sh_ignores_error(call):
 def test_sh_ignores_with_capture(popen):
     popen.return_value = Mock()
     popen.return_value.returncode = 1
-    runtime.sh('foo', capture=True, ignore_error=True)
+    easy.sh('foo', capture=True, ignore_error=True)
 
     assert popen.called
     assert popen.call_args[0][0] == 'foo'
