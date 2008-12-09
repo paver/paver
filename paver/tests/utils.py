@@ -1,4 +1,4 @@
-from paver import runtime, setuputils, defaults, tasks
+from paver import setuputils, defaults, tasks
 
 class FakeModule(object):
     def __init__(self, **kw):

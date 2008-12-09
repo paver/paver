@@ -24,8 +24,7 @@ except ImportError:
 # expression
 dist.command_re = re.compile (r'^[a-zA-Z]([a-zA-Z0-9_\.]*)$')
 
-from paver.runtime import *
-from paver import runtime, tasks
+from paver import tasks
 
 __ALL__ = ['find_package_data']
 

@@ -142,6 +142,8 @@ def _import_task(taskname):
 
 class Task(object):
     called = False
+    consume_args = False
+    
     def __init__(self, func):
         self.func = func
         self.needs = []
@@ -275,6 +277,13 @@ def cmdopts(options):
         return func
     return entangle
 
+def consume_args(func):
+    """Any command line arguments that appear after this task on the
+    command line will be placed in options.args."""
+    func = task(func)
+    func.consume_args = True
+    return func
+
 def _preparse(args):
     task = None
     while args:
@@ -318,6 +327,9 @@ def _parse_command_line(args):
     if not task:
         raise BuildFailure("Unknown task: %s" % taskname)
     args = task.parse_args(args)
+    if task.consume_args:
+        environment.options.args = args
+        args = []
     return task, args
 
 @task

@@ -4,7 +4,7 @@ from distutils.core import Command
 from paver.setuputils import install_distutils_tasks, \
                             DistutilsTaskFinder, _get_distribution, \
                             DistutilsTask
-from paver import runtime, tasks, options
+from paver import tasks, options
 from paver.tests.utils import _set_environment
 
 class _sdist(Command):

@@ -239,3 +239,18 @@ def test_dry_run():
     environment = _set_environment()
     tasks._process_commands(['-n'])
     assert environment.dry_run
+    
+def test_consume_args():
+    @tasks.task
+    @tasks.consume_args
+    def t1(options):
+        assert options.args == ["1", "t2", "3"]
+    
+    @tasks.task
+    def t2(options):
+        assert False, "Should not have run t2 because of consume_args"
+        
+    env = _set_environment(t1=t1, t2=t2)
+    tasks._process_commands("t1 1 t2 3".split())
+    assert t1.called
+    
