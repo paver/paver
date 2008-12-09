@@ -2,9 +2,6 @@ from paver.easy import *
 
 from paver import doctools, tasks, options
 
-from paver.setuputils import Distribution
-
-
 def test_sections_from_file():
     simpletext = """# [[[section foo]]]
 #Foo!

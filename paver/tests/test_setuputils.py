@@ -1,7 +1,7 @@
 from pprint import pprint
 from distutils.core import Command
 
-from paver.setuputils import Distribution, install_distutils_tasks, \
+from paver.setuputils import install_distutils_tasks, \
                             DistutilsTaskFinder, _get_distribution, \
                             DistutilsTask
 from paver import runtime, tasks, options
@@ -53,7 +53,9 @@ def test_override_distutils_command():
     assert isinstance(_sdist.fin, _sdist)
 
 def test_distutils_task_finder():
-    dist = Distribution()
+    env = _set_environment()
+    env.options = options.Bunch(setup=options.Bunch())
+    dist = _get_distribution()
     dutf = DistutilsTaskFinder()
     task = dutf.get_task('distutils.command.install')
     assert task
