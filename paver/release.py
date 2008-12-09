@@ -1,6 +1,6 @@
 """Release metadata for Paver."""
 
-from paver.runtime import Bunch
+from paver.options import Bunch
 
 setup_meta=Bunch(
     name='Paver',

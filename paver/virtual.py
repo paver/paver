@@ -1,6 +1,6 @@
 """Tasks for managing virtualenv environments."""
 
-from paver.runtime import task, options, dry, debug
+from paver.easy import task, options, dry, debug
 from paver.path import path
 from paver.release import setup_meta
 
