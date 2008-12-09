@@ -3,18 +3,8 @@ from pprint import pprint
 from paver import command, runtime, defaults, setuputils, misctasks, tasks, options
 
 from paver.tests.mock import Mock
-from paver.tests.utils import reset_runtime
+from paver.tests.utils import _set_environment
 
-class FakeModule(object):
-    def __init__(self, **kw):
-        for name, value in kw.items():
-            setattr(self, name, value)
-            
-def _set_environment(**kw):
-    pavement = FakeModule(**kw)
-    tasks.environment = tasks.Environment(pavement)
-    return tasks.environment
-    
 def test_basic_dependencies():
     @tasks.task
     def t1():
@@ -239,4 +229,8 @@ def test_options_shouldnt_overlap():
         assert False, "shoudl have gotten a PavementError"
     except tasks.PavementError:
         pass
-    
+
+def test_dotted_options():
+    environment = _set_environment()
+    tasks._process_commands(['this.is.cool=1'])
+    assert environment.options.this['is'].cool == '1'

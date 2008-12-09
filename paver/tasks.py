@@ -197,6 +197,7 @@ by another task in the dependency chain.""" % (self, option, task))
             except KeyError:
                 optholder = paver.options.Bunch()
                 environment.options[task_name] = optholder
+            print "Task name %s for option %s" % (task_name, option_name)
             optholder[option_name] = getattr(options, option_name)
         return args
 

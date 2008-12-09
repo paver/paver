@@ -1,8 +1,12 @@
-from paver import runtime, setuputils, defaults
+from paver import runtime, setuputils, defaults, tasks
 
-def reset_runtime():
-    runtime.TASKS.clear()
-    runtime.options.clear()
-    reload(defaults)
-    return runtime.Bunch(dry_run=True)
+class FakeModule(object):
+    def __init__(self, **kw):
+        for name, value in kw.items():
+            setattr(self, name, value)
+
+def _set_environment(**kw):
+    pavement = FakeModule(**kw)
+    tasks.environment = tasks.Environment(pavement)
+    return tasks.environment
 

@@ -63,6 +63,7 @@ class _cmddict(dict):
                 key = self._replacement_name(key, value)
             else:
                 nkey = self._replacement_name(key, current)
+                print "Bligger: " + nkey
                 self[nkey] = current
         dict.__setitem__(self, key, value)
     
@@ -291,32 +292,35 @@ def find_package_data(
 class DistutilsTask(tasks.Task):
     def __init__(self, distribution, command_name, command_class):
         self.name = command_name
+        self.__name__ = self.name
         self.distribution = distribution
         self.command_name = command_name
-        self.shortname = command_name
+        self.shortname = _get_shortname(command_name)
         self.command_class = command_class
         self.option_names = set()
         self.needs = []
         self.user_options = command_class.user_options
         
     def __call__(self, *args, **kw):
+        options = tasks.environment.options[self.shortname]
+        opt_dict = self.distribution.get_option_dict(self.command_name)
+        for (name, value) in options.items():
+            opt_dict[name] = ("command line", value)
+        print "Opt dict is now: %s" % (opt_dict,)
         self.distribution.run_command(self.command_name)
         
-    def parse_args(self, args):
-        options, args = self.parser.parse_args(args)
-        opt_dict = self.distribution.get_option_dict(self.command_name)
-        for (name, value) in vars(options).items():
-            opt_dict[name] = ("command line", value)
-        return args
-        
+def _get_shortname(taskname):
+    dotindex = taskname.rfind(".")
+    if dotindex > -1:
+        command_name = taskname[dotindex+1:]
+    else:
+        command_name = taskname
+    return command_name
+    
 class DistutilsTaskFinder(object):
     def get_task(self, taskname):
         dist = _get_distribution()
-        dotindex = taskname.rfind(".")
-        if dotindex > -1:
-            command_name = taskname[dotindex+1:]
-        else:
-            command_name = taskname
+        command_name = _get_shortname(taskname)
         try:
             command_class = dist.get_command_class(command_name)
         except DistutilsModuleError:
