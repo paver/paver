@@ -167,12 +167,18 @@ class Task(object):
             
                     environment.debug("Task %s: adding option %s (%s)" %
                                      (self.name, longname, option[1]))
-                    if option[1] is None:
-                        parser.add_option("--" + longname, action=action, 
-                                          dest=longname)
-                    else:
-                        parser.add_option("-" + option[1], "--" + longname, action=action, 
-                                          dest=longname)
+                    try:
+                        if option[1] is None:
+                            parser.add_option("--" + longname, action=action, 
+                                              dest=longname)
+                        else:
+                            parser.add_option("-" + option[1], 
+                                              "--" + longname, action=action, 
+                                              dest=longname)
+                    except optparse.OptionConflictError:
+                        raise PavementError("""In setting command options for %r, 
+option %s for %r is already in use
+by another task in the dependency chain.""" % (self, option, task))
                     self.option_names.add((task.shortname, longname))
                 except IndexError:
                     raise PavementError("Invalid option format provided for %r: %s"

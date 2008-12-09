@@ -221,3 +221,22 @@ def test_options_inherited_via_needs():
     assert t1.called
     assert t2.called
     
+def test_options_shouldnt_overlap():
+    @tasks.task
+    @tasks.cmdopts([('foo=', 'f', "Foo!")])
+    def t1(options):
+        assert False
+    
+    @tasks.task
+    @tasks.needs('t1')
+    @tasks.cmdopts([('force=', 'f', "Force!")])
+    def t2(options):
+        assert False
+        
+    environment = _set_environment(t1=t1, t2=t2)
+    try:
+        tasks._process_commands("t2 -f 1".split())
+        assert False, "shoudl have gotten a PavementError"
+    except tasks.PavementError:
+        pass
+    
