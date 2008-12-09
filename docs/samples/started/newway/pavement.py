@@ -1,7 +1,4 @@
-# the following line is optional, but is useful when you use a tool
-# like WingIDE or if you wish to import your pavement directly into a Python
-# shell.
-from paver.defaults import *
+from paver.easy import *
 import paver.doctools
 
 # [[[section setup]]]

@@ -3,7 +3,6 @@ documentation."""
 
 import re
 
-from paver.path import path
 from paver.easy import *
 
 try:

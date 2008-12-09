@@ -17,7 +17,7 @@ Date:    9 Mar 2007
 This has been modified from the original to avoid dry run issues.
 """
 
-from paver.runtime import dry
+from paver.easy import dry
 
 
 # TODO

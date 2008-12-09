@@ -1,4 +1,5 @@
-from paver.runtime import *
+from paver.easy import *
+
 from paver import doctools, tasks, options
 
 from paver.setuputils import Distribution

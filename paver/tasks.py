@@ -1,4 +1,5 @@
 import sys
+import os
 import optparse
 import types
 import inspect
@@ -337,6 +338,7 @@ def main(args=None):
         else:
             args = []
     environment = Environment()
-    mod = __import__("pavement")
+    mod = types.ModuleType("pavement")
+    execfile("pavement.py", mod.__dict__)
     environment.pavement = mod
     _process_commands(args)

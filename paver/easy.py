@@ -1,6 +1,7 @@
 import subprocess
 
 from paver import tasks
+from paver.options import Bunch
 
 def dry(message, func, *args, **kw):
     """Wraps a function that performs a destructive operation, so that
@@ -53,5 +54,40 @@ def sh(command, capture=False, ignore_error=False):
         if returncode and not ignore_error:
             raise BuildFailure(returncode)
 
+class _SimpleProxy(object):
+    __initialized = False
+    def __init__(self, rootobj, name):
+        self.__rootobj = rootobj
+        self.__name = name
+        self.__initialized = True
+    
+    def __get_object(self):
+        return getattr(self.__rootobj, self.__name)
+        
+    def __getattr__(self, attr):
+        return getattr(self.__get_object(), attr)
+    
+    def __setattr__(self, attr, value):
+        if self.__initialized:
+            setattr(self.__get_object(), attr, value)
+        else:
+            super(_SimpleProxy, self).__setattr__(attr, value)
+            
+    def __call__(self, *args, **kw):
+        return self.__get_object()(*args, **kw)
+    
+    def __str__(self):
+        return str(self.__get_object())
+    
+    def __repr__(self):
+        return repr(self.__get_object())
+
+environment = _SimpleProxy(tasks, "environment")
+options = _SimpleProxy(environment, "options")
+
 task = tasks.task
+needs = tasks.needs
+cmdopts = tasks.cmdopts
 BuildFailure = tasks.BuildFailure
+
+from paver.path import path
