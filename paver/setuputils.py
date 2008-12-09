@@ -6,7 +6,10 @@ import sys
 import distutils
 from fnmatch import fnmatchcase
 from distutils.util import convert_path
-from distutils import dist
+try:
+    from setuptools import dist
+except ImportError:
+    from distutils import dist
 from distutils.errors import DistutilsModuleError
 
 try:
@@ -114,10 +117,6 @@ class Distribution(_Distribution):
                     # py2app command
                     info("Could not load entry point: %s", ep)
         _Distribution.get_command_list(self)
-        self.cmdclass.update(runtime.TASKS)
-        for value in self.cmdclass.values():
-            if hasattr(value, 'task_obj'):
-                value._handle_dependencies()
         
     def get_command_obj(self, command, create=1):
         # when in the distutils context, make sure we
@@ -131,7 +130,7 @@ class Distribution(_Distribution):
     def get_option_dict(self, command):
         return self.command_options.setdefault(command, Bunch())
     
-    def run_command(self, command, more_options=None):
+    def rn_command(self, command, more_options=None):
         if "=" in command:
             key, value = command.split("=")
             runtime.options.setdotted(key, value)
@@ -289,24 +288,56 @@ def find_package_data(
                 out.setdefault(package, []).append(prefix+name)
     return out
 
-class DistutilsTaskFinder(object):
-    def __init__(self, distribution):
+class DistutilsTask(tasks.Task):
+    def __init__(self, distribution, command_name, command_class):
+        self.name = command_name
         self.distribution = distribution
+        self.command_name = command_name
+        self.shortname = command_name
+        self.command_class = command_class
+        self.option_names = set()
+        self.needs = []
+        self.user_options = command_class.user_options
         
+    def __call__(self, *args, **kw):
+        self.distribution.run_command(self.command_name)
+        
+    def parse_args(self, args):
+        options, args = self.parser.parse_args(args)
+        opt_dict = self.distribution.get_option_dict(self.command_name)
+        for (name, value) in vars(options).items():
+            opt_dict[name] = ("command line", value)
+        return args
+        
+class DistutilsTaskFinder(object):
     def get_task(self, taskname):
+        dist = _get_distribution()
         dotindex = taskname.rfind(".")
         if dotindex > -1:
             command_name = taskname[dotindex+1:]
         else:
             command_name = taskname
         try:
-            command_class = self.distribution.get_command_class(command_name)
+            command_class = dist.get_command_class(command_name)
         except DistutilsModuleError:
             return None
-        return command_class
+        return DistutilsTask(dist, command_name, command_class)
+        
+    def get_tasks(self):
+        dist = _get_distribution()
+        dist._update_command_list()
+
+def _get_distribution():
+    try:
+        return tasks.environment.distribution
+    except AttributeError:
+        dist = _Distribution(attrs=tasks.environment.options.setup)
+        tasks.environment.distribution = dist
+        dist.script_name = sys.argv[0]
+        return dist
 
 def install_distutils_tasks():
-    tasks.environment.distribution = dist.Distribution()
+    tasks.environment.task_finders.append(DistutilsTaskFinder().get_task)
 
 if has_setuptools:
     __ALL__.extend(["find_packages"])

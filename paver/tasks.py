@@ -2,6 +2,7 @@ import sys
 import optparse
 import types
 import inspect
+import itertools
 
 environment = None
 
@@ -20,6 +21,7 @@ class Environment(object):
     
     def __init__(self, pavement=None):
         self.pavement = pavement
+        self.task_finders = []
         try:
             # for the time being, at least, tasks.py can be used on its
             # own!
@@ -33,9 +35,20 @@ class Environment(object):
         
     def debug(self, message, *args):
         print message % args
+    
+    def error(self, message, *args):
+        print message % args
         
     def get_task(self, taskname):
         task = getattr(self.pavement, taskname, None)
+        
+        # delegate to task finders next
+        if not task:
+            for finder in self.task_finders:
+                task = finder(taskname)
+                if task:
+                    break
+
         # try to look up by full name
         if not task:
             task = _import_task(taskname)
@@ -113,9 +126,6 @@ def _import_task(taskname):
     return getattr(module, func_name)
 
 class Task(object):
-    parser = optparse.OptionParser()
-    parser.disable_interspersed_args()
-    
     called = False
     def __init__(self, func):
         self.func = func
@@ -124,6 +134,7 @@ class Task(object):
         self.shortname = func.__name__
         self.name = "%s.%s" % (func.__module__, func.__name__)
         self.option_names = set()
+        self.user_options = []
         try:
             self.__doc__ = func.__doc__
         except AttributeError:
@@ -136,33 +147,51 @@ class Task(object):
     
     def __repr__(self):
         return "Task: " + self.__name__
-        
-    def set_command_options(self, options):
+    
+    @property    
+    def parser(self):
+        options = self.user_options
         parser = optparse.OptionParser()
         parser.disable_interspersed_args()
         
-        for option in options:
-            longname = option[0]
-            if longname.endswith('='):
-                action = "store"
-                longname = longname[:-1]
-            else:
-                action = "store_true"
+        needs_tasks = [environment.get_task(task) for task in self.needs]
+        for task in itertools.chain([self], needs_tasks):
+            for option in task.user_options:
+                try:
+                    longname = option[0]
+                    if longname.endswith('='):
+                        action = "store"
+                        longname = longname[:-1]
+                    else:
+                        action = "store_true"
             
-            environment.debug("Task %s: adding option %s (%s)" %
-                             (self.name, longname, option[1]))
-            parser.add_option("-" + option[1], "--" + longname, action=action, dest=longname)
-            self.option_names.add(longname)
-        self.parser = parser
+                    environment.debug("Task %s: adding option %s (%s)" %
+                                     (self.name, longname, option[1]))
+                    if option[1] is None:
+                        parser.add_option("--" + longname, action=action, 
+                                          dest=longname)
+                    else:
+                        parser.add_option("-" + option[1], "--" + longname, action=action, 
+                                          dest=longname)
+                    self.option_names.add((task.shortname, longname))
+                except IndexError:
+                    raise PavementError("Invalid option format provided for %r: %s"
+                                        % (self, option))
+        return parser
         
     def parse_args(self, args):
+        import paver.options
         environment.debug("Task %s: Parsing args %s" % (self.name, args))
+        optholder = environment.options.setdefault(self.shortname, 
+                                                   paver.options.Bunch())
         options, args = self.parser.parse_args(args)
-        for name in self.option_names:
+        for task_name, option_name in self.option_names:
             try:
-                environment.options[name] = getattr(options, name)
-            except AttributeError:
-                pass
+                optholder = environment.options[task_name]
+            except KeyError:
+                optholder = paver.options.Bunch()
+                environment.options[task_name] = optholder
+            optholder[option_name] = getattr(options, option_name)
         return args
 
 def task(func):
@@ -216,7 +245,7 @@ def cmdopts(options):
     name (the only difference is that - is replaced by _)."""
     def entangle(func):
         func = task(func)
-        func.set_command_options(options)
+        func.user_options = options
         return func
     return entangle
 

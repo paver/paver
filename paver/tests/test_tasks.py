@@ -182,6 +182,7 @@ def test_task_command_line_options():
     @tasks.cmdopts([('foo=', 'f', 'Foobeedoobee!')])
     def t1(options):
         assert options.foo == "1"
+        assert options.t1.foo == "1"
     
     environment = _set_environment(t1=t1)
     tasks._process_commands(['t1', '--foo', '1'])
@@ -202,3 +203,21 @@ def test_setting_of_options_with_equals():
     tasks._process_commands(['foo=1', 't1', 'bar=2', 't2'])
     assert t1.called
     assert t2.called
+    
+def test_options_inherited_via_needs():
+    @tasks.task
+    @tasks.cmdopts([('foo=', 'f', "Foo!")])
+    def t1(options):
+        assert options.t1.foo == "1"
+    
+    @tasks.task
+    @tasks.needs('t1')
+    @tasks.cmdopts([('bar=', 'b', "Bar!")])
+    def t2(options):
+        assert options.t2.bar == '2'
+        
+    environment = _set_environment(t1=t1, t2=t2)
+    tasks._process_commands("t2 --foo 1 -b 2".split())
+    assert t1.called
+    assert t2.called
+    

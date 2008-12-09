@@ -2,7 +2,7 @@ from pprint import pprint
 from distutils.core import Command
 
 from paver.setuputils import Distribution, install_distutils_tasks, \
-                            DistutilsTaskFinder
+                            DistutilsTaskFinder, _get_distribution
 from paver import runtime, tasks
 from paver.runtime import *
 
@@ -43,16 +43,17 @@ def _set_environment(**kw):
 
 
 #----------------------------------------------------------------------
-def tst_override_distutils_command():
+def test_override_distutils_command():
     @tasks.task
     def sdist():
         pass
     
     env = _set_environment(sdist=sdist)
+    env.options = Bunch(setup=Bunch())
     
     install_distutils_tasks()
+    d = _get_distribution()
     
-    d = env.distribution
     d.cmdclass['sdist'] = _sdist
     tasks._process_commands(['sdist', 'paver.tests.test_setuputils.sdist', '-f'])
     assert sdist.called
@@ -62,7 +63,7 @@ def tst_override_distutils_command():
 
 def test_distutils_task_finder():
     dist = Distribution()
-    dutf = DistutilsTaskFinder(dist)
+    dutf = DistutilsTaskFinder()
     task = dutf.get_task('distutils.command.install')
     assert task
     task = dutf.get_task('install')
