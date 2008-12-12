@@ -5,10 +5,17 @@ Paver Changelog
 
 1.0a1 (unreleased)
 ----------------
+* COMPATIBILITY BREAK: paver.misctasks is no longer imported by default, even when using paver.easy
+* DEPRECATIONS: paver.runtime and paver.defaults have been deprecated. Watch the
+  warnings for info on how to change to the new paver.easy module.
 * COMPATIBILITY WARNING: By default, the sh() function will now raise a 
   BuildFailure exception if the return code of the process is non-zero.
   Passing ignore_error=True will switch back to the previous behavior.
   Thanks to Marc Sibson.
+* Regardless of logging level, output for a task is captured. If there is a BuildFailure,
+  then that captured output is displayed.
+* The new paver.tasks module encapsulates everything needed for running tasks
+  in a file. The distutils ties have been reduced.
 * @needs now accepts a list of requirements in the form @needs('task1', 'task2')
   (passing in a list still works as well)
 * Bundles (temporarily) PoachEggs and adds tasks for paver.virtual to support

@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from paver import command, runtime, defaults, setuputils, misctasks, tasks, options
+from paver import command, setuputils, misctasks, tasks, options
 
 from paver.tests.mock import Mock
 from paver.tests.utils import _set_environment
@@ -277,3 +277,52 @@ def test_consume_args():
     tasks._process_commands("t1 1 t2 3".split())
     assert t1.called
     
+def test_debug_logging():
+    @tasks.task
+    def t1(debug):
+        debug("Hi %s", "there")
+        
+    env = _set_environment(t1=t1, patch_print=True)
+    tasks._process_commands(['-v', 't1'])
+    assert env.patch_captured[-1] == "Hi there"
+    env.patch_captured = []
+    
+    tasks._process_commands(['t1'])
+    assert env.patch_captured[-1] != "Hi there"
+
+def test_base_logging():
+    @tasks.task
+    def t1(info):
+        info("Hi %s", "you")
+    
+    env = _set_environment(t1=t1, patch_print=True)
+    tasks._process_commands(['t1'])
+    assert env.patch_captured[-1] == 'Hi you'
+    env.patch_captured = []
+    
+    tasks._process_commands(['-q', 't1'])
+    assert not env.patch_captured
+    
+def test_error_show_up_no_matter_what():
+    @tasks.task
+    def t1(error):
+        error("Hi %s", "error")
+    
+    env = _set_environment(t1=t1, patch_print=True)
+    tasks._process_commands(['t1'])
+    assert env.patch_captured[-1] == "Hi error"
+    env.patch_captured = []
+    
+    tasks._process_commands(['-q', 't1'])
+    assert env.patch_captured[-1] == "Hi error"
+    
+def test_all_messages_for_a_task_are_captured():
+    @tasks.task
+    def t1(debug, error):
+        debug("This is debug msg")
+        error("This is error msg")
+        raise tasks.BuildFailure("Yo, problem, yo")
+    
+    env = _set_environment(t1=t1, patch_print=True)
+    tasks._process_commands(['t1'])
+    assert "This is debug msg" in "\n".join(env.patch_captured)

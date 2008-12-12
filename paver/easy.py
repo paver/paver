@@ -21,7 +21,7 @@ def error(message, *args):
 def info(message, *args):
     """Displays a message to the user. If the quiet option is specified, the
     message will not be displayed."""
-    tasks.environment.log(message, *args)
+    tasks.environment.info(message, *args)
 
 def debug(message, *args):
     """Displays a message to the user, but only if the verbose flag is
@@ -52,7 +52,7 @@ def sh(command, capture=False, ignore_error=False):
     else:
         returncode = dry(command, subprocess.call, command, shell=True)
         if returncode and not ignore_error:
-            raise BuildFailure(returncode)
+            raise BuildFailure("Subprocess return code: %s" % returncode)
 
 class _SimpleProxy(object):
     __initialized = False

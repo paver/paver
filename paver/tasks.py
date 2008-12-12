@@ -18,8 +18,13 @@ class BuildFailure(Exception):
 
 
 class Environment(object):
+    _task_in_progress = None
+    _task_output = None
     _all_tasks = None
     _dry_run = False
+    verbose = False
+    interactive = False
+    quiet = False
     
     def __init__(self, pavement=None):
         self.pavement = pavement
@@ -33,14 +38,25 @@ class Environment(object):
         except ImportError:
             pass
     
-    def log(self, message, *args):
-        print message % args
+    def info(self, message, *args):
+        self._log(2, message, args)
         
     def debug(self, message, *args):
-        print message % args
+        self._log(1, message, args)
     
     def error(self, message, *args):
-        print message % args
+        self._log(3, message, args)
+    
+    def _log(self, level, message, args):
+        output = message % args
+        if self._task_output is not None:
+            self._task_output.append(output)
+        if level > 2 or (level > 1 and not self.quiet) or \
+            self.verbose:
+            self._print(output)
+    
+    def _print(self, output):
+        print output
         
     def _set_dry_run(self, dr):
         self._dry_run = dr
@@ -95,18 +111,41 @@ class Environment(object):
                     raise PavementError("Task %s requires an argument (%s) that is "
                         "not present in the environment" % (task_name, arg))
         
-        self.log("---> " + task_name)
-        for req in needs:
-            task = self.get_task(req)
-            if not task:
-                raise PavementError("Requirement %s for task %s not found" %
-                    (req, task_name))
-            if not isinstance(task, Task):
-                raise PavementError("Requirement %s for task %s is not a Task"
-                    % (req, task_name))
-            if not task.called:
-                task()
-        return func(**kw)
+        if not self._task_in_progress:
+            self._task_in_progress = task_name
+            self._task_output = []
+            running_top_level = True
+        else:
+            running_top_level = False
+        def do_task():
+            self.info("---> " + task_name)
+            for req in needs:
+                task = self.get_task(req)
+                if not task:
+                    raise PavementError("Requirement %s for task %s not found" %
+                        (req, task_name))
+                if not isinstance(task, Task):
+                    raise PavementError("Requirement %s for task %s is not a Task"
+                        % (req, task_name))
+                if not task.called:
+                    task()
+            return func(**kw)
+        if running_top_level:
+            try:
+                return do_task()
+            except BuildFailure, e:
+                self._print("""
+
+Captured Task Output:
+---------------------
+""")
+                self._print("\n".join(self._task_output))
+                self._print("\nBuild failed running %s: %s" % 
+                            (self._task_in_progress, e))
+            self._task_in_progress = None
+            self._task_output = None
+        else:
+            return do_task()
     
     def get_tasks(self):
         if self._all_tasks:
@@ -176,6 +215,7 @@ class Task(object):
             if not task:
                 raise PavementError("Task %s needed by %s does not exist"
                     % (task_name, self))
+            print task
             for option in task.user_options:
                 try:
                     longname = option[0]
@@ -314,10 +354,16 @@ def _parse_command_line(args):
         parser = optparse.OptionParser()
         parser.add_option('-n', '--dry-run', action='store_true',
                         help="don't actually do anything")
+        parser.add_option('-v', "--verbose", action="store_true",
+                        help="display all logging output")
+        parser.add_option('-q', '--quiet', action="store_true",
+                        help="display only errors")
+        parser.add_option("-i", "--interactive", action="store_true",
+                        help="enable prompting")
         parser.disable_interspersed_args()
         options, args = parser.parse_args(args)
-        if options.dry_run:
-            environment.dry_run = True
+        for key, value in vars(options).items():
+            setattr(environment, key, value)
         if not args:
             return None, []
         
@@ -333,6 +379,7 @@ def _parse_command_line(args):
     return task, args
 
 @task
+@consume_args
 def help():
     task_list = environment.get_tasks()
     for task in task_list:
@@ -354,6 +401,11 @@ def main(args=None):
             args = []
     environment = Environment()
     mod = types.ModuleType("pavement")
-    execfile("pavement.py", mod.__dict__)
-    environment.pavement = mod
-    _process_commands(args)
+    try:
+        execfile("pavement.py", mod.__dict__)
+        environment.pavement = mod
+        _process_commands(args)
+    except PavementError, e:
+        print "\n\n*** Problem with pavement:\n%s\n%s\n\n" % (
+                    os.path.abspath('pavement.py'), e)
+        
