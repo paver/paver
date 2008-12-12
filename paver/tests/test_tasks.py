@@ -72,6 +72,29 @@ def test_chained_dependencies():
     t4()
     assert called == [True, True, True, True], "Called was: %s" % (called)
 
+def test_backwards_compatible_needs():
+    @tasks.task
+    def t():
+        pass
+    
+    @tasks.task
+    @tasks.needs(['t'])
+    def t2():
+        pass
+    
+    @tasks.task
+    @tasks.needs('t')
+    def t3():
+        pass
+    
+    env = _set_environment(t=t, t2=t2, t3=t3)
+    t3()
+    assert t.called
+    t.called = False
+    
+    t2()
+    assert t.called
+
 def test_tasks_dont_repeat():
     called = [0, 0, 0, 0]
     
