@@ -3,12 +3,14 @@
 Paver Changelog
 ===============
 
-0.9 (unreleased)
+1.0a1 (unreleased)
 ----------------
 * COMPATIBILITY WARNING: By default, the sh() function will now raise a 
   BuildFailure exception if the return code of the process is non-zero.
   Passing ignore_error=True will switch back to the previous behavior.
   Thanks to Marc Sibson.
+* @needs now accepts a list of requirements in the form @needs('task1', 'task2')
+  (passing in a list still works as well)
 * Bundles (temporarily) PoachEggs and adds tasks for paver.virtual to support
   using PoachEggs to manage your eggs.
 * Added paver.bzr (support for Bazaar-NG related operations), courtesy of
@@ -16,6 +18,8 @@ Paver Changelog
 * The error() function is now exported, for logging of errors (thanks to Marc Sibson)
 * Added handy paver.svn.export function for exporting an svn repository revision 
   (thanks to Marc Sibson)
+* The "scripts" directory has been renamed "distutils_scripts" to avoid name collision
+  on Windows.
 
 0.8.1 (June 2, 2008)
 --------------------

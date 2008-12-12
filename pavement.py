@@ -52,7 +52,7 @@ paver = paver.tasks:main
     ))
 else:
     old_sdist = "distutils.command.sdist"
-    options.setup.scripts = ['scripts/paver']
+    options.setup.scripts = ['distutils_scripts/paver']
 
 options.setup.package_data=paver.setuputils.find_package_data("paver", package="paver",
                                                 only_in_packages=False)
