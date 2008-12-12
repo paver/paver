@@ -1,0 +1,5 @@
+#!/bin/env python
+
+from paver.tasks import main
+
+main()

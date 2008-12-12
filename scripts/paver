@@ -1,5 +1,0 @@
-#!/bin/env python
-
-from paver.command import main
-
-main()
