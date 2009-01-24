@@ -9,7 +9,8 @@ def test_sh_raises_BuildFailure(call):
     try:
         easy.sh('foo')
     except easy.BuildFailure, e:
-        assert e.args == (1, )
+        args = e.args
+        assert args == ('Subprocess return code: 1', )
     else:
         assert False, 'Failed to raise BuildFailure'
 
@@ -24,7 +25,8 @@ def test_sh_with_capture_raises_BuildFailure(popen):
     try:
         easy.sh('foo', capture=True)
     except easy.BuildFailure, e:
-        assert e.args == (1, )
+        args = e.args
+        assert args == (1, )
     else:
         assert False, 'Failed to raise BuildFailure'
 
