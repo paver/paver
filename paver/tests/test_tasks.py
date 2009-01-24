@@ -326,3 +326,14 @@ def test_all_messages_for_a_task_are_captured():
     env = _set_environment(t1=t1, patch_print=True)
     tasks._process_commands(['t1'])
     assert "This is debug msg" in "\n".join(env.patch_captured)
+    
+def test_captured_output_shows_up_on_exception():
+    @tasks.task
+    def t1(debug, error):
+        debug("Dividing by zero!")
+        1/0
+    
+    env = _set_environment(t1=t1, patch_print=True)
+    tasks._process_commands(['t1'])
+    assert "Dividing by zero!" in "\n".join(env.patch_captured)
+    

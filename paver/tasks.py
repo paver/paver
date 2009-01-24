@@ -4,6 +4,9 @@ import optparse
 import types
 import inspect
 import itertools
+import traceback
+
+VERSION = "1.0a0"
 
 environment = None
 
@@ -57,7 +60,7 @@ class Environment(object):
     
     def _print(self, output):
         print output
-        
+    
     def _set_dry_run(self, dr):
         self._dry_run = dr
         try:
@@ -133,15 +136,18 @@ class Environment(object):
         if running_top_level:
             try:
                 return do_task()
-            except BuildFailure, e:
+            except Exception, e:
                 self._print("""
 
 Captured Task Output:
 ---------------------
 """)
                 self._print("\n".join(self._task_output))
-                self._print("\nBuild failed running %s: %s" % 
-                            (self._task_in_progress, e))
+                if isinstance(e, BuildFailure):
+                    self._print("\nBuild failed running %s: %s" % 
+                                (self._task_in_progress, e))
+                else:
+                    self._print(traceback.format_exc())
             self._task_in_progress = None
             self._task_output = None
         else:
@@ -215,7 +221,6 @@ class Task(object):
             if not task:
                 raise PavementError("Task %s needed by %s does not exist"
                     % (task_name, self))
-            print task
             for option in task.user_options:
                 try:
                     longname = option[0]
@@ -351,7 +356,7 @@ def _parse_command_line(args):
     
     if not task:
         # this is where global options should be dealt with
-        parser = optparse.OptionParser()
+        parser = optparse.OptionParser(usage="""Usage: %prog [global options] taskname [task options] [taskname [taskoptions]]""")
         parser.add_option('-n', '--dry-run', action='store_true',
                         help="don't actually do anything")
         parser.add_option('-v', "--verbose", action="store_true",
@@ -393,6 +398,7 @@ def _process_commands(args):
         task()
 
 def main(args=None):
+    print "Paver %s" % VERSION
     global environment
     if args is None:
         if len(sys.argv) > 1:
