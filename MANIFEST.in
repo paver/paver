@@ -1,6 +1,6 @@
-include metainfo.py
 include LICENSE.txt
-include scripts/*
+include README.txt
+include distutils_scripts/*
 recursive-include paver/docs *
 include paver-minilib.zip
 include setup.py
