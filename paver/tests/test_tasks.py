@@ -333,8 +333,15 @@ def test_alternate_pavement_option():
     assert env.pavement_file == 'pavement.py'
 
     env = _set_environment()
-    tasks._parse_global_options(['--pavement-file=foo.py'])
-    assert env.pavement_file == 'foo.py'
+    tasks._parse_global_options(['--file=foo.py'])
+    set_pavement = env.pavement_file
+    assert set_pavement == 'foo.py'
+
+    env = _set_environment()
+    tasks._parse_global_options(['-f', 'foo.py'])
+    set_pavement = env.pavement_file
+    assert set_pavement == 'foo.py'
+
 
 def test_captured_output_shows_up_on_exception():
     @tasks.task

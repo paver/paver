@@ -28,7 +28,7 @@ class Environment(object):
     verbose = False
     interactive = False
     quiet = False
-    _pavement_file = "pavement.py"
+    _file = "pavement.py"
     
     def __init__(self, pavement=None):
         self.pavement = pavement
@@ -76,16 +76,18 @@ class Environment(object):
     dry_run = property(_get_dry_run, _set_dry_run)
         
     def _set_pavement_file(self, pavement_file):
-        self._pavement_file = pavement_file
+        self._file = pavement_file
         try:
             self.options.pavement_file = pavement_file
         except AttributeError:
             pass
 
     def _get_pavement_file(self):
-        return self._pavement_file
+        return self._file
 
     pavement_file = property(_get_pavement_file, _set_pavement_file)
+    
+    file = property(fset=_set_pavement_file)
 
     def get_task(self, taskname):
         task = getattr(self.pavement, taskname, None)
@@ -377,9 +379,9 @@ def _parse_global_options(args):
                     help="display only errors")
     parser.add_option("-i", "--interactive", action="store_true",
                     help="enable prompting")
-    parser.add_option("--pavement-file", metavar="FILE",
+    parser.add_option("-f", "--file", metavar="FILE",
                     help="read tasks from FILE [%default]")
-    parser.set_defaults(pavement_file=environment.pavement_file)
+    parser.set_defaults(file=environment.pavement_file)
 
     parser.disable_interspersed_args()
     options, args = parser.parse_args(args)
