@@ -12,6 +12,8 @@ Paver Changelog
   BuildFailure exception if the return code of the process is non-zero.
   Passing ignore_error=True will switch back to the previous behavior.
   Thanks to Marc Sibson.
+* You can now specify an alternate file to run rather than "pavement.py" using
+  the -f or --file global option. Thanks to Marc Sibson.
 * Regardless of logging level, output for a task is captured. If there is a BuildFailure,
   then that captured output is displayed.
 * The new paver.tasks module encapsulates everything needed for running tasks

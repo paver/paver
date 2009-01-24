@@ -28,6 +28,7 @@ class Environment(object):
     verbose = False
     interactive = False
     quiet = False
+    _pavement_file = "pavement.py"
     
     def __init__(self, pavement=None):
         self.pavement = pavement
@@ -38,6 +39,7 @@ class Environment(object):
             from paver import options
             self.options = options.Namespace()
             self.options.dry_run = False
+            self.options.pavement_file = self.pavement_file
         except ImportError:
             pass
     
@@ -73,6 +75,18 @@ class Environment(object):
         
     dry_run = property(_get_dry_run, _set_dry_run)
         
+    def _set_pavement_file(self, pavement_file):
+        self._pavement_file = pavement_file
+        try:
+            self.options.pavement_file = pavement_file
+        except AttributeError:
+            pass
+
+    def _get_pavement_file(self):
+        return self._pavement_file
+
+    pavement_file = property(_get_pavement_file, _set_pavement_file)
+
     def get_task(self, taskname):
         task = getattr(self.pavement, taskname, None)
         
@@ -351,24 +365,34 @@ line (%s) attempts to set an option.""" % (args))
             break
     return task, args
 
+def _parse_global_options(args):
+    # this is where global options should be dealt with
+    parser = optparse.OptionParser(usage="""Usage: %prog [global options] taskname [task options] [taskname [taskoptions]]""")
+    
+    parser.add_option('-n', '--dry-run', action='store_true',
+                    help="don't actually do anything")
+    parser.add_option('-v', "--verbose", action="store_true",
+                    help="display all logging output")
+    parser.add_option('-q', '--quiet', action="store_true",
+                    help="display only errors")
+    parser.add_option("-i", "--interactive", action="store_true",
+                    help="enable prompting")
+    parser.add_option("--pavement-file", metavar="FILE",
+                    help="read tasks from FILE [%default]")
+    parser.set_defaults(pavement_file=environment.pavement_file)
+
+    parser.disable_interspersed_args()
+    options, args = parser.parse_args(args)
+    for key, value in vars(options).items():
+        setattr(environment, key, value)
+        
+    return args
+
 def _parse_command_line(args):
     task, args = _preparse(args)
     
     if not task:
-        # this is where global options should be dealt with
-        parser = optparse.OptionParser(usage="""Usage: %prog [global options] taskname [task options] [taskname [taskoptions]]""")
-        parser.add_option('-n', '--dry-run', action='store_true',
-                        help="don't actually do anything")
-        parser.add_option('-v', "--verbose", action="store_true",
-                        help="display all logging output")
-        parser.add_option('-q', '--quiet', action="store_true",
-                        help="display only errors")
-        parser.add_option("-i", "--interactive", action="store_true",
-                        help="enable prompting")
-        parser.disable_interspersed_args()
-        options, args = parser.parse_args(args)
-        for key, value in vars(options).items():
-            setattr(environment, key, value)
+        args = _parse_global_options(args)
         if not args:
             return None, []
         
@@ -377,10 +401,12 @@ def _parse_command_line(args):
         
     if not task:
         raise BuildFailure("Unknown task: %s" % taskname)
+        
     args = task.parse_args(args)
     if task.consume_args:
         environment.options.args = args
         args = []
+
     return task, args
 
 @task
@@ -406,12 +432,15 @@ def main(args=None):
         else:
             args = []
     environment = Environment()
+
+    # need to parse args to recover pavement-file to read before executing
+    args = _parse_global_options(args)
+
     mod = types.ModuleType("pavement")
     try:
-        execfile("pavement.py", mod.__dict__)
+        execfile(environment.pavement_file, mod.__dict__)
         environment.pavement = mod
         _process_commands(args)
     except PavementError, e:
         print "\n\n*** Problem with pavement:\n%s\n%s\n\n" % (
-                    os.path.abspath('pavement.py'), e)
-        
+                    os.path.abspath(environment.pavement_file), e)

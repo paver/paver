@@ -327,6 +327,15 @@ def test_all_messages_for_a_task_are_captured():
     tasks._process_commands(['t1'])
     assert "This is debug msg" in "\n".join(env.patch_captured)
     
+def test_alternate_pavement_option():
+    env = _set_environment()
+    tasks._parse_global_options([])
+    assert env.pavement_file == 'pavement.py'
+
+    env = _set_environment()
+    tasks._parse_global_options(['--pavement-file=foo.py'])
+    assert env.pavement_file == 'foo.py'
+
 def test_captured_output_shows_up_on_exception():
     @tasks.task
     def t1(debug, error):
