@@ -3,8 +3,8 @@
 Paver Changelog
 ===============
 
-1.0a1 (unreleased)
-----------------
+1.0b1 (unreleased)
+------------------
 * COMPATIBILITY BREAK: paver.misctasks is no longer imported by default, even when using paver.easy
 * DEPRECATIONS: paver.runtime and paver.defaults have been deprecated. Watch the
   warnings for info on how to change to the new paver.easy module.
@@ -12,6 +12,10 @@ Paver Changelog
   BuildFailure exception if the return code of the process is non-zero.
   Passing ignore_error=True will switch back to the previous behavior.
   Thanks to Marc Sibson.
+* There is a new call_pavement function (automatically imported with
+  from paver.easy import *) that can call another pavement file. The
+  new pavement gets its own environment/options but runs in the same
+  process.
 * You can now specify an alternate file to run rather than "pavement.py" using
   the -f or --file global option. Thanks to Marc Sibson.
 * Regardless of logging level, output for a task is captured. If there is a BuildFailure,

@@ -1,9 +1,13 @@
+import os
 from pprint import pprint
 
 from paver import command, setuputils, misctasks, tasks, options
 
 from paver.tests.mock import Mock
 from paver.tests.utils import _set_environment
+
+OP_T1_CALLED = 0
+subpavement = os.path.join(os.path.dirname(__file__), "other_pavement.py")
 
 def test_basic_dependencies():
     @tasks.task
@@ -352,4 +356,18 @@ def test_captured_output_shows_up_on_exception():
     env = _set_environment(t1=t1, patch_print=True)
     tasks._process_commands(['t1'])
     assert "Dividing by zero!" in "\n".join(env.patch_captured)
+    
+def test_calling_subpavement():
+    @tasks.task
+    def private_t1(options):
+        options.foo = 2
+        tasks.call_pavement(subpavement, "t1")
+        # our options should not be mangled
+        assert options.foo == 2
+    
+    env = _set_environment(private_t1=private_t1)
+    tasks._process_commands(['private_t1'])
+    # the value should be set by the other pavement, which runs
+    # in the same process
+    assert OP_T1_CALLED == 1
     

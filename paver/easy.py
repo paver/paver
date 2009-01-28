@@ -85,6 +85,7 @@ class _SimpleProxy(object):
 environment = _SimpleProxy(tasks, "environment")
 options = _SimpleProxy(environment, "options")
 
+call_pavement = tasks.call_pavement
 task = tasks.task
 needs = tasks.needs
 cmdopts = tasks.cmdopts

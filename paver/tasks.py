@@ -6,8 +6,9 @@ import inspect
 import itertools
 import traceback
 
-VERSION = "1.0a0"
+VERSION = "1.0b1"
 
+environment_stack = []
 environment = None
 
 class PavementError(Exception):
@@ -406,14 +407,18 @@ def _parse_command_line(args):
         
     args = task.parse_args(args)
     if task.consume_args:
-        environment.options.args = args
+        try:
+            environment.options.args = args
+        except AttributeError:
+            pass
+        environment.args = args
         args = []
 
     return task, args
 
 @task
 @consume_args
-def help():
+def help(args):
     task_list = environment.get_tasks()
     for task in task_list:
         print task.name
@@ -424,6 +429,26 @@ def _process_commands(args):
         if task is None:
             break
         task()
+
+def call_pavement(new_pavement, args):
+    if isinstance(args, basestring):
+        args = args.split()
+    global environment
+    environment_stack.append(environment)
+    environment = Environment()
+    environment.pavement_file = new_pavement
+    _launch_pavement(args)
+    environment = environment_stack.pop()
+
+def _launch_pavement(args):
+    mod = types.ModuleType("pavement")
+    try:
+        execfile(environment.pavement_file, mod.__dict__)
+        environment.pavement = mod
+        _process_commands(args)
+    except PavementError, e:
+        print "\n\n*** Problem with pavement:\n%s\n%s\n\n" % (
+                    os.path.abspath(environment.pavement_file), e)
 
 def main(args=None):
     print "Paver %s" % VERSION
@@ -437,12 +462,5 @@ def main(args=None):
 
     # need to parse args to recover pavement-file to read before executing
     args = _parse_global_options(args)
-
-    mod = types.ModuleType("pavement")
-    try:
-        execfile(environment.pavement_file, mod.__dict__)
-        environment.pavement = mod
-        _process_commands(args)
-    except PavementError, e:
-        print "\n\n*** Problem with pavement:\n%s\n%s\n\n" % (
-                    os.path.abspath(environment.pavement_file), e)
+    _launch_pavement(args)
+    
