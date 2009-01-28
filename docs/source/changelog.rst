@@ -24,8 +24,6 @@ Paver Changelog
   in a file. The distutils ties have been reduced.
 * @needs now accepts a list of requirements in the form @needs('task1', 'task2')
   (passing in a list still works as well)
-* Bundles (temporarily) PoachEggs and adds tasks for paver.virtual to support
-  using PoachEggs to manage your eggs.
 * Added paver.bzr (support for Bazaar-NG related operations), courtesy of
   Bryan Forbes.
 * The error() function is now exported, for logging of errors (thanks to Marc Sibson)

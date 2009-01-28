@@ -21,14 +21,6 @@ Python's distutils_ makes it easy indeed to create a distributable
 package. We create a setup.py file that looks like this::
 
   #<== include('started/oldway/setup.py')==>
-  from distutils.core import setup
-
-  setup(
-      name="TheOldWay",
-      packages=['oldway'],
-      version="1.0",
-      author="Kevin Dangoor"
-  )
   #<==end==>
   
 With that simple setup script, you can run::
@@ -42,8 +34,6 @@ to build a source distribution::
   #    insert_output=False)
   # sh('ls -l docs/samples/started/oldway/dist')
   # ==>
-  total 8
-  -rw-r--r--  1 admin  staff  787 Jan 28 15:28 TheOldWay-1.0.tar.gz
   # <==end==>
 
 Then your users can run the familiar::
@@ -72,11 +62,6 @@ HTML files in a docs directory in the package for presenting help to
 the users. We end up creating a shell script to do this::
 
   # <== include("started/oldway/builddocs.sh")==>
-  cd docs
-  make html
-  cd ..
-  rm -rf oldway/docs
-  mv docs/_build/html oldway/docs
   # <==end==>
 
 Of course, creating a script like this means that we have to actually
@@ -115,12 +100,6 @@ a project to use Paver is really, really simple. Recall the setup
 function from our Old Way setup.py::
 
   # <== include("started/oldway/setup.py", "setup")==>
-  setup(
-      name="TheOldWay",
-      packages=['oldway'],
-      version="1.0",
-      author="Kevin Dangoor"
-  )
   # <==end==>
 
 Getting Started with Paver
@@ -141,14 +120,6 @@ for distutils operations are stored in a ``setup`` section of the
 options. Here's what the conversion looks like::
 
   # <== include('started/newway/pavement.py', 'setup')==>
-  options(
-      setup=Bunch(
-          name="TheNewWay",
-          packages=['newway'],
-          version="1.0",
-          author="Kevin Dangoor"
-      )
-  )
   # <==end==>
 
 Notice how the actual options haven't changed a bit. setup is declared
@@ -164,9 +135,6 @@ setuptools. Paver uses and builds on distutils and setuptools.
 Want proof? How about looking at the output of ``paver help setup``::
 
   # <== sh('cd docs/samples/started/newway; paver help setup')==>
-  Paver 1.0a1
-  ---> paver.tasks.help
-  Task not found: setup
   # <==end==>
 
 This output is the same as the output you get from
@@ -179,8 +147,6 @@ equivalent output file::
   #    insert_output=False)
   # sh('ls -l docs/samples/started/newway/dist')
   # ==>
-  total 8
-  -rw-r--r--  1 admin  staff  1035 Jan 28 15:29 TheNewWay-1.0.tar.gz
   # <==end==>
 
 It also means that users of The New Way can also run ``paver install``
@@ -217,7 +183,6 @@ Worried about bloating your package? The paver-minilib is not large::
   #    insert_output=False)
   # sh('ls -l docs/samples/started/newway/paver-minilib.zip')
   # ==>
-  -rw-r--r--@ 1 admin  staff  25957 Jan 28 15:29 docs/samples/started/newway/paver-minilib.zip
   # <==end==>
 
 Paver itself is bootstrapped with a generated setup file and a
@@ -239,11 +204,6 @@ commands. All we need to do is create a new sdist task in our
 pavement.py::
 
   # <== include('started/newway/pavement.py', 'sdist')==>
-  @task
-  @needs(['generate_setup', 'minilib', 'setuptools.command.sdist'])
-  def sdist():
-      """Overrides sdist to make sure that our setup.py is generated."""
-      pass
   # <==end==>
 
 The @task decorator just tells Paver that this is a task and not just
@@ -275,35 +235,12 @@ the import will make the doctools-related tasks available.
 ``paver help html`` will tell us how to use the html command::
 
   # <== sh('paver help paver.doctools.html')==>
-  Paver 1.0a1
-  ---> paver.tasks.help
-
-  paver.doctools.html
-  -------------------
-
-  Build HTML documentation using Sphinx. This uses the following
-          options in a "sphinx" section of the options.
-          
-          docroot
-            the root under which Sphinx will be working. Default: docs
-          builddir
-            directory under the docroot where the resulting files are put.
-            default: build
-          sourcedir
-            directory under the docroot for the source files
-            default: (empty string)
-          
   # <==end==>
 
 According to that, we'll need to set the builddir setting, since we're
 using a builddir called "_build". Let's add this to our pavement.py::
 
   # <== include('started/newway/pavement.py', 'sphinx')==>
-  options(
-      sphinx=Bunch(
-          builddir="_build"
-      )
-  )
   # <==end==>
 
 And with that, ``paver html`` is now equivalent to ``make html`` using
@@ -316,11 +253,6 @@ You may remember that shell script we had for moving our generated
 docs to the right place::
 
   # <== include('started/oldway/builddocs.sh')==>
-  cd docs
-  make html
-  cd ..
-  rm -rf oldway/docs
-  mv docs/_build/html oldway/docs
   # <==end==>
 
 Ideally, we'd want this to happen whenever we generate the docs.
@@ -328,14 +260,6 @@ We've already seen how to override tasks, so let's try that out
 here::
 
   # <== include('started/newway/pavement.py', 'html')==>
-  @task
-  @needs('paver.doctools.html')
-  def html(options):
-      """Build the docs and put them into our package."""
-      destdir = path('newway/docs')
-      destdir.rmtree()
-      builtdocs = path("docs") / options.builddir / "html"
-      builtdocs.move(destdir)
   # <==end==>
 
 There are a handful of interesting things in here. The equivalent of
@@ -351,7 +275,6 @@ new generated files into that spot. Next, we look at the built
 docs directory that we'll be moving::
 
   # <== include('started/newway/pavement.py', 'html.builtdocs')==>
-  builtdocs = path("docs") / options.builddir / "html"
   # <==end==>
 
 One cool thing about path objects is that you can use the natural
@@ -392,16 +315,6 @@ two part strategy to solve this problem. Let's look at part of the index.rst
 document file to see the first part::
 
   # <== include("started/newway/docs/index.rst", "mainpart")==>
-  Welcome to The New Way's documentation!
-  =======================================
-
-  This is the Paver way of doing things. The key functionality here
-  is in this powerful piece of code, which I will `include` here in its entirety
-  so that you can bask in its power::
-
-    # [[[cog include("newway/thecode.py", "code")]]]
-    # [[[end]]]
-
   # <==end==>
 
 In The New Way's index.rst, you can see the same mechanism being used that
@@ -423,13 +336,6 @@ up the 'code' section of the newway/thecode.py file. Let's take a look
 at that file::
 
   # <== sh("cat docs/samples/started/newway/newway/thecode.py") ==>
-  """This is our powerful, code-filled, new-fangled module."""
-
-  # [[[section code]]]
-  def powerful_function_and_new_too():
-      """This is powerful stuff, and it's new."""
-      return 2*1
-  # [[[endsection]]]
   # <==end==>
 
 Paver has a Cog-like syntax for defining named sections. So, you just
@@ -453,28 +359,12 @@ I only have one server. First, we'll set up some variables to use for
 our deploy task::
 
   # <== include('started/newway/pavement.py', 'deployoptions')==>
-  options(
-      deploy = Bunch(
-          htmldir = path('newway/docs'),
-          hosts = ['host1.hostymost.com', 'host2.hostymost.com'],
-          hostpath = 'sites/newway'
-      )
-  )
   # <==end==>
 
 As you can see, we can put whatever kinds of objects we wish into
 the options. Now for the deploy task itself::
 
   # <== include("started/newway/pavement.py", "deploy")==>
-  @task
-  @cmdopts([
-      ('username=', 'u', 'Username to use when logging in to the servers')
-  ])
-  def deploy(options):
-      """Deploy the HTML to the server."""
-      for host in options.hosts:
-          sh("rsync -avz -e ssh %s/ %s@%s:%s/" % (options.htmldir,
-              options.username, host, options.hostpath))
   # <==end==>
 
 You'll notice the new "cmdopts" decorator. Let's say that you have
@@ -493,10 +383,6 @@ for each host. Let's do a dry run providing a username to see
 what the commands will be::
 
   # <== sh("cd docs/samples/started/newway; paver -n deploy -u kevin")==>
-  Paver 1.0a1
-  ---> pavement.deploy
-  rsync -avz -e ssh newway/docs/ kevin@host1.hostymost.com:sites/newway/
-  rsync -avz -e ssh newway/docs/ kevin@host2.hostymost.com:sites/newway/
   # <==end==>
 
 Where to go from here
