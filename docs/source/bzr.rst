@@ -1,4 +1,4 @@
-.. _svn:
+.. _bzr:
 
 Using with Bazaar-NG (bzr)
 ==========================

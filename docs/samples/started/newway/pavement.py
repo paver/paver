@@ -34,6 +34,14 @@ options(
 )
 # [[[endsection]]]
 
+# [[[section minilib]]]
+options(
+    minilib = Bunch(
+        extra_files=["doctools"]
+    )
+)
+# [[[endsection]]]
+
 # [[[section sdist]]]
 @task
 @needs(['generate_setup', 'minilib', 'setuptools.command.sdist'])
@@ -45,7 +53,7 @@ def sdist():
 # [[[section html]]]
 @task
 @needs('paver.doctools.html')
-def html():
+def html(options):
     """Build the docs and put them into our package."""
     destdir = path('newway/docs')
     destdir.rmtree()
@@ -60,7 +68,7 @@ def html():
 @cmdopts([
     ('username=', 'u', 'Username to use when logging in to the servers')
 ])
-def deploy():
+def deploy(options):
     """Deploy the HTML to the server."""
     for host in options.hosts:
         sh("rsync -avz -e ssh %s/ %s@%s:%s/" % (options.htmldir,

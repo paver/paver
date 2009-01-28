@@ -89,7 +89,9 @@ def minilib(options):
     
     extra_files
         list of other paver modules to include (don't include the .py 
-        extension)
+        extension). By default, the following modules are included:
+        defaults, path, release, setuputils, misctasks, options,
+        tasks, easy
     """
     import paver
     paverdir = path(paver.__file__).dirname()

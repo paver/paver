@@ -2,7 +2,7 @@
 
 This module does not include any tasks, only functions."""
 
-from paver.runtime import Bunch
+from paver.options import Bunch
 from bzrlib.builtins import cmd_branch, cmd_checkout, cmd_update, cmd_pull, cmd_version_info
 from StringIO import StringIO
 import sys

@@ -13,7 +13,7 @@ Paver Changelog
   Passing ignore_error=True will switch back to the previous behavior.
   Thanks to Marc Sibson.
 * There is a new call_pavement function (automatically imported with
-  from paver.easy import *) that can call another pavement file. The
+  from paver.easy import \*) that can call another pavement file. The
   new pavement gets its own environment/options but runs in the same
   process.
 * You can now specify an alternate file to run rather than "pavement.py" using

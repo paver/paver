@@ -6,7 +6,7 @@ import inspect
 import itertools
 import traceback
 
-VERSION = "1.0b1"
+VERSION = "1.0a1"
 
 environment_stack = []
 environment = None
@@ -463,6 +463,19 @@ def _group_by_module(items):
 @consume_args
 def help(args):
     """This help display."""
+    if args:
+        task_name = args[0]
+        task = environment.get_task(task_name)
+        if not task:
+            print "Task not found: %s" % (task_name)
+            return
+        
+        print "\n%s" % task_name
+        print "-" * (len(task_name))
+        print
+        print task.__doc__
+        return
+        
     task_list = environment.get_tasks()
     task_list = sorted(task_list, cmp=_cmp_task_names)
     maxlen, task_list = _group_by_module(task_list)
