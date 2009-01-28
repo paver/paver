@@ -96,7 +96,7 @@ class Environment(object):
         # delegate to task finders next
         if not task:
             for finder in self.task_finders:
-                task = finder(taskname)
+                task = finder.get_task(taskname)
                 if task:
                     break
 
@@ -184,6 +184,8 @@ Captured Task Output:
                 if isinstance(item, types.ModuleType) and item not in modules:
                     scan_module(item)
         scan_module(self.pavement)
+        for finder in self.task_finders:
+            result.update(finder.get_tasks())
         self._all_tasks = result
         return result
     
@@ -205,6 +207,7 @@ def _import_task(taskname):
 class Task(object):
     called = False
     consume_args = False
+    __doc__ = ""
     
     def __init__(self, func):
         self.func = func
@@ -283,6 +286,18 @@ by another task in the dependency chain.""" % (self, option, task))
             if value is not None:
                 optholder[option_name] = getattr(options, option_name)
         return args
+        
+    @property
+    def description(self):
+        doc = self.__doc__
+        if doc:
+            period = doc.find(".")
+            if period > -1:
+                doc = doc[0:period]
+        else:
+            doc = ""
+        return doc
+
 
 def task(func):
     """Specifies that this function is a task.
@@ -416,12 +431,46 @@ def _parse_command_line(args):
 
     return task, args
 
+def _cmp_task_names(a, b):
+    a = a.name
+    b = b.name
+    a_in_pavement = a.startswith("pavement.")
+    b_in_pavement = b.startswith("pavement.")
+    if a_in_pavement and not b_in_pavement:
+        return 1
+    if b_in_pavement and not a_in_pavement:
+        return -1
+    return cmp(a, b)
+    
+def _group_by_module(items):
+    groups = []
+    current_group_name = None
+    current_group = None
+    maxlen = 5
+    for item in items:
+        name = item.name
+        dotpos = name.rfind(".")
+        group_name = name[:dotpos]
+        maxlen = max(len(item.shortname), maxlen)
+        if current_group_name != group_name:
+            current_group = []
+            current_group_name = group_name
+            groups.append([group_name, current_group])
+        current_group.append(item)
+    return maxlen, groups
+
 @task
 @consume_args
 def help(args):
+    """This help display."""
     task_list = environment.get_tasks()
-    for task in task_list:
-        print task.name
+    task_list = sorted(task_list, cmp=_cmp_task_names)
+    maxlen, task_list = _group_by_module(task_list)
+    fmt = "  %-" + str(maxlen) + "s - %s"
+    for group_name, group in task_list:
+        print "\nTasks from %s:" % (group_name)
+        for task in group:
+            print(fmt % (task.shortname, task.description))
 
 def _process_commands(args):
     while True:

@@ -117,7 +117,10 @@ def find_package_data(
 
 class DistutilsTask(tasks.Task):
     def __init__(self, distribution, command_name, command_class):
-        self.name = command_name
+        name_sections = str(command_class).split(".")
+        if name_sections[-2] == name_sections[-1]:
+            del name_sections[-2]
+        self.name = ".".join(name_sections)
         self.__name__ = self.name
         self.distribution = distribution
         self.command_name = command_name
@@ -133,6 +136,10 @@ class DistutilsTask(tasks.Task):
         for (name, value) in options.items():
             opt_dict[name] = ("command line", value)
         self.distribution.run_command(self.command_name)
+        
+    @property
+    def description(self):
+        return self.command_class.description
         
 def _get_shortname(taskname):
     dotindex = taskname.rfind(".")
@@ -154,7 +161,19 @@ class DistutilsTaskFinder(object):
         
     def get_tasks(self):
         dist = _get_distribution()
-        dist._update_command_list()
+        if has_setuptools:
+            for ep in pkg_resources.iter_entry_points('distutils.commands'):
+                try:
+                    cmdclass = ep.load(False) # don't require extras, we're not running
+                    dist.cmdclass[ep.name] = cmdclass
+                except:
+                    # on the Mac, at least, installing from the tarball
+                    # via zc.buildout fails due to a problem in the
+                    # py2app command
+                    tasks.environment.info("Could not load entry point: %s", ep)
+        dist.get_command_list()
+        return set(DistutilsTask(dist, key, value) 
+            for key, value in dist.cmdclass.items())
 
 def _get_distribution():
     try:
@@ -166,7 +185,7 @@ def _get_distribution():
         return dist
 
 def install_distutils_tasks():
-    tasks.environment.task_finders.append(DistutilsTaskFinder().get_task)
+    tasks.environment.task_finders.append(DistutilsTaskFinder())
 
 if has_setuptools:
     __ALL__.extend(["find_packages"])

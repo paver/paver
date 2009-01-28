@@ -370,4 +370,26 @@ def test_calling_subpavement():
     # the value should be set by the other pavement, which runs
     # in the same process
     assert OP_T1_CALLED == 1
+
+class MyTaskFinder(object):
+    def get_task(self, name):
+        if name == "foo":
+            return self.foo
+        return None
+        
+    def get_tasks(self):
+        return set([self.foo])
+    
+    @tasks.task
+    def foo(self):
+        self.foo_called = True
+    
+def test_task_finders():
+    env = _set_environment()
+    mtf = MyTaskFinder()
+    env.task_finders.append(mtf)
+    t = env.get_task("foo")
+    assert t == mtf.foo
+    all_tasks = env.get_tasks()
+    assert mtf.foo in all_tasks
     
