@@ -3,8 +3,8 @@
 Paver Changelog
 ===============
 
-1.0b1 (unreleased)
-------------------
+1.0a1 (January 28, 2009)
+------------------------
 * COMPATIBILITY BREAK: paver.misctasks is no longer imported by default, even when using paver.easy
 * DEPRECATIONS: paver.runtime and paver.defaults have been deprecated. Watch the
   warnings for info on how to change to the new paver.easy module.
