@@ -7,6 +7,9 @@ Paver Changelog
 ------------------
 * If you provide an invalid long task name, you will no longer get an 
   AttributeError. Thanks to Marc Sibson.
+* If a task has an uncaught exception, the debug-level output is displayed
+  *and* Paver will exit with a return code of 1. No further tasks are
+  executed. Thanks to Marc Sibson.
 * The version number is no longer displayed, so that you can reasonably 
   pipe the output elsewhere. A new --version option will display the version
   as before.

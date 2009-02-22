@@ -4,7 +4,7 @@ from pprint import pprint
 from paver import command, setuputils, misctasks, tasks, options
 
 from paver.tests.mock import Mock
-from paver.tests.utils import _set_environment
+from paver.tests.utils import _set_environment, FakeExitException
 
 OP_T1_CALLED = 0
 subpavement = os.path.join(os.path.dirname(__file__), "other_pavement.py")
@@ -340,8 +340,11 @@ def test_all_messages_for_a_task_are_captured():
         raise tasks.BuildFailure("Yo, problem, yo")
     
     env = _set_environment(t1=t1, patch_print=True)
-    tasks._process_commands(['t1'])
-    assert "This is debug msg" in "\n".join(env.patch_captured)
+    try:
+        tasks._process_commands(['t1'])
+    except FakeExitException:
+        assert "This is debug msg" in "\n".join(env.patch_captured)
+        assert env.exit_code == 1
     
 def test_alternate_pavement_option():
     env = _set_environment()
@@ -365,9 +368,13 @@ def test_captured_output_shows_up_on_exception():
         debug("Dividing by zero!")
         1/0
     
-    env = _set_environment(t1=t1, patch_print=True)
-    tasks._process_commands(['t1'])
-    assert "Dividing by zero!" in "\n".join(env.patch_captured)
+    env = _set_environment(t1=t1, patch_print=True, patch_exit=1)
+    try:
+        tasks._process_commands(['t1'])
+        assert False and "Expecting FakeExitException"
+    except FakeExitException:
+        assert "Dividing by zero!" in "\n".join(env.patch_captured)
+        assert env.exit_code == 1
     
 def test_calling_subpavement():
     @tasks.task

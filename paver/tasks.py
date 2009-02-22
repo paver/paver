@@ -64,6 +64,9 @@ class Environment(object):
     def _print(self, output):
         print output
     
+    def _exit(self, code):
+        sys.exit(1)
+
     def _set_dry_run(self, dr):
         self._dry_run = dr
         try:
@@ -167,6 +170,7 @@ Captured Task Output:
                     self._print(traceback.format_exc())
             self._task_in_progress = None
             self._task_output = None
+            self._exit(1)
         else:
             return do_task()
     
