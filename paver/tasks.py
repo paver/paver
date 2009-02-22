@@ -6,7 +6,7 @@ import inspect
 import itertools
 import traceback
 
-VERSION = "1.0a1"
+VERSION = "1.0a2"
 
 environment_stack = []
 environment = None
@@ -397,10 +397,14 @@ def _parse_global_options(args):
                     help="enable prompting")
     parser.add_option("-f", "--file", metavar="FILE",
                     help="read tasks from FILE [%default]")
+    parser.add_option("--version", action="store_true",
+                    help="display Paver version number")
     parser.set_defaults(file=environment.pavement_file)
 
     parser.disable_interspersed_args()
     options, args = parser.parse_args(args)
+    if options.version:
+        print "Paver %s" % VERSION
     for key, value in vars(options).items():
         setattr(environment, key, value)
         
@@ -513,7 +517,6 @@ def _launch_pavement(args):
                     os.path.abspath(environment.pavement_file), e)
 
 def main(args=None):
-    print "Paver %s" % VERSION
     global environment
     if args is None:
         if len(sys.argv) > 1:

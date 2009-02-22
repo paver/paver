@@ -5,7 +5,11 @@ Paver Changelog
 
 1.0a2 (unreleased)
 ------------------
-* If you provide an invalid long task name, you will no longer get an AttributeError. Thanks to Marc Sibson.
+* If you provide an invalid long task name, you will no longer get an 
+  AttributeError. Thanks to Marc Sibson.
+* The version number is no longer displayed, so that you can reasonably 
+  pipe the output elsewhere. A new --version option will display the version
+  as before.
 
 1.0a1 (January 28, 2009)
 ------------------------
