@@ -3,8 +3,15 @@
 Paver Changelog
 ===============
 
+1.0a2 (unreleased)
+------------------
+* If you provide an invalid long task name, you will no longer get an AttributeError. Thanks to Marc Sibson.
+
 1.0a1 (January 28, 2009)
 ------------------------
+(note: 1.0a1 was recalled because it was unable to properly handle distutils command
+line options.)
+
 * COMPATIBILITY BREAK: paver.misctasks is no longer imported by default, even when using paver.easy
 * DEPRECATIONS: paver.runtime and paver.defaults have been deprecated. Watch the
   warnings for info on how to change to the new paver.easy module.

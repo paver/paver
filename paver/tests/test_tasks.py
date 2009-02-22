@@ -192,7 +192,19 @@ def test_shortname_access():
     environment = _set_environment(tasks=tasks)
     task = environment.get_task("help")
     assert task is not None
-    
+
+
+def test_longname_access():
+    environment = _set_environment(tasks=tasks)
+    task = environment.get_task("paver.tasks.help")
+    assert task is not None
+
+    task = environment.get_task("nosuchmodule.nosuchtask")
+    assert task is None
+
+    task = environment.get_task("paver.tasks.nosuchtask")
+    assert task is None
+
 
 def test_task_command_line_options():
     @tasks.task

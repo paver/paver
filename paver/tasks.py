@@ -202,7 +202,7 @@ def _import_task(taskname):
         module = __import__(full_mod_name, fromlist=[mod_name])
     except ImportError:
         return None
-    return getattr(module, func_name)
+    return getattr(module, func_name, None)
 
 class Task(object):
     called = False
