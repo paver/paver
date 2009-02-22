@@ -13,6 +13,8 @@ Paver Changelog
 * The version number is no longer displayed, so that you can reasonably 
   pipe the output elsewhere. A new --version option will display the version
   as before.
+* Eliminate DeprecationWarnings in paver.ssh and paver.svn. Thanks to Marc
+  Sibson.
 
 1.0a1 (January 28, 2009)
 ------------------------

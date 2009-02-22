@@ -5,7 +5,7 @@ This module does not include any tasks, only functions.
 At this point, these functions do not use any kind of library. They require
 the svn binary on the path."""
 
-from paver.runtime import sh, Bunch, path
+from paver.easy import sh, Bunch, path
 
 def _format_revision(revision):
     if revision:
