@@ -5,6 +5,8 @@ Paver Changelog
 
 1.0a2 (unreleased)
 ------------------
+* The bug that caused 1.0a1 to be recalled (distutils command options)
+  has been fixed thanks to Greg Thornton.
 * If you provide an invalid long task name, you will no longer get an 
   AttributeError. Thanks to Marc Sibson.
 * If a task has an uncaught exception, the debug-level output is displayed

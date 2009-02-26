@@ -259,11 +259,11 @@ class Task(object):
                     try:
                         if option[1] is None:
                             parser.add_option("--" + longname, action=action, 
-                                              dest=longname)
+                                              dest=longname.replace('-', '_'))
                         else:
                             parser.add_option("-" + option[1], 
                                               "--" + longname, action=action, 
-                                              dest=longname)
+                                              dest=longname.replace('-', '_'))
                     except optparse.OptionConflictError:
                         raise PavementError("""In setting command options for %r, 
 option %s for %r is already in use
@@ -281,6 +281,7 @@ by another task in the dependency chain.""" % (self, option, task))
                                                    paver.options.Bunch())
         options, args = self.parser.parse_args(args)
         for task_name, option_name in self.option_names:
+            option_name = option_name.replace('-', '_')
             try:
                 optholder = environment.options[task_name]
             except KeyError:

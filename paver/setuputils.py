@@ -13,6 +13,9 @@ except ImportError:
 from distutils.errors import DistutilsModuleError
 _Distribution = dist.Distribution
 
+from distutils import debug
+debug.DEBUG = True
+
 try:
     import setuptools
     import pkg_resources
@@ -134,7 +137,7 @@ class DistutilsTask(tasks.Task):
         options = tasks.environment.options[self.shortname]
         opt_dict = self.distribution.get_option_dict(self.command_name)
         for (name, value) in options.items():
-            opt_dict[name] = ("command line", value)
+            opt_dict[name.replace('-', '_')] = ("command line", value)
         self.distribution.run_command(self.command_name)
         
     @property
