@@ -5,3 +5,4 @@ recursive-include paver/docs *
 include paver-minilib.zip
 include setup.py
 recursive-include paver/tests *
+include pavement.py
