@@ -11,55 +11,56 @@ try:
 except ImportError:
     has_sphinx = False
 
-if has_sphinx:
-    def _get_paths():
-        """look up the options that determine where all of the files are."""
-        opts = options
-        docroot = path(opts.get('docroot', 'docs'))
-        if not docroot.exists():
-            raise BuildFailure("Sphinx documentation root (%s) does not exist."
-                               % docroot)
-        builddir = docroot / opts.get("builddir", ".build")
-        builddir.mkdir()
-        srcdir = docroot / opts.get("sourcedir", "")
-        if not srcdir.exists():
-            raise BuildFailure("Sphinx source file dir (%s) does not exist" 
-                                % srcdir)
-        htmldir = builddir / "html"
-        htmldir.mkdir()
-        doctrees = builddir / "doctrees"
-        doctrees.mkdir()
-        return Bunch(locals())
-    
-    @task
-    def html():
-        """Build HTML documentation using Sphinx. This uses the following
-        options in a "sphinx" section of the options.
-        
-        docroot
-          the root under which Sphinx will be working. Default: docs
-        builddir
-          directory under the docroot where the resulting files are put.
-          default: build
-        sourcedir
-          directory under the docroot for the source files
-          default: (empty string)
-        """
-        options.order('sphinx', add_rest=True)
-        paths = _get_paths()
-        sphinxopts = ['', '-b', 'html', '-d', paths.doctrees, 
-            paths.srcdir, paths.htmldir]
-        dry("sphinx-build %s" % (" ".join(sphinxopts),), sphinx.main, sphinxopts)
-    
-    @task
-    def doc_clean():
-        """Clean (delete) the built docs. Specifically, this deletes the
-        build directory under the docroot. See the html task for the
-        options list."""
-        options.order('sphinx', add_rest=True)
-        paths = _get_paths()
-        paths.builddir.rmtree()
-        paths.builddir.mkdir()
+def _get_paths():
+    """look up the options that determine where all of the files are."""
+    opts = options
+    docroot = path(opts.get('docroot', 'docs'))
+    if not docroot.exists():
+        raise BuildFailure("Sphinx documentation root (%s) does not exist."
+                           % docroot)
+    builddir = docroot / opts.get("builddir", ".build")
+    builddir.mkdir()
+    srcdir = docroot / opts.get("sourcedir", "")
+    if not srcdir.exists():
+        raise BuildFailure("Sphinx source file dir (%s) does not exist" 
+                            % srcdir)
+    htmldir = builddir / "html"
+    htmldir.mkdir()
+    doctrees = builddir / "doctrees"
+    doctrees.mkdir()
+    return Bunch(locals())
+
+@task
+def html():
+    """Build HTML documentation using Sphinx. This uses the following
+    options in a "sphinx" section of the options.
+
+    docroot
+      the root under which Sphinx will be working. Default: docs
+    builddir
+      directory under the docroot where the resulting files are put.
+      default: build
+    sourcedir
+      directory under the docroot for the source files
+      default: (empty string)
+    """
+    if not has_sphinx:
+        raise BuildFailure('install sphinx to build html docs')
+    options.order('sphinx', add_rest=True)
+    paths = _get_paths()
+    sphinxopts = ['', '-b', 'html', '-d', paths.doctrees, 
+        paths.srcdir, paths.htmldir]
+    dry("sphinx-build %s" % (" ".join(sphinxopts),), sphinx.main, sphinxopts)
+
+@task
+def doc_clean():
+    """Clean (delete) the built docs. Specifically, this deletes the
+    build directory under the docroot. See the html task for the
+    options list."""
+    options.order('sphinx', add_rest=True)
+    paths = _get_paths()
+    paths.builddir.rmtree()
+    paths.builddir.mkdir()
 
 _sectionmarker = re.compile(r'\[\[\[section\s+(.+)\]\]\]')
 _endmarker = re.compile(r'\[\[\[endsection\s*.*\]\]\]')

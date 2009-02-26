@@ -17,6 +17,12 @@ Paver Changelog
   as before.
 * Eliminate DeprecationWarnings in paver.ssh and paver.svn. Thanks to Marc
   Sibson.
+* The html task will always be defined now when you import paver.doctools
+  but will yield a BuildFailure if Sphinx is not installed. Hopefully this
+  will lead to clearer errors for people. Thanks to Marc Sibson.
+* The Getting Started Guide has been improved for 1.0. Additionally,
+  the "newway" sample now has a MANIFEST.in which provides useful knowledge
+  for people.
 
 1.0a1 (January 28, 2009)
 ------------------------
