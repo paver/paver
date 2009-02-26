@@ -109,8 +109,13 @@ setup.py is a standard Python script. It's just called setup.py
 as a convention. Paver works a bit more like Make or Rake.
 To use Paver, you run ``paver <taskname>`` and the paver
 command will look for a pavement.py file in the current directory.
-pavement.py is a standard Python module that is given a bunch of
-convenience functions and objects.
+pavement.py is a standard Python module. A typical pavement will 
+import from paver.easy to get a bunch of convenience functions
+and objects and then import other modules that include useful
+tasks::
+
+    # <== include('started/newway/pavement.py', 'imports')==>
+    # <==end==>
 
 Converting from setup.py to pavement.py is easy. Paver provides
 a special ``options`` object that holds all of your build options.
@@ -127,19 +132,36 @@ as a ``Bunch``. A ``Bunch`` is just a dictionary that also allows
 attribute-style access to the values. ``options.setup.name`` is
 a bit less typing and easier on the eyes than ``options['setup']['name']``.
 
-Paver `is` distutils
---------------------
+Paver is compatible with distutils
+----------------------------------
 
 Choosing to use Paver does not mean giving up on distutils or
-setuptools. Paver uses and builds on distutils and setuptools.
-Want proof? How about looking at the output of ``paver help setup``::
+setuptools. Paver lets you continue to use distutils and setuptools
+commands. When you import a module that has Paver tasks in it,
+those tasks automatically become available for running. If you
+want access to distutils and setuptools commands as well, you
+just add one line to your pavement::
 
-  # <== sh('cd docs/samples/started/newway; paver help setup')==>
+    # <== include('started/newway/pavement.py', 'install_distutils')==>
+    # <==end==>
+
+We can see this in action by looking at ``paver help ``::
+
+  # <== sh('cd docs/samples/started/newway; paver help')==>
   # <==end==>
 
-This output is the same as the output you get from
-``python setup.py --help-commands`` in a distutils-based project.
-That means, we can run ``paver sdist`` and end up with the
+That command is listing all of the available tasks, and you can see
+near the top there are tasks from distutils.command. All of the
+standard distutils commands are available.
+
+There's one more thing we need to do before our Python package
+is properly redistributable: tell distutils about our special files.
+We can do that with a simple MANIFEST.in::
+
+    # <== include('started/newway/MANIFEST.in')==>
+    # <==end==>
+
+With that, we can run ``paver sdist`` and end up with the
 equivalent output file::
 
   # <== 

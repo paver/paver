@@ -1,9 +1,13 @@
+# [[[section imports]]]
 from paver.easy import *
 import paver.doctools
 import paver.misctasks
 import paver.setuputils
+# [[[endsection]]]
 
+# [[[section install_distutils]]]
 paver.setuputils.install_distutils_tasks()
+# [[[endsection]]]
 
 # [[[section setup]]]
 options(
