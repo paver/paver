@@ -3,8 +3,8 @@
 Paver Changelog
 ===============
 
-1.0a2 (unreleased)
-------------------
+1.0a2 (February 26, 2009)
+-------------------------
 * The bug that caused 1.0a1 to be recalled (distutils command options)
   has been fixed thanks to Greg Thornton.
 * If you provide an invalid long task name, you will no longer get an 

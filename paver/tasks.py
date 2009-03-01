@@ -8,9 +8,6 @@ import traceback
 
 VERSION = "1.0a2"
 
-environment_stack = []
-environment = None
-
 class PavementError(Exception):
     """Exception that represents a problem in the pavement.py file
     rather than the process of running a build."""
@@ -193,6 +190,9 @@ Captured Task Output:
         self._all_tasks = result
         return result
     
+environment_stack = []
+environment = Environment()
+
 def _import_task(taskname):
     """Looks up a dotted task name and imports the module as necessary
     to get at the task."""
