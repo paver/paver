@@ -259,11 +259,13 @@ class Task(object):
                     try:
                         if option[1] is None:
                             parser.add_option("--" + longname, action=action, 
-                                              dest=longname.replace('-', '_'))
+                                              dest=longname.replace('-', '_'),
+                                              help=option[2])
                         else:
                             parser.add_option("-" + option[1], 
                                               "--" + longname, action=action, 
-                                              dest=longname.replace('-', '_'))
+                                              dest=longname.replace('-', '_'),
+                                              help=option[2])
                     except optparse.OptionConflictError:
                         raise PavementError("""In setting command options for %r, 
 option %s for %r is already in use
