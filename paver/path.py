@@ -16,7 +16,6 @@ This module requires Python 2.2 or later.
 
 This has been modified from the original to avoid dry run issues.
 """
-
 from paver.easy import dry
 
 
@@ -34,7 +33,7 @@ from paver.easy import dry
 import sys, warnings, os, fnmatch, glob, shutil, codecs, md5
 
 __version__ = '2.2'
-__all__ = ['path']
+__all__ = ['path', 'pushd']
 
 # Platform-specific support for path.owner
 if os.name == 'nt':

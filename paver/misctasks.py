@@ -1,7 +1,7 @@
 """Miscellaneous tasks that don't fit into one of the other groupings."""
 import os
 
-from paver.tasks import task
+from paver.easy import dry, path, task
 
 _docsdir = os.path.join(os.path.dirname(__file__), "docs")
 if os.path.exists(_docsdir):
@@ -50,6 +50,7 @@ def generate_setup():
     setup.py file will look in the directory that the user is running it
     in for a paver-minilib.zip and will add that to sys.path if available.
     Otherwise, it will just assume that paver is available."""
+    from paver.easy import dry
     def write_setup():
         setup = open("setup.py", "w")
         setup.write("""import os

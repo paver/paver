@@ -1,6 +1,6 @@
 import subprocess
+import sys
 
-import paver.misctasks
 from paver import tasks
 from paver.options import Bunch
 
@@ -92,4 +92,11 @@ needs = tasks.needs
 cmdopts = tasks.cmdopts
 BuildFailure = tasks.BuildFailure
 
-from paver.path import path
+# these are down here to avoid circular dependencies. Ideally, nothing would
+# be using paver.easy other than pavements.
+if sys.version_info > (2,5):
+    from paver.path25 import path, pushd
+else:
+    from paver.path import path
+
+import paver.misctasks

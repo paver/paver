@@ -25,6 +25,12 @@ Paver Changelog
 * paver can now again run tasks even when there is no pavement present.
   any task accessible via paver.easy (which now also includes misctasks)
   will work.
+* added the pushd context manager (Python 2.5+). This will switch into another
+  directory on the way in and then change back to the old directory on 
+  the way out. Suggested by Steve Howe, with the additional suggestion from
+  Juergen Hermann to return the old directory::
+      with pushd('newdirectory') as olddirectory:
+          ...do something...
 
 1.0a2 (February 26, 2009)
 -------------------------
