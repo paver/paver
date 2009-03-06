@@ -370,6 +370,7 @@ def consume_args(func):
 
 def _preparse(args):
     task = None
+    taskname = None
     while args:
         arg = args.pop(0)
         if '=' in arg:
@@ -384,11 +385,12 @@ line (%s) attempts to set an option.""" % (args))
             args.insert(0, arg)
             break
         else:
-            task = environment.get_task(arg)
+            taskname = arg
+            task = environment.get_task(taskname)
             if task is None:
-                raise BuildFailure("Unknown task: %s" % arg)
+                raise BuildFailure("Unknown task: %s" % taskname)
             break
-    return task, args
+    return task, taskname, args
 
 def _parse_global_options(args):
     # this is where global options should be dealt with
@@ -418,7 +420,7 @@ def _parse_global_options(args):
     return args
 
 def _parse_command_line(args):
-    task, args = _preparse(args)
+    task, taskname, args = _preparse(args)
     
     if not task:
         args = _parse_global_options(args)
@@ -428,8 +430,11 @@ def _parse_command_line(args):
         taskname = args.pop(0)
         task = environment.get_task(taskname)
         
-    if not task:
-        raise BuildFailure("Unknown task: %s" % taskname)
+        if not task:
+            raise BuildFailure("Unknown task: %s" % taskname)
+    
+    if not isinstance(task, Task):
+        raise BuildFailure("%s is not a Task" % taskname)
         
     args = task.parse_args(args)
     if task.consume_args:

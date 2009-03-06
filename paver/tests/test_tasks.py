@@ -1,7 +1,7 @@
 import os
 from pprint import pprint
 
-from paver import command, setuputils, misctasks, tasks, options
+from paver import setuputils, misctasks, tasks, options
 
 from paver.tests.mock import Mock
 from paver.tests.utils import _set_environment, FakeExitException
@@ -412,3 +412,13 @@ def test_task_finders():
     all_tasks = env.get_tasks()
     assert mtf.foo in all_tasks
     
+def test_calling_a_function_rather_than_task():
+    def foo():
+        pass
+        
+    env = _set_environment(foo=foo)
+    try:
+        tasks._process_commands(['foo'])
+        assert False, "Expected a BuildFailure when calling something that is not a task."
+    except tasks.BuildFailure:
+        pass
