@@ -519,6 +519,9 @@ def _launch_pavement(args):
     try:
         execfile(environment.pavement_file, mod.__dict__)
         environment.pavement = mod
+        auto_task = getattr(mod, 'auto', None)
+        if isinstance(auto_task, Task):
+            mod.auto()
         _process_commands(args)
     except PavementError, e:
         print "\n\n*** Problem with pavement:\n%s\n%s\n\n" % (

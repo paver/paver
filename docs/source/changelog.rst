@@ -5,6 +5,10 @@ Paver Changelog
 
 1.0a3 (March 6, 2009)
 ----------
+* Added automatic running of "auto" task. If there's a task with the name "auto",
+  it is run automatically. Using this mechanism, you can write code that sets up
+  the options any way you wish, and without using globals at all (because the
+  auto task can be given options as a parameter).
 * When generating egg_info running "paver", the full path to the Paver script
   was getting included in egg-info/SOURCES.txt. This causes installation problems
   on Windows, at the very least. Paver will now instead place the pavement
