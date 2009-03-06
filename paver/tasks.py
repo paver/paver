@@ -514,8 +514,14 @@ def call_pavement(new_pavement, args):
     global environment
     environment_stack.append(environment)
     environment = Environment()
-    environment.pavement_file = new_pavement
-    _launch_pavement(args)
+    cwd = os.getcwd()
+    dirname, basename = os.path.split(new_pavement)
+    environment.pavement_file = basename
+    try:
+        os.chdir(dirname)
+        _launch_pavement(args)
+    finally:
+        os.chdir(cwd)
     environment = environment_stack.pop()
 
 def _launch_pavement(args):

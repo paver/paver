@@ -18,6 +18,8 @@ Paver Changelog
 * pavements can now refer to __file__ to get their own filename. You can also
   just declare pavement_file as an argument to your task function, if
   you wish.
+* call_pavement now switches directories to the location of the pavement and
+  then switches back when returning
 * if you try to run a function as a task, you'll now get a more appropriate
   and descriptive BuildFailure, rather than an AttributeError
 
