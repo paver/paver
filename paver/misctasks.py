@@ -29,7 +29,7 @@ def minilib(options):
     """
     import paver
     paverdir = path(paver.__file__).dirname()
-    filelist = ['__init__', 'defaults', 'path', 'release',
+    filelist = ['__init__', 'defaults', 'path', 'path25', 'release',
                 'setuputils', "misctasks", "options", "tasks", "easy"]
     filelist.extend(options.get('extra_files', []))
     output_file = 'paver-minilib.zip'

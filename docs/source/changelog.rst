@@ -3,8 +3,14 @@
 Paver Changelog
 ===============
 
+1.0a4 (March 6, 2009)
+---------------------
+* call_pavement would raise an exception if the pavement being called is 
+  in the current directory
+* the new paver.path25 module was missing from the paver-minilib.zip
+
 1.0a3 (March 6, 2009)
-----------
+---------------------
 * Added automatic running of "auto" task. If there's a task with the name "auto",
   it is run automatically. Using this mechanism, you can write code that sets up
   the options any way you wish, and without using globals at all (because the

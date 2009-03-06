@@ -6,7 +6,7 @@ import inspect
 import itertools
 import traceback
 
-VERSION = "1.0a3"
+VERSION = "1.0a4"
 
 class PavementError(Exception):
     """Exception that represents a problem in the pavement.py file
@@ -518,7 +518,8 @@ def call_pavement(new_pavement, args):
     dirname, basename = os.path.split(new_pavement)
     environment.pavement_file = basename
     try:
-        os.chdir(dirname)
+        if dirname:
+            os.chdir(dirname)
         _launch_pavement(args)
     finally:
         os.chdir(cwd)
