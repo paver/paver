@@ -1,82 +1,16 @@
 """Miscellaneous tasks that don't fit into one of the other groupings."""
+import os
 
-from paver.easy import *
+from paver.tasks import task
 
-def _task_list(userdef_only):
-    """Pull together a string list of tasks for help command output.
-    The userdef_only parameter determines whether only tasks that
-    were defined by the user belong in the list.
-    """
-    tasknames = sorted(TASKS.keys())
-    
-    # find the length of the longest task name for formatting purposes
-    try:
-        if userdef_only:
-            maxlen = max(len(TASKS[tn].displayname) for tn in tasknames
-                         if TASKS[tn].user_defined)
-        else:
-            maxlen = max(len(TASKS[tn].displayname) for tn in tasknames)
-    except ValueError:
-        # this is if the list is empty
-        maxlen = 5
-    fmt = "  %-" + str(maxlen) + "s - %s"
-    for taskname in tasknames:
-        task = TASKS[taskname]
-        if userdef_only and not task.user_defined:
-            continue
-        print(fmt % (taskname, task.description))
-
-#@task
-#@consume_args
-def help(options):
-    """Displays the list of commands and the details."""
-    args = options.args
-    from paver import release
-    print """Paver %s
-
-Usage: paver [global options] [option.name=value] task [task options] [task...]
-
-Run 'paver help [section]' to see the following sections of info:
-
-options    global command line options
-setup      available distutils/setuptools tasks
-tasks      all tasks that have been imported by your pavement
-
-'paver help taskname' will display details for a task.
-""" % (release.setup_meta['version'])
-    if not args:
-        print "Tasks defined in your pavement:"
-        _task_list(True)
-        return
-    
-    section = args[0].lower()
-    if section == 'options':
-        dist = runtime.dist
-        dist.script_args = ['-h']
-        dist.parse_command_line()
-    elif section == 'setup':
-        dist = runtime.dist
-        dist.script_args = ['--help-commands']
-        dist.parse_command_line()
-    elif section == 'tasks':
-        print "Tasks defined in and imported by your pavement:"
-        _task_list(False)
-    else:
-        task = runtime._ALL_TASKS.get(section)
-        if not task:
-            print "Could not find task %s to display help" % (section)
-        else:
-            print "Details for %s:" % (section)
-            print task.doc
-    
-
-_docsdir = path(__file__).parent / "docs"
-if _docsdir.exists():
+_docsdir = os.path.join(os.path.dirname(__file__), "docs")
+if os.path.exists(_docsdir):
     @task
     def paverdocs():
         """Open your web browser and display Paver's documentation."""
         import webbrowser
-        webbrowser.open("file://" + (_docsdir.abspath() / 'index.html'))
+        webbrowser.open("file://" 
+            + (os.path.join(os.path.abspath(_docsdir), 'index.html')))
         
 @task
 def minilib(options):

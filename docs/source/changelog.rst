@@ -22,6 +22,9 @@ Paver Changelog
   then switches back when returning
 * if you try to run a function as a task, you'll now get a more appropriate
   and descriptive BuildFailure, rather than an AttributeError
+* paver can now again run tasks even when there is no pavement present.
+  any task accessible via paver.easy (which now also includes misctasks)
+  will work.
 
 1.0a2 (February 26, 2009)
 -------------------------

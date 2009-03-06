@@ -1,5 +1,6 @@
 import subprocess
 
+import paver.misctasks
 from paver import tasks
 from paver.options import Bunch
 

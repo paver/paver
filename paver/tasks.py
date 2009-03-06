@@ -526,10 +526,17 @@ def call_pavement(new_pavement, args):
 
 def _launch_pavement(args):
     mod = types.ModuleType("pavement")
+    environment.pavement = mod
+    
+    if not os.path.exists(environment.pavement_file):
+        environment.pavement_file = None
+        exec "from paver.easy import *\n" in mod.__dict__
+        _process_commands(args)
+        return
+        
     mod.__file__ = environment.pavement_file
     try:
         execfile(environment.pavement_file, mod.__dict__)
-        environment.pavement = mod
         auto_task = getattr(mod, 'auto', None)
         if isinstance(auto_task, Task):
             mod.auto()
