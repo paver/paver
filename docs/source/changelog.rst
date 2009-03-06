@@ -11,6 +11,9 @@ Paver Changelog
   that is being run in there. This likely has the beneficial side effect of
   not requiring a MANIFEST.in file just to include the pavement.
 * the options help provided via the cmdopts decorator now appears
+* pavements can now refer to __file__ to get their own filename. You can also
+  just declare pavement_file as an argument to your task function, if
+  you wish.
 
 1.0a2 (February 26, 2009)
 -------------------------
