@@ -3,6 +3,15 @@
 Paver Changelog
 ===============
 
+1.0a3 (March 6, 2009)
+----------
+* When generating egg_info running "paver", the full path to the Paver script
+  was getting included in egg-info/SOURCES.txt. This causes installation problems
+  on Windows, at the very least. Paver will now instead place the pavement
+  that is being run in there. This likely has the beneficial side effect of
+  not requiring a MANIFEST.in file just to include the pavement.
+* the options help provided via the cmdopts decorator now appears
+
 1.0a2 (February 26, 2009)
 -------------------------
 * The bug that caused 1.0a1 to be recalled (distutils command options)

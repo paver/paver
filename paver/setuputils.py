@@ -184,7 +184,7 @@ def _get_distribution():
     except AttributeError:
         dist = _Distribution(attrs=tasks.environment.options.setup)
         tasks.environment.distribution = dist
-        dist.script_name = sys.argv[0]
+        dist.script_name = tasks.environment.pavement_file
         return dist
 
 def install_distutils_tasks():
