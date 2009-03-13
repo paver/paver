@@ -14,7 +14,9 @@ from distutils.errors import DistutilsModuleError
 _Distribution = dist.Distribution
 
 from distutils import debug
-debug.DEBUG = True
+# debug.DEBUG = True
+
+from paver.options import Bunch
 
 try:
     import setuptools
@@ -195,9 +197,9 @@ if has_setuptools:
     __ALL__.extend(["find_packages"])
     
     from setuptools import find_packages
-    
-    setup = setuptools.setup
 else:
     import distutils.core
     
-    setup = distutils.core.setup
+def setup(**kw):
+    setup_section = tasks.environment.options.setdefault("setup", Bunch())
+    setup_section.update(kw)

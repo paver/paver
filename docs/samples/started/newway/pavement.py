@@ -2,7 +2,7 @@
 from paver.easy import *
 import paver.doctools
 import paver.misctasks
-import paver.setuputils
+from paver.setuputils import setup
 # [[[endsection]]]
 
 # [[[section install_distutils]]]
@@ -10,13 +10,13 @@ paver.setuputils.install_distutils_tasks()
 # [[[endsection]]]
 
 # [[[section setup]]]
-options(
-    setup=Bunch(
-        name="TheNewWay",
-        packages=['newway'],
-        version="1.0",
-        author="Kevin Dangoor"
-    )
+setup(
+    name="TheNewWay",
+    packages=['newway'],
+    version="1.0",
+    url="http://www.blueskyonmars.com/",
+    author="Kevin Dangoor",
+    author_email="dangoor@gmail.com"
 )
 # [[[endsection]]]
 

@@ -3,15 +3,21 @@
 Paver Changelog
 ===============
 
-1.0b1 (March 12, 2009)
+1.0b1 (March 13, 2009)
 ----------------------
 * added call_task to environment and paver.easy, so it should be easy to call
   distutils tasks, for example. (Normally, with Paver 1.0, you just call Paver
   tasks like normal functions.)
-* fix md5 deprecation warning in paver.path (issue #22)
+* added setup() function to paver.setuputils that is a shortcut for 
+  setting options in options.setup. This means that you switch from
+  distutils to Paver just by renaming the file and changing the
+  import.
 * the auto task is no longer called when you run the help task (issue #21).
   As part of this, a new "no_auto" decorator has been created so that any
   task can be marked as not requiring the auto behavior.
+* consume_args and PavementError are now included in paver.easy (thanks to
+  Marc Sibson)
+* fix md5 deprecation warning in paver.path (issue #22)
 
 1.0a4 (March 6, 2009)
 ---------------------
@@ -45,8 +51,8 @@ Paver Changelog
   directory on the way in and then change back to the old directory on 
   the way out. Suggested by Steve Howe, with the additional suggestion from
   Juergen Hermann to return the old directory::
-      with pushd('newdirectory') as olddirectory:
-          ...do something...
+        with pushd('newdirectory') as olddirectory:
+            ...do something...
 
 1.0a2 (February 26, 2009)
 -------------------------

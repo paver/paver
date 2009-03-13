@@ -1,0 +1,1 @@
+This is a sample of using Paver rather than standard distutils.

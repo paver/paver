@@ -43,7 +43,7 @@ to build a source distribution::
   # sh('ls -l docs/samples/started/oldway/dist')
   # ==>
   total 8
-  -rw-r--r--  1 admin  staff  787 Mar  6 14:18 TheOldWay-1.0.tar.gz
+  -rw-r--r--  1 admin  staff  789 Mar 12 22:56 TheOldWay-1.0.tar.gz
   # <==end==>
 
 Then your users can run the familiar::
@@ -139,7 +139,7 @@ tasks::
     from paver.easy import *
     import paver.doctools
     import paver.misctasks
-    import paver.setuputils
+    from paver.setuputils import setup
     # <==end==>
 
 Converting from setup.py to pavement.py is easy. Paver provides
@@ -150,13 +150,11 @@ for distutils operations are stored in a ``setup`` section of the
 options. Here's what the conversion looks like::
 
   # <== include('started/newway/pavement.py', 'setup')==>
-  options(
-      setup=Bunch(
-          name="TheNewWay",
-          packages=['newway'],
-          version="1.0",
-          author="Kevin Dangoor"
-      )
+  setup(
+      name="TheNewWay",
+      packages=['newway'],
+      version="1.0",
+      author="Kevin Dangoor"
   )
   # <==end==>
 
@@ -179,7 +177,7 @@ just add one line to your pavement::
     paver.setuputils.install_distutils_tasks()
     # <==end==>
 
-We can see this in action by looking at ``paver help ``::
+We can see this in action by looking at ``paver help``::
 
   # <== sh('cd docs/samples/started/newway; paver help')==>
   ---> paver.tasks.help
@@ -266,7 +264,7 @@ equivalent output file::
   # sh('ls -l docs/samples/started/newway/dist')
   # ==>
   total 56
-  -rw-r--r--  1 admin  staff  28031 Mar  6 14:18 TheNewWay-1.0.tar.gz
+  -rw-r--r--  1 admin  staff  28273 Mar 12 22:56 TheNewWay-1.0.tar.gz
   # <==end==>
 
 It also means that users of The New Way can also run ``paver install``
@@ -303,7 +301,7 @@ Worried about bloating your package? The paver-minilib is not large::
   #    insert_output=False)
   # sh('ls -l docs/samples/started/newway/paver-minilib.zip')
   # ==>
-  -rw-r--r--@ 1 admin  staff  26045 Mar  6 14:18 docs/samples/started/newway/paver-minilib.zip
+  -rw-r--r--@ 1 admin  staff  26284 Mar 12 22:56 docs/samples/started/newway/paver-minilib.zip
   # <==end==>
 
 Paver itself is bootstrapped with a generated setup file and a
