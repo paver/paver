@@ -8,6 +8,7 @@ Paver Changelog
 * added call_task to environment and paver.easy, so it should be easy to call
   distutils tasks, for example. (Normally, with Paver 1.0, you just call Paver
   tasks like normal functions.)
+* fix md5 deprecation warning in paver.path (issue #22)
 
 1.0a4 (March 6, 2009)
 ---------------------
