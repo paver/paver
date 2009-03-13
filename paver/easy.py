@@ -91,7 +91,9 @@ call_pavement = tasks.call_pavement
 task = tasks.task
 needs = tasks.needs
 cmdopts = tasks.cmdopts
+consume_args = tasks.consume_args
 BuildFailure = tasks.BuildFailure
+PavementError = tasks.PavementError
 
 # these are down here to avoid circular dependencies. Ideally, nothing would
 # be using paver.easy other than pavements.
