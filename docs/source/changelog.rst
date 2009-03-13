@@ -19,6 +19,11 @@ Paver Changelog
   task can be marked as not requiring the auto behavior.
 * consume_args and PavementError are now included in paver.easy (thanks to
   Marc Sibson)
+* more methods in paver.path now check for existence or lack thereof
+  and won't fail as a result. (mkdir and makedirs both check that the
+  directory does not exist, rmdir and rmtree check to be sure that
+  it does.) This is because the goal is ultimately to create or remove
+  something... paver just makes sure that it either exists or doesn't.
 * fix md5 deprecation warning in paver.path (issue #22)
 
 1.0a4 (March 6, 2009)

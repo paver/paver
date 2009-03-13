@@ -902,13 +902,16 @@ class path(_base):
             dry("mkdir %s (mode %s)" % (self, mode), os.mkdir, self, mode)
 
     def makedirs(self, mode=0777):
-        dry("makedirs %s (mode %s)" % (self, mode), os.makedirs, self, mode)
+        if not self.exists():
+            dry("makedirs %s (mode %s)" % (self, mode), os.makedirs, self, mode)
 
     def rmdir(self):
-        dry("rmdir %s" % (self), os.rmdir, self)
+        if self.exists():
+            dry("rmdir %s" % (self), os.rmdir, self)
 
     def removedirs(self):
-        dry("removedirs %s" % (self), os.removedirs, self)
+        if self.exists():
+            dry("removedirs %s" % (self), os.removedirs, self)
 
 
     # --- Modifying operations on files
