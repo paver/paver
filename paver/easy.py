@@ -92,6 +92,7 @@ task = tasks.task
 needs = tasks.needs
 cmdopts = tasks.cmdopts
 consume_args = tasks.consume_args
+no_auto = tasks.no_auto
 BuildFailure = tasks.BuildFailure
 PavementError = tasks.PavementError
 

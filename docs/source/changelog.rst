@@ -9,6 +9,9 @@ Paver Changelog
   distutils tasks, for example. (Normally, with Paver 1.0, you just call Paver
   tasks like normal functions.)
 * fix md5 deprecation warning in paver.path (issue #22)
+* the auto task is no longer called when you run the help task (issue #21).
+  As part of this, a new "no_auto" decorator has been created so that any
+  task can be marked as not requiring the auto behavior.
 
 1.0a4 (March 6, 2009)
 ---------------------

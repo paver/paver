@@ -215,6 +215,8 @@ def _import_task(taskname):
 class Task(object):
     called = False
     consume_args = False
+    no_auto = False
+    
     __doc__ = ""
     
     def __init__(self, func):
@@ -371,6 +373,13 @@ def consume_args(func):
     func = task(func)
     func.consume_args = True
     return func
+    
+def no_auto(func):
+    """Specify that this task does not depend on the auto task,
+    and don't run the auto task just for this one."""
+    func = task(func)
+    func.no_auto = True
+    return func
 
 def _preparse(args):
     task = None
@@ -480,6 +489,7 @@ def _group_by_module(items):
     return maxlen, groups
 
 @task
+@no_auto
 @consume_args
 def help(args):
     """This help display."""
@@ -505,11 +515,14 @@ def help(args):
         for task in group:
             print(fmt % (task.shortname, task.description))
 
-def _process_commands(args):
+def _process_commands(args, auto_pending=False):
     while True:
         task, args = _parse_command_line(args)
         if task is None:
             break
+        if auto_pending and not task.no_auto:
+            environment.call_task('auto')
+            auto_pending=False
         task()
 
 def call_pavement(new_pavement, args):
@@ -543,9 +556,8 @@ def _launch_pavement(args):
     try:
         execfile(environment.pavement_file, mod.__dict__)
         auto_task = getattr(mod, 'auto', None)
-        if isinstance(auto_task, Task):
-            mod.auto()
-        _process_commands(args)
+        auto_pending = isinstance(auto_task, Task)
+        _process_commands(args, auto_pending=auto_pending)
     except PavementError, e:
         print "\n\n*** Problem with pavement:\n%s\n%s\n\n" % (
                     os.path.abspath(environment.pavement_file), e)
