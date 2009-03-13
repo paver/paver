@@ -243,8 +243,11 @@ class Task(object):
     @property    
     def parser(self):
         options = self.user_options
-        parser = optparse.OptionParser()
+        parser = optparse.OptionParser(add_help_option=False,
+            usage="%%prog %s [options]" % (self.name))
         parser.disable_interspersed_args()
+        parser.add_option('-h', '--help', action="store_true",
+                        help="display this help information")
         
         needs_tasks = [(environment.get_task(task), task) for task in self.needs]
         for task, task_name in itertools.chain([(self, self.name)], needs_tasks):
@@ -282,12 +285,29 @@ by another task in the dependency chain.""" % (self, option, task))
                                         % (self, option))
         return parser
         
+    def display_help(self, parser=None):
+        if not parser:
+            parser = self.parser
+            
+        name = self.name
+        print "\n%s" % name
+        print "-" * (len(name))
+        parser.print_help()
+        print
+        print self.__doc__
+        print
+    
     def parse_args(self, args):
         import paver.options
         environment.debug("Task %s: Parsing args %s" % (self.name, args))
         optholder = environment.options.setdefault(self.shortname, 
                                                    paver.options.Bunch())
-        options, args = self.parser.parse_args(args)
+        parser = self.parser
+        options, args = parser.parse_args(args)
+        if options.help:
+            self.display_help(parser)
+            sys.exit(0)
+            
         for task_name, option_name in self.option_names:
             option_name = option_name.replace('-', '_')
             try:
@@ -407,8 +427,13 @@ line (%s) attempts to set an option.""" % (args))
 
 def _parse_global_options(args):
     # this is where global options should be dealt with
-    parser = optparse.OptionParser(usage="""Usage: %prog [global options] taskname [task options] [taskname [taskoptions]]""")
+    parser = optparse.OptionParser(usage=
+        """Usage: %prog [global options] taskname [task options] """
+        """[taskname [taskoptions]]""", version="Paver %s" % (VERSION),
+        add_help_option=False)
     
+    environment.help_function = parser.print_help
+
     parser.add_option('-n', '--dry-run', action='store_true',
                     help="don't actually do anything")
     parser.add_option('-v', "--verbose", action="store_true",
@@ -419,14 +444,14 @@ def _parse_global_options(args):
                     help="enable prompting")
     parser.add_option("-f", "--file", metavar="FILE",
                     help="read tasks from FILE [%default]")
-    parser.add_option("--version", action="store_true",
-                    help="display Paver version number")
+    parser.add_option('-h', "--help", action="store_true",
+                    help="display this help information")
     parser.set_defaults(file=environment.pavement_file)
 
     parser.disable_interspersed_args()
     options, args = parser.parse_args(args)
-    if options.version:
-        print "Paver %s" % VERSION
+    if options.help:
+        args.insert(0, "help")
     for key, value in vars(options).items():
         setattr(environment, key, value)
         
@@ -491,7 +516,7 @@ def _group_by_module(items):
 @task
 @no_auto
 @consume_args
-def help(args):
+def help(args, help_function):
     """This help display."""
     if args:
         task_name = args[0]
@@ -500,12 +525,11 @@ def help(args):
             print "Task not found: %s" % (task_name)
             return
         
-        print "\n%s" % task_name
-        print "-" * (len(task_name))
-        print
-        print task.__doc__
+        task.display_help()
         return
-        
+    
+    help_function()
+    
     task_list = environment.get_tasks()
     task_list = sorted(task_list, cmp=_cmp_task_names)
     maxlen, task_list = _group_by_module(task_list)

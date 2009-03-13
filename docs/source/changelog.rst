@@ -12,6 +12,8 @@ Paver Changelog
   setting options in options.setup. This means that you switch from
   distutils to Paver just by renaming the file and changing the
   import.
+* the -h command line argument and "help" task have been unified. You'll
+  get the same output regardless of which one you use.
 * the auto task is no longer called when you run the help task (issue #21).
   As part of this, a new "no_auto" decorator has been created so that any
   task can be marked as not requiring the auto behavior.
