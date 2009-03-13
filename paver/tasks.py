@@ -118,7 +118,11 @@ class Environment(object):
                 task = matches[0]
         return task
         
-    def call_task(self, task_name, needs, func):
+    def call_task(self, task_name):
+        task = self.get_task(task_name)
+        task()
+    
+    def _run_task(self, task_name, needs, func):
         funcargs = inspect.getargspec(func)[0]
         kw = dict()
         for arg in funcargs:
@@ -227,7 +231,7 @@ class Task(object):
             pass
         
     def __call__(self, *args, **kw):
-        retval = environment.call_task(self.name, self.needs, self.func)
+        retval = environment._run_task(self.name, self.needs, self.func)
         self.called = True
         return retval
     
