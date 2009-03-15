@@ -16,7 +16,6 @@ This module requires Python 2.2 or later.
 
 This has been modified from the original to avoid dry run issues.
 """
-from paver.easy import dry
 
 
 # TODO
@@ -30,7 +29,7 @@ from paver.easy import dry
 #   - guess_content_type() method?
 #   - Perhaps support arguments to touch().
 
-import sys, warnings, os, fnmatch, glob, shutil, codecs, md5
+import sys, warnings, os, fnmatch, glob, shutil, codecs
 
 try:
     from hashlib import md5
@@ -997,3 +996,4 @@ class path(_base):
         def startfile(self):
             os.startfile(self)
 
+from paver.easy import dry

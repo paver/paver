@@ -3,6 +3,11 @@
 Paver Changelog
 ===============
 
+1.0rc1 (unreleased)
+-------------------
+* fix the md5 deprecation warning in paver.path for real (forgot to delete the
+  offending import). Also fixed an import loop when you try to import paver.path.
+
 1.0b1 (March 13, 2009)
 ----------------------
 * added call_task to environment and paver.easy, so it should be easy to call
