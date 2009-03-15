@@ -5,6 +5,8 @@ Paver Changelog
 
 1.0rc1 (unreleased)
 -------------------
+* The paver.setuputils.setup function will automatically call install_distutils_tasks.
+  This makes it a very convenient way to upgrade from distutils/setuptools to Paver.
 * fix the md5 deprecation warning in paver.path for real (forgot to delete the
   offending import). Also fixed an import loop when you try to import paver.path.
 

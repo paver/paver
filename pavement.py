@@ -4,15 +4,15 @@ from paver.release import setup_meta
 
 import paver.doctools
 import paver.virtual
-import paver.setuputils
 import paver.misctasks
+from paver.setuputils import setup
 
-paver.setuputils.install_distutils_tasks()
 
 options = environment.options
 
+setup(**setup_meta)
+
 options(
-    setup = setup_meta,
     minilib=Bunch(
         extra_files=['doctools', 'virtual']
     ),

@@ -191,7 +191,10 @@ def _get_distribution():
 
 def install_distutils_tasks():
     """Makes distutils and setuptools commands available as Paver tasks."""
-    tasks.environment.task_finders.append(DistutilsTaskFinder())
+    env = tasks.environment
+    if not hasattr(env, "_distutils_tasks_installed"):
+        env.task_finders.append(DistutilsTaskFinder())
+        env._distutils_tasks_installed = True
 
 if has_setuptools:
     __ALL__.extend(["find_packages"])
@@ -201,5 +204,6 @@ else:
     import distutils.core
     
 def setup(**kw):
+    install_distutils_tasks()
     setup_section = tasks.environment.options.setdefault("setup", Bunch())
     setup_section.update(kw)
