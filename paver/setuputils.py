@@ -6,6 +6,7 @@ import sys
 import distutils
 from fnmatch import fnmatchcase
 from distutils.util import convert_path
+from distutils import log
 try:
     from setuptools import dist
 except ImportError:
@@ -196,6 +197,38 @@ def install_distutils_tasks():
         env.task_finders.append(DistutilsTaskFinder())
         env._distutils_tasks_installed = True
 
+def setup(**kw):
+    install_distutils_tasks()
+    setup_section = tasks.environment.options.setdefault("setup", Bunch())
+    setup_section.update(kw)
+
+def error(message, *args):
+    """Displays an error message to the user."""
+    tasks.environment.error(message, *args)
+
+def info(message, *args):
+    """Displays a message to the user. If the quiet option is specified, the
+    message will not be displayed."""
+    tasks.environment.info(message, *args)
+
+def debug(message, *args):
+    """Displays a message to the user, but only if the verbose flag is
+    set."""
+    tasks.environment.debug(message, *args)
+
+def base_log(level, message, args):
+    """Displays a message at the given log level"""
+    tasks.environment._log(level, message, *args)
+    
+# monkeypatch the distutils logging to go through Paver's logging
+log.log = base_log
+log.debug = debug
+log.info = info
+log.warn = error
+log.error = error
+log.fatal = error
+
+
 if has_setuptools:
     __ALL__.extend(["find_packages"])
     
@@ -203,7 +236,3 @@ if has_setuptools:
 else:
     import distutils.core
     
-def setup(**kw):
-    install_distutils_tasks()
-    setup_section = tasks.environment.options.setdefault("setup", Bunch())
-    setup_section.update(kw)
