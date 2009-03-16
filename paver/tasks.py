@@ -604,6 +604,8 @@ def main(args=None):
     environment = Environment()
 
     # need to parse args to recover pavement-file to read before executing
-    args = _parse_global_options(args)
-    _launch_pavement(args)
-    
+    try:
+        args = _parse_global_options(args)
+        _launch_pavement(args)
+    except BuildFailure, e:
+        environment.error("Build failed: %s", e)
