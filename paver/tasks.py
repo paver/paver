@@ -540,14 +540,22 @@ def help(args, help_function):
             print(fmt % (task.shortname, task.description))
 
 def _process_commands(args, auto_pending=False):
+    first_loop = True
     while True:
         task, args = _parse_command_line(args)
+        if auto_pending:
+            if not task or not task.no_auto:
+                environment.call_task('auto')
+                auto_pending=False
         if task is None:
-            break
-        if auto_pending and not task.no_auto:
-            environment.call_task('auto')
-            auto_pending=False
+            if first_loop:
+                task = environment.get_task('default')
+                if not task:
+                    break
+            else:
+                break
         task()
+        first_loop = False
 
 def call_pavement(new_pavement, args):
     if isinstance(args, basestring):
