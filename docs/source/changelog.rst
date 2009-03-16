@@ -3,17 +3,22 @@
 Paver Changelog
 ===============
 
-1.0rc1 (unreleased)
--------------------
+1.0rc1 (March 16, 2009)
+-----------------------
+* If there is a task called "default", it is run if Paver is run with no
+  tasks listed on the command line.
+* The auto task is run, even if no tasks are specified on the command line.
 * distutils' log output is now routed through Paver's logging functions, 
   which means that the output is now displayed once more (and is controlled 
   via Paver's command line arguments.)
 * The paver.setuputils.setup function will automatically call 
   install_distutils_tasks. This makes it a very convenient way to upgrade 
   from distutils/setuptools to Paver.
+* Nicer looking error when you run Paver with an unknown task name.
 * fix the md5 deprecation warning in paver.path for real (forgot to delete the
   offending import). Also fixed an import loop when you try to import 
   paver.path.
+* Improved docs for 1.0
 
 1.0b1 (March 13, 2009)
 ----------------------
@@ -70,6 +75,7 @@ Paver Changelog
   directory on the way in and then change back to the old directory on 
   the way out. Suggested by Steve Howe, with the additional suggestion from
   Juergen Hermann to return the old directory::
+  
         with pushd('newdirectory') as olddirectory:
             ...do something...
 

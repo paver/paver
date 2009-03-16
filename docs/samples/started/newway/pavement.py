@@ -1,12 +1,7 @@
 # [[[section imports]]]
 from paver.easy import *
 import paver.doctools
-import paver.misctasks
 from paver.setuputils import setup
-# [[[endsection]]]
-
-# [[[section install_distutils]]]
-paver.setuputils.install_distutils_tasks()
 # [[[endsection]]]
 
 # [[[section setup]]]
@@ -48,7 +43,7 @@ options(
 
 # [[[section sdist]]]
 @task
-@needs(['generate_setup', 'minilib', 'setuptools.command.sdist'])
+@needs('generate_setup', 'minilib', 'setuptools.command.sdist')
 def sdist():
     """Overrides sdist to make sure that our setup.py is generated."""
     pass

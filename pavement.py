@@ -59,7 +59,7 @@ options.setup.package_data=paver.setuputils.find_package_data("paver", package="
 
 if paver.doctools.has_sphinx:
     @task
-    @needs(['cog', 'paver.doctools.html'])
+    @needs('cog', 'paver.doctools.html')
     def html():
         """Build Paver's documentation and install it into paver/docs"""
         builtdocs = path("docs") / options.sphinx.builddir / "html"
@@ -68,7 +68,7 @@ if paver.doctools.has_sphinx:
         builtdocs.move(destdir)
     
     @task
-    @needs(['html', "minilib", "generate_setup", old_sdist])
+    @needs('html', "minilib", "generate_setup", old_sdist)
     def sdist():
         """Builds the documentation and the tarball."""
         pass

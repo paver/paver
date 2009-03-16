@@ -198,35 +198,40 @@ def install_distutils_tasks():
         env._distutils_tasks_installed = True
 
 def setup(**kw):
+    """Updates options.setup with the keyword arguments provided,
+    and installs the distutils tasks for this pavement. You can
+    use paver.setuputils.setup as a direct replacement for
+    the distutils.core.setup or setuptools.setup in a traditional
+    setup.py."""
     install_distutils_tasks()
     setup_section = tasks.environment.options.setdefault("setup", Bunch())
     setup_section.update(kw)
 
-def error(message, *args):
+def _error(message, *args):
     """Displays an error message to the user."""
     tasks.environment.error(message, *args)
 
-def info(message, *args):
+def _info(message, *args):
     """Displays a message to the user. If the quiet option is specified, the
     message will not be displayed."""
     tasks.environment.info(message, *args)
 
-def debug(message, *args):
+def _debug(message, *args):
     """Displays a message to the user, but only if the verbose flag is
     set."""
     tasks.environment.debug(message, *args)
 
-def base_log(level, message, args):
+def _base_log(level, message, args):
     """Displays a message at the given log level"""
     tasks.environment._log(level, message, *args)
     
 # monkeypatch the distutils logging to go through Paver's logging
-log.log = base_log
-log.debug = debug
-log.info = info
-log.warn = error
-log.error = error
-log.fatal = error
+log.log = _base_log
+log.debug = _debug
+log.info = _info
+log.warn = _error
+log.error = _error
+log.fatal = _error
 
 
 if has_setuptools:

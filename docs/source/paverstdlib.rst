@@ -3,9 +3,8 @@
 The Paver Standard Library
 ==========================
 
-A large part of what makes Paver useful is that it's designed to work with
-the tools that are commonly used for Python build, distribution and
-deployment tasks.
+Paver includes several modules that will help you get your project scripting
+done more quickly.
 
 .. toctree::
    

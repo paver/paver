@@ -3,10 +3,9 @@
 Paver Command Line
 ==================
 
-The Paver command line interface is an extended version of the distutils
-command line::
+Paver does sophisticated command line parsing globally and for each task::
 
-  paver [-q] [-n] [-v] [-h] [option.name=key] [task] [task...]
+  paver [-q] [-n] [-v] [-f pavement] [-h] [option.name=key] [taskname] [taskoptions] [taskname...]
 
 The command line options are:
 
@@ -20,12 +19,19 @@ The command line options are:
   verbose... display debug level output
 
 -h
-  display distutils-style command line help
+  display the command line options and list of available tasks. Note
+  that -h can be provided for any task to display the command line options
+  and detailed help for that task.
+
+-f <pavement>
+  use a different file than "pavement.py"
 
 
-If you run paver without a task, it will default to the "help" task which 
-lists the tasks in your pavement.py file. The help task also has the ability
-to provide detailed help for a given task.
+If you run paver without a task, it will only run the "auto" task, if there
+is one. Otherwise, Paver will do nothing.
+
+``paver help`` is the equivalent of ``paver -h``, and ``paver help taskname``
+is the equivalent of ``paver taskname -h``.
 
 You can set build options via the command line by providing optionname=value.
 The option names can be in dotted notation, so ``foo.bar.baz=something`` will

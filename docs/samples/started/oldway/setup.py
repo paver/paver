@@ -5,6 +5,8 @@ setup(
     name="TheOldWay",
     packages=['oldway'],
     version="1.0",
-    author="Kevin Dangoor"
+    url="http://www.blueskyonmars.com/",
+    author="Kevin Dangoor",
+    author_email="dangoor@gmail.com"
 )
 # [[[endsection]]]

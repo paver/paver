@@ -39,7 +39,7 @@ except ImportError:
     md5 = md5.new
 
 __version__ = '2.2'
-__all__ = ['path', 'pushd']
+__all__ = ['path']
 
 # Platform-specific support for path.owner
 if os.name == 'nt':

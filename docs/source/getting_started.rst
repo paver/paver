@@ -122,15 +122,13 @@ a special ``options`` object that holds all of your build options.
 ``options`` is just a dictionary that allows attribute-style
 access and has some special searching abilities. The options
 for distutils operations are stored in a ``setup`` section of the
-options. Here's what the conversion looks like::
+options. And, as a convenience, Paver provides a setup function
+that sets the values in that options section (and goes a step
+further, by making all of the distutils/setuptools commands 
+available as Paver tasks). Here's what the conversion looks like::
 
   # <== include('started/newway/pavement.py', 'setup')==>
   # <==end==>
-
-Notice how the actual options haven't changed a bit. setup is declared
-as a ``Bunch``. A ``Bunch`` is just a dictionary that also allows
-attribute-style access to the values. ``options.setup.name`` is
-a bit less typing and easier on the eyes than ``options['setup']['name']``.
 
 Paver is compatible with distutils
 ----------------------------------
@@ -139,11 +137,9 @@ Choosing to use Paver does not mean giving up on distutils or
 setuptools. Paver lets you continue to use distutils and setuptools
 commands. When you import a module that has Paver tasks in it,
 those tasks automatically become available for running. If you
-want access to distutils and setuptools commands as well, you
-just add one line to your pavement::
-
-    # <== include('started/newway/pavement.py', 'install_distutils')==>
-    # <==end==>
+want access to distutils and setuptools commands as well, you can either
+use the ``paver.setuputils.setup`` function as described
+above, or call ``paver.setuputils.install_distutils_tasks()``.
 
 We can see this in action by looking at ``paver help``::
 
@@ -234,10 +230,6 @@ run before this one. You can also use the `call_task(taskname)`
 function within your task if you wish. The function name determines
 the name of the task. The docstring is what shows up in Paver's
 help output.
-
-The tasks that are defined `last` are the ones that are given
-preference for the short name like "sdist". All tasks also
-have a long name, which is how we can refer to the old sdist command.
 
 With that task in our pavement.py, ``paver sdist`` is all it takes
 to build a source distribution after generating a setup file

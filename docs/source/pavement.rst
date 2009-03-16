@@ -64,9 +64,8 @@ Tasks are just simple functions. You designate a function as being a
 task by using the @task decorator.
 
 You can also specify that a task depends on another task running
-first with the @needs decorator. A given task will run only once regardless 
-of how many times it's specified in @needs or whether the task shows 
-up on the command line.
+first with the @needs decorator. A given task will only run once
+as a dependency for other tasks.
 
 Manually Calling Tasks
 ----------------------
@@ -96,4 +95,59 @@ unless there is a conflict where two tasks are trying to use the same
 short name.
 
 Tasks are always available unambiguously via their long names.
+
+Task Parameters
+---------------
+
+Tasks don't have to take any parameters. However, Paver allows you to work
+in a fairly clean, globals-free manner(*). Generally speaking, the easiest way
+to work with paver is to just do ``from paver.easy import *``, but if you
+don't like having so much in your namespace, you can have any attribute
+from tasks.environment sent into your function. For example::
+
+    @task
+    def my_task(options, info):
+        # this task will get the options and the "info" logging function
+        # sent in
+        pass
+
+(*): well, there *is* one global: tasks.environment.
   
+Command Line Arguments
+----------------------
+
+Tasks can specify that they accept command line arguments, via two 
+other decorators. The ``@consume_args`` decorator tells Paver that *all* 
+command line arguments following this task's name should be passed to the 
+task. You can either look up the arguments in ``options.args``, or just 
+specify args as a parameter to your function. For example, Paver's "help" 
+task is declared like this::
+
+    @task
+    @consume_args
+    def help(args, help_function):
+        pass
+        
+The "args" parameter is just an attribute on tasks.environment (as is
+help_function), so it is passed in using the same rules described in the
+previous section.
+
+More generally, you're not trying to consume all of the remainder of the
+command line but to just accept certain specific arguments. That's what
+the cmdopts decorator is for::
+
+    @task
+    @cmdopts([
+        ('username=', 'u', 'Username to use when logging in to the servers')
+    ])
+    def deploy(options):
+        pass
+        
+@cmdopts takes a list of tuples, each with long option name, short option name
+and help text. If there's an "=" after the long option name, that means
+that the option takes a parameter. Otherwise, the option is assumed to be
+boolean. The command line options set in this manner are all added to
+the ``options`` under a namespace matching the name of the task. In the
+case above, options.deploy.username would be set if the user ran
+paver deploy -u my-user-name. Note that an equivalent command line would be
+paver deploy.username=my-user-name deploy

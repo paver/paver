@@ -3,12 +3,49 @@ Paver: Easy Scripting for Software Projects
 ===========================================
 
 .. image:: _static/paver_banner.jpg
+    :height: 126
+    :width: 240
 
-Paver is a Python-based build/distribution/deployment scripting tool along the
-lines of Make or Rake. What makes Paver unique is its integration with 
-commonly used Python libraries. Common tasks that were easy before remain 
-easy. More importantly, dealing with *your* applications specific needs and 
-requirements is now much easier.
+Paver is a Python-based software project scripting tool along the
+lines of Make or Rake. It is not designed to handle the dependency
+tracking requirements of, for example, a C program. It *is* designed
+to help out with all of your other repetitive tasks (run documentation
+generators, moving files about, downloading things), all with the
+convenience of Python's syntax and massive library of code.
+
+If you're developing applications in Python, you get even more...
+Most public Python projects use distutils or setuptools to create source
+tarballs for distribution. (Private projects can take advantage of
+this, too!) Have you ever wanted to generate the docs before building the
+source distribution? With Paver, you can, trivially. Here's a complete
+pavement.py::
+
+    from paver.easy import *
+    from paver.setuputils import setup
+    
+    setup(
+        name="MyCoolProject",
+        packages=['mycool'],
+        version="1.0",
+        url="http://www.blueskyonmars.com/",
+        author="Kevin Dangoor",
+        author_email="dangoor@gmail.com"
+    )
+    
+    @task
+    @needs(['html', "distutils.command.sdist"])
+    def sdist():
+        """Generate docs and source distribution."""
+        pass
+        
+With that pavement file, you can just run ``paver sdist``, and your docs
+will be rebuilt automatically before creating the source distribution.
+It's also easy to move the generated docs into some other directory
+(and, of course, you can tell Paver where your docs are stored,
+if they're not in the default location.)
+
+Features
+--------
 
 * Build files are :ref:`just Python <justpython>`
 * :ref:`One file with one syntax <onefile>`, pavement.py, knows how to manage
@@ -37,10 +74,8 @@ Paver was created by `Kevin Dangoor <blueskyonmars.com>`_ of `SitePen <sitepen.c
 Status
 ------
 
-Paver is currently alpha release software. There is one major feature (zc.buildout
-integration) planned for 1.0. At this point, it is unlikely that there will
-be significant changes to the pavement syntax, but there are no guarantees.
-If there are breaking changes, they will almost certainly be minor.
+Paver has been in use in production settings since mid-2008, and significant 
+attention is paid to backwards compatibility since the release of 1.0.
 
 See the :ref:`changelog <changelog>` for more information about recent improvements.
 
@@ -90,6 +125,7 @@ Contents
    pavement
    paverstdlib
    cmdline
+   tips
    articles
    changelog
    todo

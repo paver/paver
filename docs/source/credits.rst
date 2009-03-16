@@ -3,6 +3,8 @@
 Credits
 =======
 
+* The Paver project has gotten patches from Juergen Hermann, Marc Sibson,
+  Greg Thornton, Michael Greene, Krys Wilken and Bryan Forbes.
 * Ned Batchelder's "cog" package is included for handling inclusion of files
   into the docs.
 * Ian Bicking provided a lot of great input prior to Paver's initial release
