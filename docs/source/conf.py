@@ -13,8 +13,26 @@
 
 import sys
 
+from sphinx.ext import autodoc
+
+from paver.tasks import Task
+
+
 # If your extensions are in another directory, add it here.
 #sys.path.append()
+
+# Add our autodoc extension
+
+class TaskDocumenter(autodoc.FunctionDocumenter):
+    objtype = "task"
+    directivetype = "autofunction"
+    
+    @classmethod
+    def can_document_member(cls, member, membername, isattr, parent):
+        print "I'm checking ", membername, isinstance(member, Task)
+        return isinstance(member, Task)
+    
+# autodoc.add_documenter(TaskDocumenter)
 
 # General configuration
 # ---------------------

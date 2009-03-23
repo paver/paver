@@ -8,7 +8,7 @@ done more quickly.
 
 .. toctree::
    
-   runtime
+   tasks
    setuptools
    files
    doctools
