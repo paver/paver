@@ -221,7 +221,7 @@ def _debug(message, *args):
     set."""
     tasks.environment.debug(message, *args)
 
-def _base_log(level, message, args):
+def _base_log(level, message, *args):
     """Displays a message at the given log level"""
     tasks.environment._log(level, message, *args)
     
