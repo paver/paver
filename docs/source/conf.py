@@ -25,14 +25,14 @@ from paver.tasks import Task
 
 class TaskDocumenter(autodoc.FunctionDocumenter):
     objtype = "task"
-    directivetype = "autofunction"
+    directivetype = "function"
     
     @classmethod
     def can_document_member(cls, member, membername, isattr, parent):
         print "I'm checking ", membername, isinstance(member, Task)
         return isinstance(member, Task)
     
-# autodoc.add_documenter(TaskDocumenter)
+autodoc.add_documenter(TaskDocumenter)
 
 # General configuration
 # ---------------------

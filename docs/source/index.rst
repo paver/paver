@@ -128,7 +128,6 @@ Contents
    tips
    articles
    changelog
-   todo
    credits
 
 Indices and tables
