@@ -223,7 +223,7 @@ def _debug(message, *args):
 
 def _base_log(level, message, *args):
     """Displays a message at the given log level"""
-    tasks.environment._log(level, message, *args)
+    tasks.environment._log(level, message, args)
     
 # monkeypatch the distutils logging to go through Paver's logging
 log.log = _base_log
