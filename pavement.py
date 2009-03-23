@@ -21,7 +21,7 @@ options(
         sourcedir="source"
     ),
     virtualenv=Bunch(
-        packages_to_install=["nose", "http://bitbucket.org/birkenfeld/sphinx/get/e94e28c5ea55.gz", "docutils", "virtualenv"],
+        packages_to_install=["nose", "Sphinx>=0.6b1", "docutils", "virtualenv"],
         install_paver=False,
         script_name='bootstrap.py',
         paver_command_line=None

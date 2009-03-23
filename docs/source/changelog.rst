@@ -3,8 +3,8 @@
 Paver Changelog
 ===============
 
-1.0rc1 (March 16, 2009)
------------------------
+1.0 (March 22, 2009)
+--------------------
 * If there is a task called "default", it is run if Paver is run with no
   tasks listed on the command line.
 * The auto task is run, even if no tasks are specified on the command line.
@@ -19,6 +19,8 @@ Paver Changelog
   offending import). Also fixed an import loop when you try to import 
   paver.path.
 * Improved docs for 1.0
+* Paver now requires Sphinx 0.6 for the docs. In Paver's conf.py for Sphinx,
+  there is an autodoc Documenter for handling Paver Tasks properly.
 
 1.0b1 (March 13, 2009)
 ----------------------

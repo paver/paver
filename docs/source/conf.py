@@ -29,8 +29,13 @@ class TaskDocumenter(autodoc.FunctionDocumenter):
     
     @classmethod
     def can_document_member(cls, member, membername, isattr, parent):
-        print "I'm checking ", membername, isinstance(member, Task)
         return isinstance(member, Task)
+        
+    def import_object(self):
+        super(TaskDocumenter, self).import_object()
+        obj = self.object
+        self.object = obj.func
+        return True
     
 autodoc.add_documenter(TaskDocumenter)
 
