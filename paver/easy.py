@@ -29,17 +29,18 @@ def debug(message, *args):
     set."""
     tasks.environment.debug(message, *args)
 
-def sh(command, capture=False, ignore_error=False):
+def sh(command, capture=False, ignore_error=False, cwd=None):
     """Runs an external command. If capture is True, the output of the
     command will be captured and returned as a string.  If the command 
     has a non-zero return code raise a BuildFailure. You can pass
     ignore_error=True to allow non-zero return codes to be allowed to
-    pass silently, silently into the night.
+    pass silently, silently into the night.  If you pass cwd='some/path'
+    paver will chdir to 'some/path' before exectuting the command.
     
     If the dry_run option is True, the command will not
     actually be run."""
     def runpipe():
-        kwargs = { 'shell': True, 'stderr': subprocess.PIPE }
+        kwargs = { 'shell': True, 'stderr': subprocess.PIPE, 'cwd': cwd}
         if capture:
             kwargs['stdout'] = subprocess.PIPE
         p = subprocess.Popen(command, **kwargs)
