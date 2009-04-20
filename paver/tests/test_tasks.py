@@ -292,6 +292,16 @@ def test_consume_args():
     env = _set_environment(t1=t1, t2=t2)
     tasks._process_commands("t1 1 t2 3".split())
     assert t1.called
+
+    @tasks.task
+    @tasks.consume_args
+    def t3(options):
+        assert options.args[0] == '-v'
+        assert options.args[1] == '1'
+
+    env = _set_environment(t3=t3)
+    tasks._process_commands("t3 -v 1".split())
+    assert t3.called
     
 def test_debug_logging():
     @tasks.task

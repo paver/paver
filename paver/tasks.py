@@ -474,7 +474,6 @@ def _parse_command_line(args):
     if not isinstance(task, Task):
         raise BuildFailure("%s is not a Task" % taskname)
         
-    args = task.parse_args(args)
     if task.consume_args:
         try:
             environment.options.args = args
@@ -482,6 +481,8 @@ def _parse_command_line(args):
             pass
         environment.args = args
         args = []
+    else:
+        args = task.parse_args(args)
 
     return task, args
 
