@@ -77,6 +77,14 @@ def after_install(options, home_dir):
         paver_command_line
             run this paver command line after installation (just the command
             line arguments, not the paver command itself).
+        dest_dir
+            the destination directory for the virtual environment (defaults to
+            '.')
+        no_site_packages
+            don't give access to the global site-packages dir to the virtual
+            environment (defaults to False)
+        unzip_setuptools
+            unzip Setuptools when installing it (defaults to False)
         """
         vopts = options.virtualenv
         _create_bootstrap(vopts.get("script_name", "bootstrap.py"),
