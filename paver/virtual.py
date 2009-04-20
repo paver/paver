@@ -14,22 +14,33 @@ if has_virtualenv:
     _easy_install_template = "    subprocess.call([join(%s, 'easy_install'), " \
                                      "'%s'])\n"
     def _create_bootstrap(script_name, packages_to_install, paver_command_line,
-                          install_paver=True, more_text=""):
+                          install_paver=True, more_text="", dest_dir='.',
+                          no_site_packages=False, unzip_setuptools=False):
         if install_paver:
             paver_install = (_easy_install_template % 
                         ('bin_dir', 'paver==%s' % setup_meta['version']))
         else:
             paver_install = ""
+
+        options = ""
+        if no_site_packages:
+            options = "    options.no_site_packages = True"
+        if unzip_setuptools:
+            if options:
+                options += "\n"
+            options += "    options.unzip_setuptools = True"
+        if options:
+            options += "\n"
         
         extra_text = """def adjust_options(options, args):
-    args[:] = ['.']
-
+    args[:] = ['%s']
+%s
 def after_install(options, home_dir):
     if sys.platform == 'win32':
         bin_dir = join(home_dir, 'Scripts')
     else:
         bin_dir = join(home_dir, 'bin')
-%s""" % paver_install
+%s""" % (dest_dir, options, paver_install)
         for package in packages_to_install:
             extra_text += _easy_install_template % ('bin_dir', package)
         if paver_command_line:
@@ -70,4 +81,7 @@ def after_install(options, home_dir):
         vopts = options.virtualenv
         _create_bootstrap(vopts.get("script_name", "bootstrap.py"),
                           vopts.get("packages_to_install", []),
-                          vopts.get("paver_command_line", None))
+                          vopts.get("paver_command_line", None),
+                          dest_dir=vopts.get("dest_dir", '.'),
+                          no_site_packages=vopts.get("no_site_packages", False),
+                          unzip_setuptools=vopts.get("unzip_setuptools", False))
