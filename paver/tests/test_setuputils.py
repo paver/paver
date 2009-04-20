@@ -105,3 +105,31 @@ def test_distutils_tasks_should_not_get_extra_options():
     assert not _sdist.foo_set
     opts = d.get_option_dict('sdist')
     assert 'foo' not in opts
+
+def test_needs_sdist_without_options():
+    """Test that a custom sdist can be used in needs() w/o options.setup"""
+    _sdist.reset()
+
+    @tasks.task
+    @tasks.needs("paver.tests.test_setuputils.sdist")
+    def sdist():
+        assert _sdist.called
+
+    @tasks.task
+    @tasks.needs("sdist")
+    def t1():
+        pass
+
+    env = _set_environment(sdist=sdist, t1=t1)
+    env.options = options.Bunch()
+    install_distutils_tasks()
+    d = _get_distribution()
+    d.cmdclass['sdist'] = _sdist
+
+    tasks._process_commands(['t1'])
+    assert sdist.called
+    assert _sdist.called
+    assert t1.called
+    cmd = d.get_command_obj('sdist')
+    assert not cmd.foo
+    assert not _sdist.foo_set

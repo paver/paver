@@ -137,7 +137,7 @@ class DistutilsTask(tasks.Task):
         self.user_options = command_class.user_options
         
     def __call__(self, *args, **kw):
-        options = tasks.environment.options[self.shortname]
+        options = tasks.environment.options.get(self.shortname, {})
         opt_dict = self.distribution.get_option_dict(self.command_name)
         for (name, value) in options.items():
             opt_dict[name.replace('-', '_')] = ("command line", value)
@@ -185,7 +185,7 @@ def _get_distribution():
     try:
         return tasks.environment.distribution
     except AttributeError:
-        dist = _Distribution(attrs=tasks.environment.options.setup)
+        dist = _Distribution(attrs=tasks.environment.options.get('setup', {}))
         tasks.environment.distribution = dist
         dist.script_name = tasks.environment.pavement_file
         return dist
