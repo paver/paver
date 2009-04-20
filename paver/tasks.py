@@ -207,7 +207,7 @@ def _import_task(taskname):
     full_mod_name = ".".join(parts[:-1])
     mod_name = parts[-2]
     try:
-        module = __import__(full_mod_name, fromlist=[mod_name])
+        module = __import__(full_mod_name, globals(), locals(), [mod_name])
     except ImportError:
         return None
     return getattr(module, func_name, None)
