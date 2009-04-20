@@ -39,21 +39,20 @@ def sh(command, capture=False, ignore_error=False):
     If the dry_run option is True, the command will not
     actually be run."""
     def runpipe():
-        p = subprocess.Popen(command, shell=True, 
-                stdout=subprocess.PIPE)
-        
+        kwargs = { 'shell': True, 'stderr': subprocess.PIPE }
+        if capture:
+            kwargs['stdout'] = subprocess.PIPE
+        p = subprocess.Popen(command, **kwargs)
         p.wait()
         if p.returncode and not ignore_error:
-            raise BuildFailure(p.returncode)
+            error(p.stderr.read())
+            raise BuildFailure("Subprocess return code: %d" % p.returncode)
 
-        return p.stdout.read()
+        if capture:
+            return p.stdout.read()
 
-    if capture:
-        return dry(command, runpipe)
-    else:
-        returncode = dry(command, subprocess.call, command, shell=True)
-        if returncode and not ignore_error:
-            raise BuildFailure("Subprocess return code: %s" % returncode)
+    return dry(command, runpipe)
+
 
 class _SimpleProxy(object):
     __initialized = False
