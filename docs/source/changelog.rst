@@ -3,6 +3,16 @@
 Paver Changelog
 ===============
 
+1.0.1 (unreleased)
+------------------
+* Fixed sending nonpositional arguments first with consume_args (issue #31).
+* Fixed use of setuputils without defining options.setup (issue #24).
+* Python 2.4 compatibility fixes (issue #28)
+* sh() failures are logged to stderr.
+* sh() accepts a cwd keyword argument (issue #29).
+* virtualenv bootstrap generation accepts no_site_packages, unzip_setuptools,
+  and destination directory arguments in options.
+
 1.0 (March 22, 2009)
 --------------------
 * If there is a task called "default", it is run if Paver is run with no
