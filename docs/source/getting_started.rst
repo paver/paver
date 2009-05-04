@@ -21,6 +21,16 @@ Python's distutils_ makes it easy indeed to create a distributable
 package. We create a setup.py file that looks like this::
 
   #<== include('started/oldway/setup.py')==>
+  from distutils.core import setup
+
+  setup(
+      name="TheOldWay",
+      packages=['oldway'],
+      version="1.0",
+      url="http://www.blueskyonmars.com/",
+      author="Kevin Dangoor",
+      author_email="dangoor@gmail.com"
+  )
   #<==end==>
   
 With that simple setup script, you can run::
@@ -34,6 +44,8 @@ to build a source distribution::
   #    insert_output=False)
   # sh('ls -l docs/samples/started/oldway/dist')
   # ==>
+  total 8
+  -rw-r--r--  1 admin  staff  625 May  4 09:36 TheOldWay-1.0.tar.gz
   # <==end==>
 
 Then your users can run the familiar::
@@ -62,6 +74,11 @@ HTML files in a docs directory in the package for presenting help to
 the users. We end up creating a shell script to do this::
 
   # <== include("started/oldway/builddocs.sh")==>
+  cd docs
+  make html
+  cd ..
+  rm -rf oldway/docs
+  mv docs/_build/html oldway/docs
   # <==end==>
 
 Of course, creating a script like this means that we have to actually
@@ -100,6 +117,14 @@ a project to use Paver is really, really simple. Recall the setup
 function from our Old Way setup.py::
 
   # <== include("started/oldway/setup.py", "setup")==>
+  setup(
+      name="TheOldWay",
+      packages=['oldway'],
+      version="1.0",
+      url="http://www.blueskyonmars.com/",
+      author="Kevin Dangoor",
+      author_email="dangoor@gmail.com"
+  )
   # <==end==>
 
 Getting Started with Paver
@@ -115,6 +140,9 @@ and objects and then import other modules that include useful
 tasks::
 
     # <== include('started/newway/pavement.py', 'imports')==>
+    from paver.easy import *
+    import paver.doctools
+    from paver.setuputils import setup
     # <==end==>
 
 Converting from setup.py to pavement.py is easy. Paver provides
@@ -128,6 +156,14 @@ further, by making all of the distutils/setuptools commands
 available as Paver tasks). Here's what the conversion looks like::
 
   # <== include('started/newway/pavement.py', 'setup')==>
+  setup(
+      name="TheNewWay",
+      packages=['newway'],
+      version="1.0",
+      url="http://www.blueskyonmars.com/",
+      author="Kevin Dangoor",
+      author_email="dangoor@gmail.com"
+  )
   # <==end==>
 
 Paver is compatible with distutils
@@ -144,6 +180,80 @@ above, or call ``paver.setuputils.install_distutils_tasks()``.
 We can see this in action by looking at ``paver help``::
 
   # <== sh('cd docs/samples/started/newway; paver help')==>
+  ---> paver.tasks.help
+  Usage: paver [global options] taskname [task options] [taskname [taskoptions]]
+
+  Options:
+    --version             show program's version number and exit
+    -n, --dry-run         don't actually do anything
+    -v, --verbose         display all logging output
+    -q, --quiet           display only errors
+    -i, --interactive     enable prompting
+    -f FILE, --file=FILE  read tasks from FILE [pavement.py]
+    -h, --help            display this help information
+
+  Tasks from bdist_mpkg.cmd_bdist_mpkg:
+    bdist_mpkg       - create a Mac OS X mpkg distribution for Installer.app
+
+  Tasks from distutils.command:
+    bdist            - create a built (binary) distribution
+    bdist_dumb       - create a "dumb" built distribution
+    build            - build everything needed to install
+    build_clib       - build C/C++ libraries used by Python extensions
+    build_scripts    - "build" scripts (copy and fixup #! line)
+    clean            - clean up temporary files from 'build' command
+    install_data     - install data files
+    install_headers  - install C/C++ header files
+
+  Tasks from nose.commands:
+    nosetests        - Run unit tests using nosetests
+
+  Tasks from paver.doctools:
+    cog              - Runs the cog code generator against the files matching your 
+      specification
+    doc_clean        - Clean (delete) the built docs
+    html             - Build HTML documentation using Sphinx
+    uncog            - Remove the Cog generated code from files
+
+  Tasks from paver.misctasks:
+    generate_setup   - Generates a setup
+    minilib          - Create a Paver mini library that contains enough for a simple
+      pavement
+
+  Tasks from paver.tasks:
+    help             - This help display
+
+  Tasks from py2app.build_app:
+    py2app           - create a Mac OS X application or plugin from Python scripts
+
+  Tasks from setuptools.command:
+    alias            - define a shortcut to invoke one or more commands
+    bdist_egg        - create an "egg" distribution
+    bdist_rpm        - create an RPM distribution
+    bdist_wininst    - create an executable installer for MS Windows
+    build_ext        - build C/C++ extensions (compile/link to build directory)
+    build_py         - "build" pure Python modules (copy to build directory)
+    develop          - install package in 'development mode'
+    easy_install     - Find/get/install Python packages
+    egg_info         - create a distribution's .egg-info directory
+    install          - install everything from build directory
+    install_egg_info - Install an .egg-info directory for the package
+    install_lib      - install all Python modules (extensions and pure Python)
+    install_scripts  - install scripts (Python or otherwise)
+    register         - register the distribution with the Python package index
+    rotate           - delete older distributions, keeping N newest files
+    saveopts         - save supplied options to setup.cfg or other config file
+    sdist            - create a source distribution (tarball, zip file, etc.)
+    setopt           - set an option in setup.cfg or another config file
+    test             - run unit tests after in-place build
+
+  Tasks from sphinx.setup_command:
+    build_sphinx     - Build Sphinx documentation
+
+  Tasks from pavement:
+    deploy           - Deploy the HTML to the server
+    html             - Build the docs and put them into our package
+    sdist            - Overrides sdist to make sure that our setup
   # <==end==>
 
 That command is listing all of the available tasks, and you can see
@@ -155,6 +265,9 @@ is properly redistributable: tell distutils about our special files.
 We can do that with a simple MANIFEST.in::
 
     # <== include('started/newway/MANIFEST.in')==>
+    include setup.py
+    include pavement.py
+    include paver-minilib.zip
     # <==end==>
 
 With that, we can run ``paver sdist`` and end up with the
@@ -165,6 +278,8 @@ equivalent output file::
   #    insert_output=False)
   # sh('ls -l docs/samples/started/newway/dist')
   # ==>
+  total 64
+  -rw-r--r--  1 admin  staff  31869 May  4 09:36 TheNewWay-1.0.tar.gz
   # <==end==>
 
 It also means that users of The New Way can also run ``paver install``
@@ -201,6 +316,7 @@ Worried about bloating your package? The paver-minilib is not large::
   #    insert_output=False)
   # sh('ls -l docs/samples/started/newway/paver-minilib.zip')
   # ==>
+  -rw-r--r--  1 admin  staff  27128 May  4 09:36 docs/samples/started/newway/paver-minilib.zip
   # <==end==>
 
 Paver itself is bootstrapped with a generated setup file and a
@@ -222,6 +338,11 @@ commands. All we need to do is create a new sdist task in our
 pavement.py::
 
   # <== include('started/newway/pavement.py', 'sdist')==>
+  @task
+  @needs('generate_setup', 'minilib', 'setuptools.command.sdist')
+  def sdist():
+      """Overrides sdist to make sure that our setup.py is generated."""
+      pass
   # <==end==>
 
 The @task decorator just tells Paver that this is a task and not just
@@ -249,12 +370,39 @@ the import will make the doctools-related tasks available.
 ``paver help html`` will tell us how to use the html command::
 
   # <== sh('paver help paver.doctools.html')==>
+  ---> paver.tasks.help
+
+  paver.doctools.html
+  -------------------
+  Usage: paver paver.doctools.html [options]
+
+  Options:
+    -h, --help  display this help information
+
+  Build HTML documentation using Sphinx. This uses the following
+      options in a "sphinx" section of the options.
+
+      docroot
+        the root under which Sphinx will be working. Default: docs
+      builddir
+        directory under the docroot where the resulting files are put.
+        default: build
+      sourcedir
+        directory under the docroot for the source files
+        default: (empty string)
+      
+
   # <==end==>
 
 According to that, we'll need to set the builddir setting, since we're
 using a builddir called "_build". Let's add this to our pavement.py::
 
   # <== include('started/newway/pavement.py', 'sphinx')==>
+  options(
+      sphinx=Bunch(
+          builddir="_build"
+      )
+  )
   # <==end==>
 
 And with that, ``paver html`` is now equivalent to ``make html`` using
@@ -267,6 +415,11 @@ You may remember that shell script we had for moving our generated
 docs to the right place::
 
   # <== include('started/oldway/builddocs.sh')==>
+  cd docs
+  make html
+  cd ..
+  rm -rf oldway/docs
+  mv docs/_build/html oldway/docs
   # <==end==>
 
 Ideally, we'd want this to happen whenever we generate the docs.
@@ -274,6 +427,14 @@ We've already seen how to override tasks, so let's try that out
 here::
 
   # <== include('started/newway/pavement.py', 'html')==>
+  @task
+  @needs('paver.doctools.html')
+  def html(options):
+      """Build the docs and put them into our package."""
+      destdir = path('newway/docs')
+      destdir.rmtree()
+      builtdocs = path("docs") / options.builddir / "html"
+      builtdocs.move(destdir)
   # <==end==>
 
 There are a handful of interesting things in here. The equivalent of
@@ -289,6 +450,7 @@ new generated files into that spot. Next, we look at the built
 docs directory that we'll be moving::
 
   # <== include('started/newway/pavement.py', 'html.builtdocs')==>
+  builtdocs = path("docs") / options.builddir / "html"
   # <==end==>
 
 One cool thing about path objects is that you can use the natural
@@ -329,6 +491,16 @@ two part strategy to solve this problem. Let's look at part of the index.rst
 document file to see the first part::
 
   # <== include("started/newway/docs/index.rst", "mainpart")==>
+  Welcome to The New Way's documentation!
+  =======================================
+
+  This is the Paver way of doing things. The key functionality here
+  is in this powerful piece of code, which I will `include` here in its entirety
+  so that you can bask in its power::
+
+    # [[[cog include("newway/thecode.py", "code")]]]
+    # [[[end]]]
+
   # <==end==>
 
 In The New Way's index.rst, you can see the same mechanism being used that
@@ -350,6 +522,13 @@ up the 'code' section of the newway/thecode.py file. Let's take a look
 at that file::
 
   # <== sh("cat docs/samples/started/newway/newway/thecode.py") ==>
+  """This is our powerful, code-filled, new-fangled module."""
+
+  # [[[section code]]]
+  def powerful_function_and_new_too():
+      """This is powerful stuff, and it's new."""
+      return 2*1
+  # [[[endsection]]]
   # <==end==>
 
 Paver has a Cog-like syntax for defining named sections. So, you just
@@ -373,12 +552,28 @@ I only have one server. First, we'll set up some variables to use for
 our deploy task::
 
   # <== include('started/newway/pavement.py', 'deployoptions')==>
+  options(
+      deploy = Bunch(
+          htmldir = path('newway/docs'),
+          hosts = ['host1.hostymost.com', 'host2.hostymost.com'],
+          hostpath = 'sites/newway'
+      )
+  )
   # <==end==>
 
 As you can see, we can put whatever kinds of objects we wish into
 the options. Now for the deploy task itself::
 
   # <== include("started/newway/pavement.py", "deploy")==>
+  @task
+  @cmdopts([
+      ('username=', 'u', 'Username to use when logging in to the servers')
+  ])
+  def deploy(options):
+      """Deploy the HTML to the server."""
+      for host in options.hosts:
+          sh("rsync -avz -e ssh %s/ %s@%s:%s/" % (options.htmldir,
+              options.username, host, options.hostpath))
   # <==end==>
 
 You'll notice the new "cmdopts" decorator. Let's say that you have
@@ -397,6 +592,9 @@ for each host. Let's do a dry run providing a username to see
 what the commands will be::
 
   # <== sh("cd docs/samples/started/newway; paver -n deploy -u kevin")==>
+  ---> pavement.deploy
+  rsync -avz -e ssh newway/docs/ kevin@host1.hostymost.com:sites/newway/
+  rsync -avz -e ssh newway/docs/ kevin@host2.hostymost.com:sites/newway/
   # <==end==>
 
 Where to go from here

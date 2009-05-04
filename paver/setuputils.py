@@ -135,6 +135,8 @@ class DistutilsTask(tasks.Task):
         self.option_names = set()
         self.needs = []
         self.user_options = command_class.user_options
+        # Parse distutils config files.
+        distribution.parse_config_files()
         
     def __call__(self, *args, **kw):
         options = tasks.environment.options.get(self.shortname, {})

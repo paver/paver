@@ -3,8 +3,12 @@
 Paver Changelog
 ===============
 
-1.0.1 (unreleased)
-------------------
+1.0.1 (May 4, 2009)
+-------------------
+
+This release was made possible by Adam Lowry who helped improve the code and reviewed
+committed many of the patches.
+
 * Fixed sending nonpositional arguments first with consume_args (issue #31).
 * Fixed use of setuputils without defining options.setup (issue #24).
 * Python 2.4 compatibility fixes (issue #28)
@@ -12,6 +16,7 @@ Paver Changelog
 * sh() accepts a cwd keyword argument (issue #29).
 * virtualenv bootstrap generation accepts no_site_packages, unzip_setuptools,
   and destination directory arguments in options.
+* Distutils config files were being ignored (issue #36) (thanks to Matthew Scott for the patch)
 
 1.0 (March 22, 2009)
 --------------------
