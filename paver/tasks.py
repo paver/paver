@@ -123,11 +123,16 @@ class Environment(object):
         task()
     
     def _run_task(self, task_name, needs, func):
-        funcargs = inspect.getargspec(func)[0]
+        (funcargs, varargs, varkw, defaults) = inspect.getargspec(func)
         kw = dict()
-        for arg in funcargs:
+        for i in xrange(0, len(funcargs)):
+            arg = funcargs[i]
             if arg == 'env':
                 kw['env'] = self
+            # Keyword arguments do now need to be in the environment
+            elif (defaults is not None and
+                  (i - (len(funcargs) - len(defaults))) >= 0):
+                pass
             else:
                 try:
                     kw[arg] = getattr(self, arg)

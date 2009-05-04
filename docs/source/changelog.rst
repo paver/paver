@@ -18,6 +18,7 @@ committed many of the patches.
   and destination directory arguments in options.
 * Distutils config files were being ignored (issue #36) (thanks to Matthew Scott for the patch)
 * The exit code was 0 whenever the first task passes, even if later tasks fail (issue #35) (thanks to Matt for the patch)
+* Tasks can take normal keyword arguments (issue #33) (thanks to Chris Burroughs for the patch with test!)
 
 1.0 (March 22, 2009)
 --------------------
