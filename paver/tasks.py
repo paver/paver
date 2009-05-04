@@ -610,3 +610,4 @@ def main(args=None):
         _launch_pavement(args)
     except BuildFailure, e:
         environment.error("Build failed: %s", e)
+        sys.exit(1)

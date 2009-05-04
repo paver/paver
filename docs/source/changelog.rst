@@ -17,6 +17,7 @@ committed many of the patches.
 * virtualenv bootstrap generation accepts no_site_packages, unzip_setuptools,
   and destination directory arguments in options.
 * Distutils config files were being ignored (issue #36) (thanks to Matthew Scott for the patch)
+* The exit code was 0 whenever the first task passes, even if later tasks fail (issue #35) (thanks to Matt for the patch)
 
 1.0 (March 22, 2009)
 --------------------
