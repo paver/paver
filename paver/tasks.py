@@ -51,7 +51,13 @@ class Environment(object):
         self._log(3, message, args)
     
     def _log(self, level, message, args):
-        output = message % args
+        # This conditional fixes an issue which arises if the message contains
+        # formatting directives but no args are provided.
+        if args:
+            output = message % args
+        else:
+            output = message
+
         if self._task_output is not None:
             self._task_output.append(output)
         if level > 2 or (level > 1 and not self.quiet) or \

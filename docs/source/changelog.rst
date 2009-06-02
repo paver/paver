@@ -3,6 +3,11 @@
 Paver Changelog
 ===============
 
+(unreleased)
+------------
+
+* FIXED A command that outputs to stderr containing formatting directives (%s) or something that looks like one would cause an error. Thanks to disturbyte for the patch.
+
 1.0.1 (May 4, 2009)
 -------------------
 

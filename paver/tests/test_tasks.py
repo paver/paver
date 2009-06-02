@@ -370,6 +370,19 @@ def test_all_messages_for_a_task_are_captured():
     except FakeExitException:
         assert "This is debug msg" in "\n".join(env.patch_captured)
         assert env.exit_code == 1
+
+def test_messages_with_formatting_and_no_args_still_work():
+    @tasks.task
+    def t1(error):
+        error("This is a %s message")
+
+    env = _set_environment(t1=t1, patch_print=True)
+    tasks._process_commands(['t1'])
+    assert env.patch_captured[-1] == "This is a %s message"
+    env.patch_captured = []
+
+    tasks._process_commands(['-q', 't1'])
+    assert env.patch_captured[-1] == "This is a %s message"
     
 def test_alternate_pavement_option():
     env = _set_environment()
