@@ -69,7 +69,7 @@ Features
 
 See how it works! Check out the :ref:`Getting Started Guide <gettingstarted>`.
 
-Paver was created by `Kevin Dangoor <blueskyonmars.com>`_ of `SitePen <sitepen.com>`_.
+Paver was created by `Kevin Dangoor <http://blueskyonmars.com>`_ of `SitePen <http://sitepen.com>`_.
 
 Status
 ------
