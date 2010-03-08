@@ -40,13 +40,15 @@ def sh(command, capture=False, ignore_error=False, cwd=None):
     If the dry_run option is True, the command will not
     actually be run."""
     def runpipe():
-        kwargs = { 'shell': True, 'stderr': subprocess.PIPE, 'cwd': cwd}
+        kwargs = { 'shell': True, 'cwd': cwd}
         if capture:
+            kwargs['stderr'] = subprocess.STDOUT
             kwargs['stdout'] = subprocess.PIPE
         p = subprocess.Popen(command, **kwargs)
         p.wait()
         if p.returncode and not ignore_error:
-            error(p.stderr.read())
+            if capture:
+                error(p.stdout.read())
             raise BuildFailure("Subprocess return code: %d" % p.returncode)
 
         if capture:

@@ -84,9 +84,9 @@ the name of the function. The long name is the fully qualified Python
 name for the function object.
 
 For example, the Sphinx support includes a task function called "html".
-That task's long name is "paver.sphinx.html".
+That task's long name is "paver.doctools.html".
 
-If you ```import paver.sphinx``` in your pavement.py, you'll be able 
+If you ```import paver.doctools``` in your pavement.py, you'll be able 
 to use either name to refer to that task.
 
 Tasks that you define in your pavement are always available by their
