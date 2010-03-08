@@ -3,8 +3,8 @@
 Paver Changelog
 ===============
 
-(unreleased)
-------------
+1.0.2 (March 8, 2010)
+---------------------
 
 * FIXED A command that outputs to stderr containing formatting directives (%s) or something that looks like one would cause an error. Thanks to disturbyte for the patch.
 * Tasks can take normal keyword arguments
