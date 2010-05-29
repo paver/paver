@@ -3,6 +3,10 @@
 Paver Changelog
 ===============
 
+1.0.3 (May 28, 2010)
+--------------------
+* Fixed unit tests (thanks to Elias Alma)
+
 1.0.2 (March 8, 2010)
 ---------------------
 
