@@ -6,7 +6,7 @@ import inspect
 import itertools
 import traceback
 
-VERSION = "1.0.2"
+VERSION = "1.0.3"
 
 class PavementError(Exception):
     """Exception that represents a problem in the pavement.py file
