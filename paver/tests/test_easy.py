@@ -7,7 +7,8 @@ import subprocess # for easy.sh tests
 def test_sh_raises_BuildFailure(popen):
     popen.return_value = Mock()
     popen.return_value.returncode = 1
-    popen.return_value.stdout.read.return_value = 'some stderr'
+    popen.return_value.communicate = Mock()
+    popen.return_value.communicate.return_value = ['some stderr']
 
     try:
         easy.sh('foo')
@@ -27,7 +28,8 @@ def test_sh_raises_BuildFailure(popen):
 def test_sh_with_capture_raises_BuildFailure(popen, error):
     popen.return_value = Mock()
     popen.return_value.returncode = 1
-    popen.return_value.stdout.read.return_value = 'some stderr'
+    popen.return_value.communicate = Mock()
+    popen.return_value.communicate.return_value = ['some stderr']
     try:
         easy.sh('foo', capture=True)
     except easy.BuildFailure, e:
@@ -48,8 +50,9 @@ def test_sh_with_capture_raises_BuildFailure(popen, error):
 @patch(subprocess, "Popen")
 def test_sh_ignores_error(popen):
     popen.return_value = Mock()
+    popen.return_value.communicate = Mock()
+    popen.return_value.communicate.return_value = ['some stderr']
     popen.return_value.returncode = 1
-    popen.return_value.stdout.read.return_value = 'some stderr'
     easy.sh('foo', ignore_error=True)
 
     assert popen.called
@@ -61,7 +64,8 @@ def test_sh_ignores_error(popen):
 def test_sh_ignores_error_with_capture(popen):
     popen.return_value = Mock()
     popen.return_value.returncode = 1
-    popen.return_value.stdout.read.return_value = 'some stderr'
+    popen.return_value.communicate = Mock()
+    popen.return_value.communicate.return_value = ['some stderr']
     easy.sh('foo', capture=True, ignore_error=True)
 
     assert popen.called

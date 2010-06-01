@@ -45,14 +45,14 @@ def sh(command, capture=False, ignore_error=False, cwd=None):
             kwargs['stderr'] = subprocess.STDOUT
             kwargs['stdout'] = subprocess.PIPE
         p = subprocess.Popen(command, **kwargs)
-        p.wait()
+        p_stdout = p.communicate()[0]
         if p.returncode and not ignore_error:
             if capture:
-                error(p.stdout.read())
+                error(p_stdout)
             raise BuildFailure("Subprocess return code: %d" % p.returncode)
 
         if capture:
-            return p.stdout.read()
+            return p_stdout
 
     return dry(command, runpipe)
 

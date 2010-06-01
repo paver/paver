@@ -3,8 +3,9 @@
 Paver Changelog
 ===============
 
-1.0.3 (May 28, 2010)
+1.0.3 (June 1, 2010)
 --------------------
+* Fixed deadlock problem when there's a lot of output from a subprocess (thanks to Jeremy Rossi)
 * Fixed unit tests (thanks to Elias Alma)
 
 1.0.2 (March 8, 2010)
