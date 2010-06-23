@@ -6,10 +6,17 @@
 
 # $Id: cogapp.py 121 2005-10-07 02:52:01Z ned $
 
-import md5, os, re, string, sys, traceback, types
+import os, re, string, sys, traceback, types
 import imp, compiler
 import copy, getopt, shlex
 from cStringIO import StringIO
+
+try:
+    import hashlib
+    md5_new = hashlib.md5
+except ImportError:
+    import md5
+    md5_new = md5.new
 
 __all__ = ['Cog', 'CogUsageError']
 
@@ -413,7 +420,7 @@ class Cog(Redirectable):
             
             # Eat all the lines in the output section.  While reading past
             # them, compute the md5 hash of the old output.
-            hasher = md5.new()
+            hasher = md5_new()
             while l and not self.isEndOutputLine(l):
                 if self.isBeginSpecLine(l):
                     raise CogError("Unexpected '%s'" % self.sBeginSpec,
@@ -432,7 +439,7 @@ class Cog(Redirectable):
 
             # Write the output of the spec to be the new output if we're 
             # supposed to generate code.
-            hasher = md5.new()
+            hasher = md5_new()
             if not self.options.bNoGenerate:
                 sFile = "%s+%d" % (sFileIn, firstLineNum)
                 sGen = gen.evaluate(cog=self, globals=globals, fname=sFile)

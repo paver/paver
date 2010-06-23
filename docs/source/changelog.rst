@@ -3,6 +3,10 @@
 Paver Changelog
 ===============
 
+1.0.4 (unreleased)
+------------------
+* Fixed md5 deprecation warnings in the bundled cog (thanks to jszakmeister, issue #56)
+
 1.0.3 (June 1, 2010)
 --------------------
 * Fixed deadlock problem when there's a lot of output from a subprocess (thanks to Jeremy Rossi)
