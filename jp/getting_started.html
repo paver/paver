@@ -1,0 +1,516 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>スタートガイド &mdash; Paver v1.0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Paver v1.0.1 documentation" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">Paver v1.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <span class="target" id="gettingstarted"></span><div class="section" id="id1">
+<h1>スタートガイド<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>新たなツールに慣れる最も簡単な方法は実際に実行できるサンプルを見てみることです。つまり、どのように Paver を使い始めれば良いかということになります。Paver ディストリビューション内の docs/sample にサンプルがあります。そして、その &#8220;started&#8221; ディレクトリにスタートガイドのサンプルがあります。</p>
+<div class="section" id="id2">
+<h2>旧い方法<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>最初のサンプルは &#8220;旧い方法&#8221; と呼びます(docs/samples/started/oldway ディレクトリにあります)。それは配布できるようにしたい Python パッケージとドキュメントの適正且つ典型的なプロジェクトです。</p>
+<p>Python の <a class="reference external" href="http://docs.python.org/dist/dist.html">distutils</a> を使用すると配布パッケージをとても簡単に作成できます。次のような setup.py ファイルを作成します。</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#&lt;== include(&#39;started/oldway/setup.py&#39;)==&gt;</span>
+<span class="kn">from</span> <span class="nn">distutils.core</span> <span class="kn">import</span> <span class="n">setup</span>
+
+<span class="n">setup</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s">&quot;TheOldWay&quot;</span><span class="p">,</span>
+    <span class="n">packages</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;oldway&#39;</span><span class="p">],</span>
+    <span class="n">version</span><span class="o">=</span><span class="s">&quot;1.0&quot;</span><span class="p">,</span>
+    <span class="n">url</span><span class="o">=</span><span class="s">&quot;http://www.blueskyonmars.com/&quot;</span><span class="p">,</span>
+    <span class="n">author</span><span class="o">=</span><span class="s">&quot;Kevin Dangoor&quot;</span><span class="p">,</span>
+    <span class="n">author_email</span><span class="o">=</span><span class="s">&quot;dangoor@gmail.com&quot;</span>
+<span class="p">)</span>
+<span class="c">#&lt;==end==&gt;</span>
+</pre></div>
+</div>
+<p>簡単な setup スクリプトで実行します。</p>
+<div class="highlight-python"><pre>python setup.py sdist</pre>
+</div>
+<p>ソースディストリビューションをビルドするには、</p>
+<div class="highlight-python"><pre># &lt;==
+# sh('cd docs/samples/started/oldway; python setup.py sdist',
+#    insert_output=False)
+# sh('ls -l docs/samples/started/oldway/dist')
+# ==&gt;
+celkem 4
+-rw-r--r-- 1 almad almad 629 11. lis 22.19 TheOldWay-1.0.tar.gz
+# &lt;==end==&gt;</pre>
+</div>
+<p>それからユーザは見慣れたコマンドを実行します。</p>
+<div class="highlight-python"><pre>python setup.py install</pre>
+</div>
+<p>パッケージをインストールするために setuptools を使用するとさらに簡単です。</p>
+<div class="highlight-python"><pre>easy_install "TheOldWay"</pre>
+</div>
+<p>パッケージは Python パッケージインデックスにあります。</p>
+<div class="section" id="id3">
+<h3>旧い方法のドキュメント<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p>旧い方法プロジェクトはドキュメントに <a class="reference external" href="http://sphinx.pocoo.org">Sphinx</a> を使用しているので少なくともちょっとはモダンです。sphinx-quickstart を使用してドキュメントを作成し始めるとき Sphinx は HTML ドキュメントを生成する Makefile を設けるでしょう。そのため、HTML ドキュメントを簡単に生成できます。</p>
+<div class="highlight-python"><pre>make html</pre>
+</div>
+<p>但し、(Paver そのもののように)このプロジェクトでは、ユーザへヘルプを定期ょ湯するためにパッケージの docs ディレクトリに HTML ファイルを追加したいです。最終的に次のようなシェルスクリプトを作ります。</p>
+<div class="highlight-python"><pre># &lt;== include("started/oldway/builddocs.sh")==&gt;
+cd docs
+make html
+cd ..
+rm -rf oldway/docs
+mv docs/_build/html oldway/docs
+# &lt;==end==&gt;</pre>
+</div>
+<p>もちろん、このようなスクリプトを作成することは、実際にそのスクリプトの実行を覚えておく必要があることを意味します。このスクリプトを &#8220;buildsdist.sh&#8221; に変更して、ファイルの最後に <tt class="docutils literal"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">sdist</span></tt> を追加することはできます。しかし、直接 <tt class="docutils literal"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">sdist</span></tt> を実行できればもっと良い気がしますよね？</p>
+<p><a class="reference external" href="http://www.python.jp/doc/release/dist/api-reference.html">新たな distutils コマンドを作成する</a> こともできますが、Python ライブラリディレクトリの distutils/command パッケージにそんな機能を本当に追加したいでしょうか？そして、いずれにしても sdist コマンドをどうやって呼び出すのでしょうか？ <a class="reference external" href="http://peak.telecommunity.com/DevCenter/setuptools">setuptools</a> は助けてくれますが、それでもこのコマンドのコレクションのためにエントリポイントとモジュールのセットアップが必要になります。</p>
+</div>
+<div class="section" id="id5">
+<h3>私のところでは動作する<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>これを読んで &#8220;うわっ、なんて不自然なサンプルだ！&#8221; と考える人がいることも <cite>分かります</cite> 。プロジェクトのビルド、パッケージング、配布、デプロイは全てのプロジェクトでかなりカスタマイズされます。Paver の重要なことの1つはプロジェクトでどんな奇妙な要求が起こっても簡単に扱えるようにすることです。このサンプルは不自然に見えるかもしれませんが、どうやって Paver がそういったタスクを簡単に扱うかについてのアイディアを説明します。</p>
+</div>
+</div>
+<div class="section" id="id6">
+<h2>新しい方法<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<p>これまでのセクションのスクリプティングを今すぐクリーンアップして Paver を少し取り入れてみましょう。Paver を使用するために既存のプロジェクトから移行することは、本当に、本当に簡単です。旧い方法の setup.py から setup() 関数を呼び出してください。</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># &lt;== include(&quot;started/oldway/setup.py&quot;, &quot;setup&quot;)==&gt;</span>
+<span class="n">setup</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s">&quot;TheOldWay&quot;</span><span class="p">,</span>
+    <span class="n">packages</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;oldway&#39;</span><span class="p">],</span>
+    <span class="n">version</span><span class="o">=</span><span class="s">&quot;1.0&quot;</span><span class="p">,</span>
+    <span class="n">url</span><span class="o">=</span><span class="s">&quot;http://www.blueskyonmars.com/&quot;</span><span class="p">,</span>
+    <span class="n">author</span><span class="o">=</span><span class="s">&quot;Kevin Dangoor&quot;</span><span class="p">,</span>
+    <span class="n">author_email</span><span class="o">=</span><span class="s">&quot;dangoor@gmail.com&quot;</span>
+<span class="p">)</span>
+<span class="c"># &lt;==end==&gt;</span>
+</pre></div>
+</div>
+<div class="section" id="paver">
+<h3>Paver を使い始める<a class="headerlink" href="#paver" title="Permalink to this headline">¶</a></h3>
+<p>setup.py は普通の Python スクリプトです。それは慣例として setup.py と呼ばれます。Paver は Make や Rake のように動作します。Paver を使用するために <tt class="docutils literal"><span class="pre">paver</span> <span class="pre">&lt;taskname&gt;</span></tt> を実行します。そして paver コマンドはカレントディレクトリの pavement.py ファイルを探します。pavement.py は普通の Python モジュールです。典型的な pavement.py は paver.easy から便利な関数、オブジェクトのセットをインポートします。それから役に立つタスクを含むその他のモジュールをインポートします。</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># &lt;== include(&#39;started/newway/pavement.py&#39;, &#39;imports&#39;)==&gt;</span>
+<span class="kn">from</span> <span class="nn">paver.easy</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">paver.doctools</span>
+<span class="kn">from</span> <span class="nn">paver.setuputils</span> <span class="kn">import</span> <span class="n">setup</span>
+<span class="c"># &lt;==end==&gt;</span>
+</pre></div>
+</div>
+<p>setup.py から pavement.py に変換することは簡単です。Paver は全てのビルドオプションを含む特殊な <tt class="docutils literal"><span class="pre">options</span></tt> オブジェクトを提供します。 <tt class="docutils literal"><span class="pre">options</span></tt> は属性スタイルのアクセスを許可して特別な検索機能を持つ辞書です。distutils の操作オプションはそのオプションの <tt class="docutils literal"><span class="pre">setup</span></tt> セクションに格納されます。そして、慣例として Paver はその options セクションに値をセットする setup 関数を提供します(さらに一歩踏み込むと、全ての distutils/setuptools コマンドを作ることで Paver のタスクとして利用できます)。ここにその移行がどのように行うかを紹介します。</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># &lt;== include(&#39;started/newway/pavement.py&#39;, &#39;setup&#39;)==&gt;</span>
+<span class="n">setup</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s">&quot;TheNewWay&quot;</span><span class="p">,</span>
+    <span class="n">packages</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;newway&#39;</span><span class="p">],</span>
+    <span class="n">version</span><span class="o">=</span><span class="s">&quot;1.0&quot;</span><span class="p">,</span>
+    <span class="n">url</span><span class="o">=</span><span class="s">&quot;http://www.blueskyonmars.com/&quot;</span><span class="p">,</span>
+    <span class="n">author</span><span class="o">=</span><span class="s">&quot;Kevin Dangoor&quot;</span><span class="p">,</span>
+    <span class="n">author_email</span><span class="o">=</span><span class="s">&quot;dangoor@gmail.com&quot;</span>
+<span class="p">)</span>
+<span class="c"># &lt;==end==&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="paver-distutils">
+<h3>Paver は distutils 互換<a class="headerlink" href="#paver-distutils" title="Permalink to this headline">¶</a></h3>
+<p>Paver を選択するということは distutils や setuptools を使用しないということではありません。Paver は distutils や setuptools コマンドを使用し続けます。Paver のタスクを持つモジュールをインポートするとき、それらのタスクは実行時に自動的に利用可能になります。distutils や setuptools に対して同様にアクセスしたいなら、上述したように <tt class="docutils literal"><span class="pre">paver.setuputils.setup</span></tt> を使用するか <tt class="docutils literal"><span class="pre">paver.setuputils.install_distutils_tasks()</span></tt> を呼び出すか、どちらでも使用することができます。</p>
+<p>実際に <tt class="docutils literal"><span class="pre">paver</span> <span class="pre">help</span></tt> を実行すると見ることができます。</p>
+<div class="highlight-python"><pre># &lt;== sh('cd docs/samples/started/newway; paver help')==&gt;
+Could not load entry point: upload_docs = setuptools.command.upload_docs:upload_docs
+---&gt; paver.tasks.help
+Usage: paver [global options] taskname [task options] [taskname [taskoptions]]
+
+Options:
+  --version             show program's version number and exit
+  -n, --dry-run         don't actually do anything
+  -v, --verbose         display all logging output
+  -q, --quiet           display only errors
+  -i, --interactive     enable prompting
+  -f FILE, --file=FILE  read tasks from FILE [pavement.py]
+  -h, --help            display this help information
+
+Tasks from distutils.command:
+  bdist            - create a built (binary) distribution
+  bdist_dumb       - create a "dumb" built distribution
+  build            - build everything needed to install
+  build_clib       - build C/C++ libraries used by Python extensions
+  build_scripts    - "build" scripts (copy and fixup #! line)
+  clean            - clean up temporary files from 'build' command
+  install_data     - install data files
+  install_headers  - install C/C++ header files
+  upload           - upload binary package to PyPI
+
+Tasks from nose.commands:
+  nosetests        - Run unit tests using nosetests
+
+Tasks from paver.doctools:
+  cog              - Runs the cog code generator against the files matching your
+    specification
+  doc_clean        - Clean (delete) the built docs
+  html             - Build HTML documentation using Sphinx
+  uncog            - Remove the Cog generated code from files
+
+Tasks from paver.misctasks:
+  generate_setup   - Generates a setup
+  minilib          - Create a Paver mini library that contains enough for a simple
+    pavement
+
+Tasks from paver.tasks:
+  help             - This help display
+
+Tasks from setuptools.command:
+  alias            - define a shortcut to invoke one or more commands
+  bdist_egg        - create an "egg" distribution
+  bdist_rpm        - create an RPM distribution
+  bdist_wininst    - create an executable installer for MS Windows
+  build_ext        - build C/C++ and Pyrex extensions (compile/link to build directory)
+  build_py         - "build" pure Python modules (copy to build directory)
+  develop          - install package in 'development mode'
+  easy_install     - Find/get/install Python packages
+  egg_info         - create a distribution's .egg-info directory
+  install          - install everything from build directory
+  install_egg_info - Install an .egg-info directory for the package
+  install_lib      - install all Python modules (extensions and pure Python)
+  install_scripts  - install scripts (Python or otherwise)
+  register         - register the distribution with the Python package index
+  rotate           - delete older distributions, keeping N newest files
+  saveopts         - save supplied options to setup.cfg or other config file
+  sdist            - create a source distribution (tarball, zip file, etc.)
+  setopt           - set an option in setup.cfg or another config file
+  test             - run unit tests after in-place build
+
+Tasks from sphinx.setup_command:
+  build_sphinx     - Build Sphinx documentation
+
+Tasks from pavement:
+  deploy           - Deploy the HTML to the server
+  html             - Build the docs and put them into our package
+  sdist            - Overrides sdist to make sure that our setup
+# &lt;==end==&gt;</pre>
+</div>
+<p>ヘルプコマンドは利用可能な全てのタスクを表示します。その上部付近に distutils.command からのタスクがあります。標準の distutils の全コマンドが利用できます。</p>
+<p>Python パッケージが適切に再配布可能になる前に行う必要があることが1つあります。distutils に特別なファイルを伝えます。それは簡単な MANIFEST.in で実行できます。</p>
+<div class="highlight-python"><pre># &lt;== include('started/newway/MANIFEST.in')==&gt;
+include setup.py
+include pavement.py
+include paver-minilib.zip
+# &lt;==end==&gt;</pre>
+</div>
+<p>そのファイルを使用して <tt class="docutils literal"><span class="pre">paver</span> <span class="pre">sdist</span></tt> を実行すると、最終的に等価な出力ファイルが生成されます。</p>
+<div class="highlight-python"><pre># &lt;==
+# sh('cd docs/samples/started/newway; paver sdist',
+#    insert_output=False)
+# sh('ls -l docs/samples/started/newway/dist')
+# ==&gt;
+celkem 32
+-rw-r--r-- 1 almad almad 28860 11. lis 22.19 TheNewWay-1.0.tar.gz
+# &lt;==end==&gt;</pre>
+</div>
+<p>新しい方法プロジェクトのユーザはシステム上にパッケージをインストールするために <tt class="docutils literal"><span class="pre">paver</span> <span class="pre">install</span></tt> も実行できることにもなります。</p>
+</div>
+<div class="section" id="setup-py">
+<h3>しかし人は setup.py を使用する！<a class="headerlink" href="#setup-py" title="Permalink to this headline">¶</a></h3>
+<p><tt class="docutils literal"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">install</span></tt> は長い間使われてきました。 <tt class="docutils literal"><span class="pre">paver</span> <span class="pre">install</span></tt> を実行することをユーザへ伝えるためにパッケージ内に必ず README を置くようにしますが、誰も実際にはそのドキュメントを読まないことを私たちみんなが知っています。(そうそう、このガイドを読む時間を取ってくれてありがとう！)</p>
+<p>そうだとしても心配しないで。tarball の中に入れる setup.py ファイルを生成するために <tt class="docutils literal"><span class="pre">paver</span> <span class="pre">generate_setup</span></tt> を実行することができます。それから、ユーザは慣れた方法で <tt class="docutils literal"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">install</span></tt> を実行して Paver がその処理を引き継ぎます。</p>
+</div>
+<div class="section" id="id7">
+<h3>しかし人はまだ Paver を持っていない！<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<p>まだ Paver を持っていない Python のインストール方法は何百万もありますが Python と distutils は持っています。どうやって Pathon ベースのインストールが実行されるだろうか？</p>
+<p>それは簡単です、 <tt class="docutils literal"><span class="pre">paver</span> <span class="pre">minilib</span></tt> を単に実行すると paver-minilib.zip というファイルが作られます。そのファイルには多くのプロジェクトをインストールするために Paver の十分な機能を持っています。Paver が生成した setup.py はそのファイルを探すようになっていて、見つかったらそのファイルを使用します。</p>
+<p>あなたのパッケージの肥大化が心配？ paver-minilib は大きくありません。</p>
+<div class="highlight-python"><pre># &lt;==
+# sh('cd docs/samples/started/newway ; paver minilib',
+#    insert_output=False)
+# sh('ls -l docs/samples/started/newway/paver-minilib.zip')
+# ==&gt;
+-rw-r--r-- 1 almad almad 27309 11. lis 22.19 docs/samples/started/newway/paver-minilib.zip
+# &lt;==end==&gt;</pre>
+</div>
+<p>Paver そのものは生成された setup ファイルと paver-minilib でブートストラップされます。</p>
+</div>
+<div class="section" id="id8">
+<h3>やぁ！あなたは私のためにもっと作業を作らないの？<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<p>新しい方法プロジェクトの適正なディストリビューションを作るために3つのコマンドが実行できることに気付いたかもしれません。えっと、実際に全てのコマンド <tt class="docutils literal"><span class="pre">paver</span> <span class="pre">generate_setup</span> <span class="pre">minilib</span> <span class="pre">sdist</span></tt> を同時に実行することはできます。しかし、それは思うほどひどい方法ではありませんが、良い方法でもありません。実際にはあなたはそのタスクのどれかを忘れるので、そのことにより最終的に壊れたディストリビューションを作りたくはないと思います。</p>
+<p>意図的に、Paver で実行する最も簡単な方法の1つは既存の &#8220;タスク&#8221; の処理を拡張して distutils コマンドを含めるようにします。必要な全ての処理を pavement.py の新たな sdist タスクとして作成することです。</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># &lt;== include(&#39;started/newway/pavement.py&#39;, &#39;sdist&#39;)==&gt;</span>
+<span class="nd">@task</span>
+<span class="nd">@needs</span><span class="p">(</span><span class="s">&#39;generate_setup&#39;</span><span class="p">,</span> <span class="s">&#39;minilib&#39;</span><span class="p">,</span> <span class="s">&#39;setuptools.command.sdist&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">sdist</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Overrides sdist to make sure that our setup.py is generated.&quot;&quot;&quot;</span>
+    <span class="k">pass</span>
+<span class="c"># &lt;==end==&gt;</span>
+</pre></div>
+</div>
+<p>&#64;task デコレータは Paver へこれはタスクであって関数ではないことを伝えます。&#64;needs デコレータはこのタスクが実行される前に実行すべき他のタスクを指定します。お好みでタスク内で <cite>call_task(taskname)</cite> 関数を呼び出すこともできます。その関数名はタスクの名前を決定します。docstring は Paver のヘルプに出力される内容になります。</p>
+<p>上述した pavement.py のタスクで setup ファイルと minilib を生成した後でソースディストリビューションをビルドするために必要なコマンドは <tt class="docutils literal"><span class="pre">paver</span> <span class="pre">sdist</span></tt> だけです。</p>
+</div>
+<div class="section" id="id9">
+<h3>ドキュメントに立ち向かう<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<p>そのツールそのものが pavement を簡単に作成するタスクと関数を提供するまで Paver の標準ライブラリは共通ツールとして役立つモジュールのコレクションを追加します。Sphinx は Paver がビルトインサポートしているパッケージの1つです。</p>
+<p>Paver の Sphinx サポートを使用するために Sphinx をインストールする必要があります。そして pavement.py に <tt class="docutils literal"><span class="pre">import</span> <span class="pre">paver.doctools</span></tt> を追加します。インポートを実行するだけで doctools 関連のタスクが利用できます。 <tt class="docutils literal"><span class="pre">paver</span> <span class="pre">help</span> <span class="pre">html</span></tt> を実行すると html コマンドの使用方法を表示します。</p>
+<div class="highlight-python"><pre># &lt;== sh('paver help paver.doctools.html')==&gt;
+Could not load entry point: upload_docs = setuptools.command.upload_docs:upload_docs
+---&gt; paver.tasks.help
+
+paver.doctools.html
+-------------------
+Usage: paver paver.doctools.html [options]
+
+Options:
+  -h, --help  display this help information
+
+Build HTML documentation using Sphinx. This uses the following
+    options in a "sphinx" section of the options.
+
+    docroot
+      the root under which Sphinx will be working. Default: docs
+    builddir
+      directory under the docroot where the resulting files are put.
+      default: build
+    sourcedir
+      directory under the docroot for the source files
+      default: (empty string)
+
+
+# &lt;==end==&gt;</pre>
+</div>
+<p>表示されたヘルプによると &#8220;_build&#8221; という builddir を使用するので builddir を設定する必要があります。pavement.py にこの設定を追加してみましょう。</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># &lt;== include(&#39;started/newway/pavement.py&#39;, &#39;sphinx&#39;)==&gt;</span>
+<span class="n">options</span><span class="p">(</span>
+    <span class="n">sphinx</span><span class="o">=</span><span class="n">Bunch</span><span class="p">(</span>
+        <span class="n">builddir</span><span class="o">=</span><span class="s">&quot;_build&quot;</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+<span class="c"># &lt;==end==&gt;</span>
+</pre></div>
+</div>
+<p>これにより <tt class="docutils literal"><span class="pre">paver</span> <span class="pre">html</span></tt> は Sphinx が持っていた Makefile を使用して <tt class="docutils literal"><span class="pre">make</span> <span class="pre">html</span></tt> を実行することと等価になります。</p>
+</div>
+<div class="section" id="id10">
+<h3>ドキュメントからシェルスクリプトを取り除く<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<p>生成したドキュメントを適切な場所へ移動するシェルスクリプトを覚えておいた方が良いです。</p>
+<div class="highlight-python"><pre># &lt;== include('started/oldway/builddocs.sh')==&gt;
+cd docs
+make html
+cd ..
+rm -rf oldway/docs
+mv docs/_build/html oldway/docs
+# &lt;==end==&gt;</pre>
+</div>
+<p>理想的には、ドキュメントを生成するときはこのように実行したいです。タスクをオーバーライドする方法は既に確認したので、ここでそれをやってみましょう。</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># &lt;== include(&#39;started/newway/pavement.py&#39;, &#39;html&#39;)==&gt;</span>
+<span class="nd">@task</span>
+<span class="nd">@needs</span><span class="p">(</span><span class="s">&#39;paver.doctools.html&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">html</span><span class="p">(</span><span class="n">options</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Build the docs and put them into our package.&quot;&quot;&quot;</span>
+    <span class="n">destdir</span> <span class="o">=</span> <span class="n">path</span><span class="p">(</span><span class="s">&#39;newway/docs&#39;</span><span class="p">)</span>
+    <span class="n">destdir</span><span class="o">.</span><span class="n">rmtree</span><span class="p">()</span>
+    <span class="n">builtdocs</span> <span class="o">=</span> <span class="n">path</span><span class="p">(</span><span class="s">&quot;docs&quot;</span><span class="p">)</span> <span class="o">/</span> <span class="n">options</span><span class="o">.</span><span class="n">builddir</span> <span class="o">/</span> <span class="s">&quot;html&quot;</span>
+    <span class="n">builtdocs</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">destdir</span><span class="p">)</span>
+<span class="c"># &lt;==end==&gt;</span>
+</pre></div>
+</div>
+<p>この設定には少し興味深いことがあります。オーバーライドしたタスクを使用するので &#8216;make html&#8217; と &#64;needs(&#8216;paver.doctools.html&#8217;) は等価になります。</p>
+<p>タスク内部では &#8220;path&#8221; を使用しています。これは Jason Orendorff がカスタマイズした path モジュールです。どのようなファイルやディレクトリ操作もこのモジュールを使用すると超簡単になります。</p>
+<p>新たに生成したファイルを対象ディレクトリにコピーするので、先ずはそのディレクトリを削除することから始めます。次に移動するためのビルドした docs ディレクトリを探します。</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># &lt;== include(&#39;started/newway/pavement.py&#39;, &#39;html.builtdocs&#39;)==&gt;</span>
+<span class="n">builtdocs</span> <span class="o">=</span> <span class="n">path</span><span class="p">(</span><span class="s">&quot;docs&quot;</span><span class="p">)</span> <span class="o">/</span> <span class="n">options</span><span class="o">.</span><span class="n">builddir</span> <span class="o">/</span> <span class="s">&quot;html&quot;</span>
+<span class="c"># &lt;==end==&gt;</span>
+</pre></div>
+</div>
+<p>path オブジェクトの優れた機能の1つはパスを構成するために &#8216;/&#8217; 演算子を直感的且つ快適に使用できることです。</p>
+<p>次にここで紹介したオプションのアクセスです。オプションオブジェクトはタスクで利用できます。それは基本的に属性スタイルのアクセスを提供するディレクトリで(長い options.sphinx.builddir の代わりに options.builddir を入力できる)オプションの変数を検索できます。オプションのプロパティはセクション間でプロパティを共有可能にするためにも便利です。</p>
+<p>これにより、分割したファイルとしてシェルスクリプトを取り除きます。</p>
+</div>
+<div class="section" id="id11">
+<h3>旧い方法の他の欠点を修正する<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
+<p>旧い方法のドキュメントでは、実際にその関数の内部に直接的に docs を追加しました。しかし、その場所でカット&amp;ペーストする必要がありました。Sphinx はドキュメントに外部ファイルを含める方法を提供します。Paver はさらにもっと良い方法で追加します。</p>
+<p>ドキュメント作成には複数の問題があります。</p>
+<ol class="arabic simple">
+<li>何よりもちゃんと動くことを保証するためにテスト可能なプログラムで、実行可能で、完全なコードになるようにドキュメントとは分割したファイルにコードを書くことは良いことです。</li>
+<li>ドキュメントと、合理的且つ理路整然とした内容に沿うドキュメントに含められるサンプルが欲しいです。Python の doctest スタイルはいつも理路整然としたドキュメントに役立つとは限りません。</li>
+<li>ドキュメントへインラインで、書かれた内容に関連するコードサンプルを追加することは素晴らしいです。書かれた内容がすぐに理解できる場合、書くことが簡単になります。</li>
+</ol>
+<p>#1 と #3 は相互排他的ですが、そうではありません。Paver ではこの問題を解決するために2種類の戦略があります。1つ目の戦略を理解するために index.rst の一部を見てましょう。</p>
+<div class="highlight-python"><pre># &lt;== include("started/newway/docs/index.rst", "mainpart")==&gt;
+Welcome to The New Way's documentation!
+=======================================
+
+This is the Paver way of doing things. The key functionality here
+is in this powerful piece of code, which I will `include` here in its entirety
+so that you can bask in its power::
+
+  # [[[cog include("newway/thecode.py", "code")]]]
+  # [[[end]]]
+
+# &lt;==end==&gt;</pre>
+</div>
+<p>新しい方法の index.rst では、このスタートガイドで使用されているのと同じ仕組みが見れます。Paver は Ned Batchelder の <a class="reference external" href="http://nedbatchelder.com/code/cog/">Cog</a> パッケージを含みます。Cog はあるファイルに Python のスニペットを用意して、それらのスニペットが生成した出力内容をそのファイルの中に組み入れます。テンプレート言語とは違い、Cog はファイルにマーカーを入れて必要になる度に再度生成できるように設計されています。テンプレート言語だと、テンプレートと最終的な出力結果を持っていますが、1つのファイルに両方の内容は持てません。</p>
+<p>そのため、私がこのスタートガイドを書いているように、チラッと見て index.rst のコンテンツの適切なインラインを確認できます。そこにある #[[[cog の部分は include() 関数を呼び出していることに気付きます。これは Paver で提供される2つめの戦略です。Paver は Cog で使用する &#8220;includedir&#8221; を指定させます。これは関連するファイルをそのディレクトリに含めるようにさせます。そして、決定的に追加したい部分のみを簡単に含めることができるように、そういったファイルのセクションを区切らせます。上述したサンプルでは newway/thecode.py ファイルの &#8216;code&#8217; セクションから取り出します。それでは newway/thecode.py ファイルの中身を覗いてみましょう。</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># &lt;== sh(&quot;cat docs/samples/started/newway/newway/thecode.py&quot;) ==&gt;</span>
+<span class="sd">&quot;&quot;&quot;This is our powerful, code-filled, new-fangled module.&quot;&quot;&quot;</span>
+
+<span class="c"># [[[section code]]]</span>
+<span class="k">def</span> <span class="nf">powerful_function_and_new_too</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;This is powerful stuff, and it&#39;s new.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="mi">2</span><span class="o">*</span><span class="mi">1</span>
+<span class="c"># [[[endsection]]]</span>
+<span class="c"># &lt;==end==&gt;</span>
+</pre></div>
+</div>
+<p>Paver は名前セクションを定義するために Cog のような構文があります。そのため、関連するファイ名と追加したいそのセクションで <tt class="docutils literal"><span class="pre">include()</span></tt> 関数を使用してください。セクションはネストして使用することもできます(ドット表記でネストされたセクションを参照します)。</p>
+</div>
+<div class="section" id="id12">
+<h3>おまけのデプロイサンプル<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
+<p>pavement.py は普通の Python プログラムです。ループやその他の構文はあなたが慣れ親しんだコーディングと同じです。そのオプションは普通の Python プログラムなのでリストやその他のオブジェクトを含めることができます。複数のホストへデプロイする必要があるときは？単にそのオプションにホストを追加してループさせるだけで良いです。</p>
+<p>複数のサーバへ新しい方法プロジェクトの HTML ファイルをデプロイしたいと仮定してください。私は1つのサーバしか持っていないけれど、これは私が Paver そのものに行うこととよく似ています。先ず、deploy タスクに使用する複数の変数を設定します。</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># &lt;== include(&#39;started/newway/pavement.py&#39;, &#39;deployoptions&#39;)==&gt;</span>
+<span class="n">options</span><span class="p">(</span>
+    <span class="n">deploy</span> <span class="o">=</span> <span class="n">Bunch</span><span class="p">(</span>
+        <span class="n">htmldir</span> <span class="o">=</span> <span class="n">path</span><span class="p">(</span><span class="s">&#39;newway/docs&#39;</span><span class="p">),</span>
+        <span class="n">hosts</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;host1.hostymost.com&#39;</span><span class="p">,</span> <span class="s">&#39;host2.hostymost.com&#39;</span><span class="p">],</span>
+        <span class="n">hostpath</span> <span class="o">=</span> <span class="s">&#39;sites/newway&#39;</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+<span class="c"># &lt;==end==&gt;</span>
+</pre></div>
+</div>
+<p>ご覧の通り、オプションの中にどのようなオブジェクトでも望みのモノを追加できます。今は deploy タスクそのもののためです。</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># &lt;== include(&quot;started/newway/pavement.py&quot;, &quot;deploy&quot;)==&gt;</span>
+<span class="nd">@task</span>
+<span class="nd">@cmdopts</span><span class="p">([</span>
+    <span class="p">(</span><span class="s">&#39;username=&#39;</span><span class="p">,</span> <span class="s">&#39;u&#39;</span><span class="p">,</span> <span class="s">&#39;Username to use when logging in to the servers&#39;</span><span class="p">)</span>
+<span class="p">])</span>
+<span class="k">def</span> <span class="nf">deploy</span><span class="p">(</span><span class="n">options</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Deploy the HTML to the server.&quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">host</span> <span class="ow">in</span> <span class="n">options</span><span class="o">.</span><span class="n">hosts</span><span class="p">:</span>
+        <span class="n">sh</span><span class="p">(</span><span class="s">&quot;rsync -avz -e ssh </span><span class="si">%s</span><span class="s">/ </span><span class="si">%s</span><span class="s">@</span><span class="si">%s</span><span class="s">:</span><span class="si">%s</span><span class="s">/&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">htmldir</span><span class="p">,</span>
+            <span class="n">options</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">options</span><span class="o">.</span><span class="n">hostpath</span><span class="p">))</span>
+<span class="c"># &lt;==end==&gt;</span>
+</pre></div>
+</div>
+<p>新たな &#8220;cmdopts&#8221; デコレータがあります。pavement に記述したくないパスワードのような機密情報があると仮定してください。cmdopts を使用するそのタスクのコマンドラインオプションを簡単に作ることができます。options.deploy.username  はコマンドラインでユーザが入力した内容をセットします。</p>
+<p>オプションオブジェクト内を探す必要もありません。Paver はそのタスクとして同じ名前でセクションにあるオプションを優先します。そのため、options.username は他のセクションで username が存在したとしても options.deploy.username を優先して選択します。</p>
+<p>deploy タスクは各ホストに rsync コマンドを実行するために単純なループを使用します。rsync コマンドがどうなるかを確認するためにユーザ名を入力して dry run を実行してみましょう。</p>
+<div class="highlight-python"><pre># &lt;== sh("cd docs/samples/started/newway; paver -n deploy -u kevin")==&gt;
+---&gt; pavement.deploy
+rsync -avz -e ssh newway/docs/ kevin@host1.hostymost.com:sites/newway/
+rsync -avz -e ssh newway/docs/ kevin@host2.hostymost.com:sites/newway/
+# &lt;==end==&gt;</pre>
+</div>
+</div>
+<div class="section" id="id13">
+<h3>この次にどこへ行くのか<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
+<p>最初に行うことは Paver を使い始めることです。これまで説明したように、あなたのワークフローに Paver を組み込むことは既存プロジェクトであっても簡単です。</p>
+<p><tt class="docutils literal"><span class="pre">paver</span> <span class="pre">help</span></tt> コマンドを使用してください。</p>
+<p>あなたが今すぐ詳細を知りたいなら <a class="reference internal" href="../pavement.html#pavement"><em>pavement ファイル</em></a> と <a class="reference internal" href="../paverstdlib.html#stdlib"><em>Paver 標準ライブラリ</em></a> を読んでみると良いでしょう。</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">スタートガイド</a><ul>
+<li><a class="reference internal" href="#id2">旧い方法</a><ul>
+<li><a class="reference internal" href="#id3">旧い方法のドキュメント</a></li>
+<li><a class="reference internal" href="#id5">私のところでは動作する</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id6">新しい方法</a><ul>
+<li><a class="reference internal" href="#paver">Paver を使い始める</a></li>
+<li><a class="reference internal" href="#paver-distutils">Paver は distutils 互換</a></li>
+<li><a class="reference internal" href="#setup-py">しかし人は setup.py を使用する！</a></li>
+<li><a class="reference internal" href="#id7">しかし人はまだ Paver を持っていない！</a></li>
+<li><a class="reference internal" href="#id8">やぁ！あなたは私のためにもっと作業を作らないの？</a></li>
+<li><a class="reference internal" href="#id9">ドキュメントに立ち向かう</a></li>
+<li><a class="reference internal" href="#id10">ドキュメントからシェルスクリプトを取り除く</a></li>
+<li><a class="reference internal" href="#id11">旧い方法の他の欠点を修正する</a></li>
+<li><a class="reference internal" href="#id12">おまけのデプロイサンプル</a></li>
+<li><a class="reference internal" href="#id13">この次にどこへ行くのか</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/jp/getting_started.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">Paver v1.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2008, SitePen, Inc..
+      Last updated on Nov 11, 2010.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+    </div>
+  </body>
+</html>

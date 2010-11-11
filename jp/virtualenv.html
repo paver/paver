@@ -1,0 +1,137 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Virtualenv サポート (paver.virtual) &mdash; Paver v1.0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Paver v1.0.1 documentation" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">Paver v1.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <span class="target" id="virtualenv"></span><div class="section" id="virtualenv-paver-virtual">
+<h1>Virtualenv サポート (paver.virtual)<a class="headerlink" href="#virtualenv-paver-virtual" title="Permalink to this headline">¶</a></h1>
+<p>Paver は開発とデプロイのために virtualenv 環境を簡単に構築します。virtualenv はシステム環境と分離して Python パッケージをインストールする環境を設けます。</p>
+</div>
+<div class="section" id="module-paver.virtual">
+<span id="paver-virtual"></span><h1>paver.virtual タスク<a class="headerlink" href="#module-paver.virtual" title="Permalink to this headline">¶</a></h1>
+<p>Tasks for managing virtualenv environments.</p>
+<dl class="function">
+<dt id="paver.virtual.bootstrap">
+<tt class="descclassname">paver.virtual.</tt><tt class="descname">bootstrap</tt><big>(</big><big>)</big><a class="headerlink" href="#paver.virtual.bootstrap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a virtualenv bootstrap script. 
+The script will create a bootstrap script that populates a
+virtualenv in the current directory. The environment will
+have paver, the packages of your choosing and will run
+the paver command of your choice.</p>
+<p>This task looks in the virtualenv options for:</p>
+<dl class="docutils">
+<dt>script_name</dt>
+<dd>name of the generated script</dd>
+<dt>packages_to_install</dt>
+<dd>packages to install with easy_install. The version of paver that
+you are using is included automatically. This should be a list of
+strings.</dd>
+<dt>paver_command_line</dt>
+<dd>run this paver command line after installation (just the command
+line arguments, not the paver command itself).</dd>
+<dt>dest_dir</dt>
+<dd>the destination directory for the virtual environment (defaults to
+&#8216;.&#8217;)</dd>
+<dt>no_site_packages</dt>
+<dd>don&#8217;t give access to the global site-packages dir to the virtual
+environment (defaults to False)</dd>
+<dt>unzip_setuptools</dt>
+<dd>unzip Setuptools when installing it (defaults to False)</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Virtualenv サポート (paver.virtual)</a></li>
+<li><a class="reference internal" href="#module-paver.virtual">paver.virtual タスク</a></li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/jp/virtualenv.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">Paver v1.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2008, SitePen, Inc..
+      Last updated on Nov 11, 2010.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+    </div>
+  </body>
+</html>

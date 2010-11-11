@@ -1,0 +1,432 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Paver Changelog &mdash; Paver v1.0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Paver v1.0.1 documentation" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">Paver v1.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="paver-changelog">
+<span id="changelog"></span><h1>Paver Changelog<a class="headerlink" href="#paver-changelog" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="unreleased">
+<h2>1.0.4 (unreleased)<a class="headerlink" href="#unreleased" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Fixed md5 deprecation warnings in the bundled cog (thanks to jszakmeister, issue #56)</li>
+</ul>
+</div>
+<div class="section" id="june-1-2010">
+<h2>1.0.3 (June 1, 2010)<a class="headerlink" href="#june-1-2010" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Fixed deadlock problem when there&#8217;s a lot of output from a subprocess (thanks to Jeremy Rossi)</li>
+<li>Fixed unit tests (thanks to Elias Alma)</li>
+</ul>
+</div>
+<div class="section" id="march-8-2010">
+<h2>1.0.2 (March 8, 2010)<a class="headerlink" href="#march-8-2010" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>FIXED A command that outputs to stderr containing formatting directives (%s) or something that looks like one would cause an error. Thanks to disturbyte for the patch.</li>
+<li>Tasks can take normal keyword arguments</li>
+<li>Returns exit code 1 if any tasks fail</li>
+<li>stderr is no longer swallowed up by sh() (issue #37, thanks to Marc Sibson for
+the patch)</li>
+</ul>
+</div>
+<div class="section" id="may-4-2009">
+<h2>1.0.1 (May 4, 2009)<a class="headerlink" href="#may-4-2009" title="Permalink to this headline">¶</a></h2>
+<p>This release was made possible by Adam Lowry who helped improve the code and reviewed
+committed many of the patches.</p>
+<ul class="simple">
+<li>Fixed sending nonpositional arguments first with consume_args (issue #31).</li>
+<li>Fixed use of setuputils without defining options.setup (issue #24).</li>
+<li>Python 2.4 compatibility fixes (issue #28)</li>
+<li>sh() failures are logged to stderr.</li>
+<li>sh() accepts a cwd keyword argument (issue #29).</li>
+<li>virtualenv bootstrap generation accepts no_site_packages, unzip_setuptools,
+and destination directory arguments in options.</li>
+<li>Distutils config files were being ignored (issue #36) (thanks to Matthew Scott for the patch)</li>
+<li>The exit code was 0 whenever the first task passes, even if later tasks fail (issue #35) (thanks to Matt for the patch)</li>
+<li>Tasks can take normal keyword arguments (issue #33) (thanks to Chris Burroughs for the patch with test!)</li>
+</ul>
+</div>
+<div class="section" id="march-22-2009">
+<h2>1.0 (March 22, 2009)<a class="headerlink" href="#march-22-2009" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>If there is a task called &#8220;default&#8221;, it is run if Paver is run with no
+tasks listed on the command line.</li>
+<li>The auto task is run, even if no tasks are specified on the command line.</li>
+<li>distutils&#8217; log output is now routed through Paver&#8217;s logging functions,
+which means that the output is now displayed once more (and is controlled
+via Paver&#8217;s command line arguments.)</li>
+<li>The paver.setuputils.setup function will automatically call
+install_distutils_tasks. This makes it a very convenient way to upgrade
+from distutils/setuptools to Paver.</li>
+<li>Nicer looking error when you run Paver with an unknown task name.</li>
+<li>fix the md5 deprecation warning in paver.path for real (forgot to delete the
+offending import). Also fixed an import loop when you try to import
+paver.path.</li>
+<li>Improved docs for 1.0</li>
+<li>Paver now requires Sphinx 0.6 for the docs. In Paver&#8217;s conf.py for Sphinx,
+there is an autodoc Documenter for handling Paver Tasks properly.</li>
+</ul>
+</div>
+<div class="section" id="b1-march-13-2009">
+<h2>1.0b1 (March 13, 2009)<a class="headerlink" href="#b1-march-13-2009" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>added call_task to environment and paver.easy, so it should be easy to call
+distutils tasks, for example. (Normally, with Paver 1.0, you just call Paver
+tasks like normal functions.)</li>
+<li>added setup() function to paver.setuputils that is a shortcut for
+setting options in options.setup. This means that you switch from
+distutils to Paver just by renaming the file and changing the
+import.</li>
+<li>the -h command line argument and &#8220;help&#8221; task have been unified. You&#8217;ll
+get the same output regardless of which one you use.</li>
+<li>the auto task is no longer called when you run the help task (issue #21).
+As part of this, a new &#8220;no_auto&#8221; decorator has been created so that any
+task can be marked as not requiring the auto behavior.</li>
+<li>consume_args and PavementError are now included in paver.easy (thanks to
+Marc Sibson)</li>
+<li>more methods in paver.path now check for existence or lack thereof
+and won&#8217;t fail as a result. (mkdir and makedirs both check that the
+directory does not exist, rmdir and rmtree check to be sure that
+it does.) This is because the goal is ultimately to create or remove
+something... paver just makes sure that it either exists or doesn&#8217;t.</li>
+<li>fix md5 deprecation warning in paver.path (issue #22)</li>
+</ul>
+</div>
+<div class="section" id="a4-march-6-2009">
+<h2>1.0a4 (March 6, 2009)<a class="headerlink" href="#a4-march-6-2009" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>call_pavement would raise an exception if the pavement being called is
+in the current directory</li>
+<li>the new paver.path25 module was missing from the paver-minilib.zip</li>
+</ul>
+</div>
+<div class="section" id="a3-march-6-2009">
+<h2>1.0a3 (March 6, 2009)<a class="headerlink" href="#a3-march-6-2009" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">Added automatic running of &#8220;auto&#8221; task. If there&#8217;s a task with the name &#8220;auto&#8221;,
+it is run automatically. Using this mechanism, you can write code that sets up
+the options any way you wish, and without using globals at all (because the
+auto task can be given options as a parameter).</p>
+</li>
+<li><p class="first">When generating egg_info running &#8220;paver&#8221;, the full path to the Paver script
+was getting included in egg-info/SOURCES.txt. This causes installation problems
+on Windows, at the very least. Paver will now instead place the pavement
+that is being run in there. This likely has the beneficial side effect of
+not requiring a MANIFEST.in file just to include the pavement.</p>
+</li>
+<li><p class="first">the options help provided via the cmdopts decorator now appears</p>
+</li>
+<li><p class="first">pavements can now refer to __file__ to get their own filename. You can also
+just declare pavement_file as an argument to your task function, if
+you wish.</p>
+</li>
+<li><p class="first">call_pavement now switches directories to the location of the pavement and
+then switches back when returning</p>
+</li>
+<li><p class="first">if you try to run a function as a task, you&#8217;ll now get a more appropriate
+and descriptive BuildFailure, rather than an AttributeError</p>
+</li>
+<li><p class="first">paver can now again run tasks even when there is no pavement present.
+any task accessible via paver.easy (which now also includes misctasks)
+will work.</p>
+</li>
+<li><p class="first">added the pushd context manager (Python 2.5+). This will switch into another
+directory on the way in and then change back to the old directory on
+the way out. Suggested by Steve Howe, with the additional suggestion from
+Juergen Hermann to return the old directory:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">with</span> <span class="n">pushd</span><span class="p">(</span><span class="s">&#39;newdirectory&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">olddirectory</span><span class="p">:</span>
+    <span class="o">...</span><span class="n">do</span> <span class="n">something</span><span class="o">...</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="a2-february-26-2009">
+<h2>1.0a2 (February 26, 2009)<a class="headerlink" href="#a2-february-26-2009" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>The bug that caused 1.0a1 to be recalled (distutils command options)
+has been fixed thanks to Greg Thornton.</li>
+<li>If you provide an invalid long task name, you will no longer get an
+AttributeError. Thanks to Marc Sibson.</li>
+<li>If a task has an uncaught exception, the debug-level output is displayed
+<em>and</em> Paver will exit with a return code of 1. No further tasks are
+executed. Thanks to Marc Sibson.</li>
+<li>The version number is no longer displayed, so that you can reasonably
+pipe the output elsewhere. A new &#8211;version option will display the version
+as before.</li>
+<li>Eliminate DeprecationWarnings in paver.ssh and paver.svn. Thanks to Marc
+Sibson.</li>
+<li>The html task will always be defined now when you import paver.doctools
+but will yield a BuildFailure if Sphinx is not installed. Hopefully this
+will lead to clearer errors for people. Thanks to Marc Sibson.</li>
+<li>The Getting Started Guide has been improved for 1.0. Additionally,
+the &#8220;newway&#8221; sample now has a MANIFEST.in which provides useful knowledge
+for people.</li>
+</ul>
+</div>
+<div class="section" id="a1-january-28-2009">
+<h2>1.0a1 (January 28, 2009)<a class="headerlink" href="#a1-january-28-2009" title="Permalink to this headline">¶</a></h2>
+<p>(note: 1.0a1 was recalled because it was unable to properly handle distutils command
+line options.)</p>
+<ul class="simple">
+<li>COMPATIBILITY BREAK: paver.misctasks is no longer imported by default, even when using paver.easy</li>
+<li>DEPRECATIONS: paver.runtime and paver.defaults have been deprecated. Watch the
+warnings for info on how to change to the new paver.easy module.</li>
+<li>COMPATIBILITY WARNING: By default, the sh() function will now raise a
+BuildFailure exception if the return code of the process is non-zero.
+Passing ignore_error=True will switch back to the previous behavior.
+Thanks to Marc Sibson.</li>
+<li>There is a new call_pavement function (automatically imported with
+from paver.easy import *) that can call another pavement file. The
+new pavement gets its own environment/options but runs in the same
+process.</li>
+<li>You can now specify an alternate file to run rather than &#8220;pavement.py&#8221; using
+the -f or &#8211;file global option. Thanks to Marc Sibson.</li>
+<li>Regardless of logging level, output for a task is captured. If there is a BuildFailure,
+then that captured output is displayed.</li>
+<li>The new paver.tasks module encapsulates everything needed for running tasks
+in a file. The distutils ties have been reduced.</li>
+<li>&#64;needs now accepts a list of requirements in the form &#64;needs(&#8216;task1&#8217;, &#8216;task2&#8217;)
+(passing in a list still works as well)</li>
+<li>Added paver.bzr (support for Bazaar-NG related operations), courtesy of
+Bryan Forbes.</li>
+<li>The error() function is now exported, for logging of errors (thanks to Marc Sibson)</li>
+<li>Added handy paver.svn.export function for exporting an svn repository revision
+(thanks to Marc Sibson)</li>
+<li>The &#8220;scripts&#8221; directory has been renamed &#8220;distutils_scripts&#8221; to avoid name collision
+on Windows.</li>
+</ul>
+</div>
+<div class="section" id="june-2-2008">
+<h2>0.8.1 (June 2, 2008)<a class="headerlink" href="#june-2-2008" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Fix bug in minilib on Windows (error in rmtree). Also simplifies the minilib
+implementation. Patch from Juergen Hermann.</li>
+<li>Fix bug in virtualenv bootstrap generation (patches from Michael Greene and
+Juergen Hermann. Michael Greene&#8217;s is the one that was applied.)</li>
+</ul>
+</div>
+<div class="section" id="may-19-2008">
+<h2>0.8 (May 19, 2008)<a class="headerlink" href="#may-19-2008" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Installation on Windows was broken due to a / at the end of the /paver/tests
+path in MANIFEST.in</li>
+<li>Options can now be set on the command line using the syntax option.name=value.
+Options are set at the point in which they appear on the command line, so
+you can set one value before task1 and then another value before task2.</li>
+<li>Option ordering can now take an explicit dictionary or Bunch added to the
+ordering. This allows you to put in new options without changing the global
+options dictionary and more closely resembles how options would be looked
+up in a buildout.</li>
+<li>call_task now supports an optional &#8220;options&#8221; argument that allows you to
+pass in a dictionary or Bunch that is added to the front of the option
+search ordering.</li>
+</ul>
+</div>
+<div class="section" id="may-16-2008">
+<h2>0.7.3 (May 16, 2008)<a class="headerlink" href="#may-16-2008" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Added include_markers parameter to the paver.doctools.Includer to display a nice
+comment with the name of the file and section. This can look more attractive than
+the raw cog. By default, this is turned off. Set options.cog.include_markers
+to an empty dictionary, and the default include markers will be used.</li>
+<li>Added options.cog.delete_code to remove the generator code when cogging.
+Default: false</li>
+<li>Paver 0.7.2 could not be installed by zc.buildout on the Mac due to a problem
+with the py2app command under that environment.</li>
+<li>cog and tests were missing from shipped distributions (bug 229324, fixed with
+a patch from Krys Wilken.)</li>
+<li>Added svn.checkup function that does a checkout or update. This is like an
+svn:externals that&#8217;s a bit more readable and easier to control, in my opinion.</li>
+</ul>
+</div>
+<div class="section" id="may-8-2008">
+<h2>0.7.2 (May 8, 2008)<a class="headerlink" href="#may-8-2008" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Fixed Python 2.4 compatibility. The paver-minilib.zip file contained 2.5
+.pyc files. .pyc files are not compatible between major Python versions.
+The new version contains .py files.</li>
+</ul>
+</div>
+<div class="section" id="id1">
+<h2>0.7.1 (May 8, 2008)<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>0.7 had a broken paver-minilib.zip (missing misctasks.py, which is now part of the
+standard minilib)</li>
+</ul>
+</div>
+<div class="section" id="may-7-2008">
+<h2>0.7 (May 7, 2008)<a class="headerlink" href="#may-7-2008" title="Permalink to this headline">¶</a></h2>
+<p>Breaking changes:</p>
+<ul class="simple">
+<li>&#8220;targets&#8221; have become &#8220;tasks&#8221;, because that name is a clearer description.</li>
+<li>paver.sphinxdoc has been renamed paver.doctools</li>
+</ul>
+<p>New features and changes:</p>
+<ul class="simple">
+<li>runtime.OPTIONS is gone now. The old voodoo surrounding the options() function
+has been replaced with a distinctly non-magical __call__ = update in the
+Namespace class.</li>
+<li>distutils.core.setup is now the command line driver</li>
+<li>distutils/setuptools commands can be seamlessly intermingled with Tasks</li>
+<li>tasks can have command line settable options via the cmdopts decorator.
+Additionally, they can use the consume_args decorator to collect up
+all command line arguments that come after the task name.</li>
+<li>Two new tasks: cog and uncog. These run Ned Batchelder&#8217;s Cog code
+generator (included in the Paver package), by default against your
+Sphinx documentation. The idea is that you can keep your code samples
+in separate files (with unit tests and all) and incorporate them
+into your documentation files. Unlike the Sphinx include directives,
+using Cog lets you work on your documentation with the code samples
+in place.</li>
+<li>paver.doctools.SectionedFile provides a convenient way to mark off sections
+of a file, usually for documentation purposes, so that those sections can
+be included in another documentation file.</li>
+<li>paver.doctools.Includer knows how to look up SectionedFiles underneath
+a directory and to cache their sections.</li>
+<li>options are now a &#8220;Namespace&#8221; object that will search the sections for
+values. By default, the namespace is searched starting with top-level
+items (preserving current behavior) followed by a section named the same
+as the task, followed by all of the other sections. The order can
+be changed by calling options.order.</li>
+<li>option values that are callable will be called and that value returned.
+This is a simple way to provide lazy evaluation of options.</li>
+<li>Added minilib task that creates a paver-minilib.zip file that can be
+used to distribute programs that use Paver for their builds so that
+setup.py will run even without Paver fully installed.</li>
+<li>Added generate_setup task that creates a setup.py file that will
+actually run Paver. This will detect paver-minilib.zip if it&#8217;s
+present.</li>
+<li>The &#8220;help&#8221; task has been greatly improved to provide a clearer picture
+of the tasks, options and commands available.</li>
+<li>Add the ability to create virtualenv bootstrap scripts</li>
+<li>The &#8220;help&#8221; property on tasks has changed to &#8220;description&#8221;</li>
+<li>output is now directed through distutils.log</li>
+<li>Ever improving docs, including a new Getting Started guide.</li>
+<li>Changes to Paver&#8217;s bootstrap setup so that Paver no longer uses
+distutils for its bootstrapping.</li>
+</ul>
+<p>There were no versions 0.5 and 0.6.</p>
+</div>
+<div class="section" id="april-22-2008">
+<h2>0.4 (April 22, 2008)<a class="headerlink" href="#april-22-2008" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>First public release.</li>
+<li>Removes setuptools dependency</li>
+<li>More docs</li>
+<li>Paver can now be run even without a pavement.py file for commands like
+help and paverdocs</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Paver Changelog</a><ul>
+<li><a class="reference internal" href="#unreleased">1.0.4 (unreleased)</a></li>
+<li><a class="reference internal" href="#june-1-2010">1.0.3 (June 1, 2010)</a></li>
+<li><a class="reference internal" href="#march-8-2010">1.0.2 (March 8, 2010)</a></li>
+<li><a class="reference internal" href="#may-4-2009">1.0.1 (May 4, 2009)</a></li>
+<li><a class="reference internal" href="#march-22-2009">1.0 (March 22, 2009)</a></li>
+<li><a class="reference internal" href="#b1-march-13-2009">1.0b1 (March 13, 2009)</a></li>
+<li><a class="reference internal" href="#a4-march-6-2009">1.0a4 (March 6, 2009)</a></li>
+<li><a class="reference internal" href="#a3-march-6-2009">1.0a3 (March 6, 2009)</a></li>
+<li><a class="reference internal" href="#a2-february-26-2009">1.0a2 (February 26, 2009)</a></li>
+<li><a class="reference internal" href="#a1-january-28-2009">1.0a1 (January 28, 2009)</a></li>
+<li><a class="reference internal" href="#june-2-2008">0.8.1 (June 2, 2008)</a></li>
+<li><a class="reference internal" href="#may-19-2008">0.8 (May 19, 2008)</a></li>
+<li><a class="reference internal" href="#may-16-2008">0.7.3 (May 16, 2008)</a></li>
+<li><a class="reference internal" href="#may-8-2008">0.7.2 (May 8, 2008)</a></li>
+<li><a class="reference internal" href="#id1">0.7.1 (May 8, 2008)</a></li>
+<li><a class="reference internal" href="#may-7-2008">0.7 (May 7, 2008)</a></li>
+<li><a class="reference internal" href="#april-22-2008">0.4 (April 22, 2008)</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/jp/changelog.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">Paver v1.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2008, SitePen, Inc..
+      Last updated on Nov 11, 2010.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+    </div>
+  </body>
+</html>

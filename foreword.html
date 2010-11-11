@@ -1,0 +1,189 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Foreword: Why Paver? &mdash; Paver v1.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Paver v1.0.1 documentation" href="index.html" />
+    <link rel="next" title="Paver’s Features" href="features.html" />
+    <link rel="prev" title="Paver: Easy Scripting for Software Projects" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="features.html" title="Paver’s Features"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Paver: Easy Scripting for Software Projects"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Paver v1.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="foreword-why-paver">
+<h1>Foreword: Why Paver?<a class="headerlink" href="#foreword-why-paver" title="Permalink to this headline">¶</a></h1>
+<p>I didn&#8217;t want to make a new build tool. Honestly. The main reason that I created Paver
+is...</p>
+<div class="section" id="the-declarative-imperative-divide">
+<h2>The Declarative/Imperative Divide<a class="headerlink" href="#the-declarative-imperative-divide" title="Permalink to this headline">¶</a></h2>
+<p>When you solve the same problem repeatedly, patterns emerge and you&#8217;re able to easily
+see ways to reduce how much effort is involved in solving that problem. Often
+times, you&#8217;ll end up with a <a class="reference external" href="http://en.wikipedia.org/wiki/Declarative_programming">declarative solution</a>. Python&#8217;s standard distutils
+is a declarative solution. In your call to the <tt class="docutils literal"><span class="pre">setup()</span></tt> function, you declare
+some metadata about your project and provide a list of the parts and you end
+up with a nice command line interface. That command line interface knows how to
+make redistributable tarballs (and eggs if you have setuptools), install the
+package, build C extensions and more.</p>
+<p>zc.buildout does a similar thing for deployments. Declare the parts of your system
+and specify a recipe for each part (each recipe with its own collection of options)
+and you can build up a consistent system with one command.</p>
+<p>These tools sound great, don&#8217;t they? They are great. As long as you don&#8217;t need
+to customize the capabilities they provide. For example, it&#8217;s not uncommon that
+you&#8217;ll need to move some file here, create some directory there, etc. Then what?</p>
+<p>In an <a class="reference external" href="http://en.wikipedia.org/wiki/Imperative_programming">imperative system</a>, you&#8217;d just add the few lines of code you need.</p>
+<p>For distutils and zc.builout and other similar tools, the answer usually involves
+extra boilerplate surrounding the code in question and then installing that code somewhere. You basically have to create declarative syntax for something that is a one-off rather than a larger, well-understood problem. And, for distutils and zc.buildout, you have to use two entirely different mechanisms.</p>
+</div>
+<div class="section" id="consistency-for-project-related-tasks">
+<h2>Consistency for Project Related Tasks<a class="headerlink" href="#consistency-for-project-related-tasks" title="Permalink to this headline">¶</a></h2>
+<p>And that&#8217;s the next thing that bothered me with the state of Python tools. It
+would be nice to have a consistent interface in command line and configuration
+for the tools that I use to work with my projects. Every tool I bring in to
+the project adds new command line interfaces, more config files (and some of
+those config files duplicate project metadata!).</p>
+</div>
+<div class="section" id="that-s-why-paver-is-here">
+<h2>That&#8217;s Why Paver Is Here<a class="headerlink" href="#that-s-why-paver-is-here" title="Permalink to this headline">¶</a></h2>
+<p>Paver is set up to provide declarative handling of common tasks with as easy
+an escape hatch to imperative programming as possible (just add a function
+with a decorator in the same file). Your project-related configuration
+options are all together and all accessible to different parts of your
+build and deployment setup. And the language used for everything is Python,
+so you&#8217;re not left guessing how to do a <tt class="docutils literal"><span class="pre">for</span></tt> loop.</p>
+<p>Of course, rebuilding the great infrastructure provided by tools like distutils
+makes no sense. So, Paver just uses distutils and other tools directly.</p>
+<p>Paver also goes beyond just providing an extension mechanism for distutils.
+It adds a bunch of useful capabilities for things like working with files
+and directories, elegantly handling sample code for your documentation and
+building bootstrap scripts to allow your software to easily be installed
+in an isolated virtualenv.</p>
+<p>I&#8217;m already using Paver for SitePen&#8217;s Support service user interface
+project and I use Paver to manage Paver itself! It&#8217;s been working out
+great for me, and it&#8217;s set up in such a way that whatever kind of scripting
+your project needs it should be pretty simple with Paver.</p>
+</div>
+<div class="section" id="making-the-switch-is-easy">
+<h2>Making the Switch is Easy<a class="headerlink" href="#making-the-switch-is-easy" title="Permalink to this headline">¶</a></h2>
+<p>Finally, I&#8217;ve put some time into making sure that moving a project from
+distutils to Paver is easy for everyone involved (people making the
+projects and people using the projects). Check out the
+<a class="reference internal" href="jp/getting_started.html#gettingstarted"><em>Getting Started Guide</em></a> to see an example of how
+a project moves from distutils to Paver (even maintaining the
+<tt class="docutils literal"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">install</span></tt> command that everyone&#8217;s used to!)</p>
+<p>Thanks for reading!</p>
+<p>Kevin Dangoor
+May 2008</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Foreword: Why Paver?</a><ul>
+<li><a class="reference internal" href="#the-declarative-imperative-divide">The Declarative/Imperative Divide</a></li>
+<li><a class="reference internal" href="#consistency-for-project-related-tasks">Consistency for Project Related Tasks</a></li>
+<li><a class="reference internal" href="#that-s-why-paver-is-here">That&#8217;s Why Paver Is Here</a></li>
+<li><a class="reference internal" href="#making-the-switch-is-easy">Making the Switch is Easy</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Paver: Easy Scripting for Software Projects</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="features.html"
+                        title="next chapter">Paver&#8217;s Features</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/foreword.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="features.html" title="Paver’s Features"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Paver: Easy Scripting for Software Projects"
+             >previous</a> |</li>
+        <li><a href="index.html">Paver v1.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2008, SitePen, Inc..
+      Last updated on Nov 11, 2010.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+    </div>
+  </body>
+</html>

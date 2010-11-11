@@ -1,0 +1,201 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>徹底的に pavement.py &mdash; Paver v1.0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Paver v1.0.1 documentation" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">Paver v1.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <span class="target" id="pavement"></span><div class="section" id="pavement-py">
+<h1>徹底的に pavement.py<a class="headerlink" href="#pavement-py" title="Permalink to this headline">¶</a></h1>
+<p>Paver は作業を行うために宣言型/命令型のハイブリッドシステムになるように意図されて作られています。pavement.py のオプションを通して定義することができます。そして、実際、多くのプロジェクトは pavement.py にオプションがありますが何もせずに使用します。例えば Paver 自身の pavement ファイル初期バージョンを考えてみてください。</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">paver.easy</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">paver.doctools</span>
+
+<span class="n">options</span><span class="p">(</span>
+    <span class="n">setup</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s">&#39;paver&#39;</span><span class="p">,</span>
+    <span class="n">version</span><span class="o">=</span><span class="s">&quot;0.3&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s">&#39;Python build tool&#39;</span><span class="p">,</span>
+    <span class="n">author</span><span class="o">=</span><span class="s">&#39;Kevin Dangoor&#39;</span><span class="p">,</span>
+    <span class="n">author_email</span><span class="o">=</span><span class="s">&#39;dangoor+paver@gmail.com&#39;</span><span class="p">,</span>
+    <span class="c">#url=&#39;&#39;,</span>
+    <span class="n">packages</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;paver&#39;</span><span class="p">],</span>
+    <span class="n">package_data</span><span class="o">=</span><span class="n">setuputils</span><span class="o">.</span><span class="n">find_package_data</span><span class="p">(</span><span class="s">&quot;paver&quot;</span><span class="p">,</span> <span class="n">package</span><span class="o">=</span><span class="s">&quot;paver&quot;</span><span class="p">,</span>
+                                            <span class="n">only_in_packages</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
+    <span class="n">install_requires</span><span class="o">=</span><span class="p">[],</span>
+    <span class="n">test_suite</span><span class="o">=</span><span class="s">&#39;nose.collector&#39;</span><span class="p">,</span>
+    <span class="n">zip_safe</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+    <span class="n">entry_points</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">    [console_scripts]</span>
+<span class="s">    paver = paver.command:main</span>
+<span class="s">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="p">),</span>
+
+    <span class="n">sphinx</span><span class="o">=</span><span class="n">Bunch</span><span class="p">(</span>
+        <span class="n">builddir</span><span class="o">=</span><span class="s">&quot;build&quot;</span><span class="p">,</span>
+        <span class="n">sourcedir</span><span class="o">=</span><span class="s">&quot;source&quot;</span>
+    <span class="p">)</span>
+
+<span class="p">)</span>
+
+<span class="nd">@task</span>
+<span class="nd">@needs</span><span class="p">(</span><span class="s">&#39;paver.doctools.html&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">html</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Build Paver&#39;s documentation and install it into paver/docs&quot;&quot;&quot;</span>
+    <span class="n">builtdocs</span> <span class="o">=</span> <span class="n">path</span><span class="p">(</span><span class="s">&quot;docs&quot;</span><span class="p">)</span> <span class="o">/</span> <span class="n">options</span><span class="o">.</span><span class="n">sphinx</span><span class="o">.</span><span class="n">builddir</span> <span class="o">/</span> <span class="s">&quot;html&quot;</span>
+    <span class="n">destdir</span> <span class="o">=</span> <span class="n">path</span><span class="p">(</span><span class="s">&quot;paver&quot;</span><span class="p">)</span> <span class="o">/</span> <span class="s">&quot;docs&quot;</span>
+    <span class="n">destdir</span><span class="o">.</span><span class="n">rmtree</span><span class="p">()</span>
+    <span class="n">builtdocs</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">destdir</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>このファイルは宣言型と命令型両方の様相を持っています。そのオプションは distutils, setuptools や Sphinx がそれぞれのジョブを行うために十分な情報を定義します。これはタスクを定義することを必要とせず実際に機能します。</p>
+<p>しかし、Paver の &#8216;paverdoc&#8217; ビルトインタスクが動作するために Paver のパッケージツリー内部に Sphinx が生成した HTML が必要になります。そのため、生成された HTML ファイルを移動するために html タスクを上書きします。</p>
+<div class="section" id="id1">
+<h2>タスクを定義する<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>タスクは単純なただの関数です。&#64;task デコレータを使用してタスクとしての関数を指定します。</p>
+<p>さらにあるタスクが他のタスクの実行に依存するときは最初に &#64;needs デコレータを指定することもできます。そのタスクは他のタスクのための依存関係として同時に実行されます。</p>
+</div>
+<div class="section" id="id2">
+<h2>手動でタスクを呼び出す<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>時々、他のタスクを実行する <cite>前に</cite> 何かを行う必要があります。そのため &#64;needs デコレータはそのジョブを実行できません。</p>
+<p>もちろん、タスクはただの Python 関数です。そのため、関数呼び出しのように他のタスクを実際に呼び出すこともできます！</p>
+</div>
+<div class="section" id="id3">
+<h2>どのようにタスク名が動作するか<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>タスクは長い名前と短い名前の両方を持ちます。短い名前は実際の関数の名前です。長い名前は Python の関数オブジェクトの省略されていない名前です。</p>
+<p>例えば、Sphinx は &#8220;html&#8221; というタスク機能をサポートします。そのタスクの長い名前は &#8220;paver.doctools.html&#8221; です。</p>
+<p>pavement.py で <tt class="docutils literal"><span class="pre">`import</span> <span class="pre">paver.doctools`</span></tt> する場合、&#8221;html&#8221; を参照するためにどちらの名前でも使用できます。</p>
+<p>pavement.py で定義したタスクは短い名前でいつでも利用できます。そのタスクは同じ短い名前を使用する他のタスクと競合しない限りどこででも定義されます。</p>
+<p>タスクは長い名前で明示的に利用することもできます。</p>
+</div>
+<div class="section" id="id4">
+<h2>タスクパラメータ<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>タスクはどんなパラメータも持つ必要はありません。しかし、Paver は適切なクリーン、globals-free な方法(*)で動作するのを許容します。一般的に言うと paver を実行する最も簡単な方法は <tt class="docutils literal"><span class="pre">from</span> <span class="pre">paver.easy</span> <span class="pre">import</span> <span class="pre">*</span></tt> を行うだけです。しかし、あなたが名前空間を多く持つことを好まないなら、関数内に送られた tasks.environment の属性を持つことができます。例えば、次の通りです。</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@task</span>
+<span class="k">def</span> <span class="nf">my_task</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="n">info</span><span class="p">):</span>
+    <span class="c"># このタスクはオプションを取得して &quot;info&quot; ロギング関数へ送る</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<p>(*): tasks.environment がグローバルです</p>
+</div>
+<div class="section" id="id5">
+<h2>コマンドライン引数<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<p>タスクは他の2つのデコレータを通してコマンドライン引数を受け取るように指定することができます。 <tt class="docutils literal"><span class="pre">&#64;consume_args</span></tt> デコレータは Paver にこのタスク名に続く <em>全て</em> のコマンドライン引数を伝えます。 <tt class="docutils literal"><span class="pre">options.args</span></tt> か、関数へのパラメータとして args を指定するかのどちらでもその引数を見つけることができます。例えば Paver の &#8220;help&#8221; タスクは次のように定義されます。</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@task</span>
+<span class="nd">@consume_args</span>
+<span class="k">def</span> <span class="nf">help</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">help_function</span><span class="p">):</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<p>&#8220;args&#8221; パラメータは tasks.environment の属性です(help_function そのまま)。そのため、前のセクションで説明した同じルールを使用して渡されます。</p>
+<p>もっと汎用的に、特定の指定した引数を受け取るために全てのコマンドラインの引数を調べる必要はありません。それは cmdopts デコレータで行います。</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@task</span>
+<span class="nd">@cmdopts</span><span class="p">([</span>
+    <span class="p">(</span><span class="s">&#39;username=&#39;</span><span class="p">,</span> <span class="s">&#39;u&#39;</span><span class="p">,</span> <span class="s">&#39;Username to use when logging in to the servers&#39;</span><span class="p">)</span>
+<span class="p">])</span>
+<span class="k">def</span> <span class="nf">deploy</span><span class="p">(</span><span class="n">options</span><span class="p">):</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<p>&#64;cmdopts は長いオプション名、短いオプション名とヘルプテキストといった3つの要素を持つタプルのリストを受け取ります。長いオプション名の後に &#8220;=&#8221; があれば、そのオプションはパラメータを取ることになります。その他のオプションはブーリアンだと仮定されます。この方法のコマンドラインオプションセットは task の名前にマッチする名前空間の下で <tt class="docutils literal"><span class="pre">options</span></tt> に全て追加されます。上述したケースでは、ユーザが paver deploy -u my-user-name と実行したなら options.deploy.username がセットされます。コマンドラインで paver deploy.username=my-user-name deploy で実行するのも等価であることに注意してください。</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">徹底的に pavement.py</a><ul>
+<li><a class="reference internal" href="#id1">タスクを定義する</a></li>
+<li><a class="reference internal" href="#id2">手動でタスクを呼び出す</a></li>
+<li><a class="reference internal" href="#id3">どのようにタスク名が動作するか</a></li>
+<li><a class="reference internal" href="#id4">タスクパラメータ</a></li>
+<li><a class="reference internal" href="#id5">コマンドライン引数</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/jp/pavement.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">Paver v1.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2008, SitePen, Inc..
+      Last updated on Nov 11, 2010.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+    </div>
+  </body>
+</html>

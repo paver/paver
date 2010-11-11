@@ -1,0 +1,147 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Miscellaneous Tasks (paver.misctasks) &mdash; Paver v1.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Paver v1.0.1 documentation" href="index.html" />
+    <link rel="up" title="The Paver Standard Library" href="paverstdlib.html" />
+    <link rel="next" title="Virtualenv Support (paver.virtual)" href="virtualenv.html" />
+    <link rel="prev" title="Documentation Tools (paver.doctools)" href="doctools.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="virtualenv.html" title="Virtualenv Support (paver.virtual)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="doctools.html" title="Documentation Tools (paver.doctools)"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Paver v1.0.1 documentation</a> &raquo;</li>
+          <li><a href="paverstdlib.html" accesskey="U">The Paver Standard Library</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="miscellaneous-tasks-paver-misctasks">
+<h1>Miscellaneous Tasks (paver.misctasks)<a class="headerlink" href="#miscellaneous-tasks-paver-misctasks" title="Permalink to this headline">¶</a></h1>
+<p>These are some other tasks that are located in the paver.misctasks module.</p>
+<span class="target" id="module-paver.misctasks"></span><p>Miscellaneous tasks that don&#8217;t fit into one of the other groupings.</p>
+<dl class="function">
+<dt id="paver.misctasks.generate_setup">
+<tt class="descclassname">paver.misctasks.</tt><tt class="descname">generate_setup</tt><big>(</big><big>)</big><a class="headerlink" href="#paver.misctasks.generate_setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a setup.py file that uses paver behind the scenes. This 
+setup.py file will look in the directory that the user is running it
+in for a paver-minilib.zip and will add that to sys.path if available.
+Otherwise, it will just assume that paver is available.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="paver.misctasks.minilib">
+<tt class="descclassname">paver.misctasks.</tt><tt class="descname">minilib</tt><big>(</big><em>options</em><big>)</big><a class="headerlink" href="#paver.misctasks.minilib" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a Paver mini library that contains enough for a simple
+pavement.py to be installed using a generated setup.py. This
+is a good temporary measure until more people have deployed paver.
+The output file is &#8216;paver-minilib.zip&#8217; in the current directory.</p>
+<p>Options:</p>
+<dl class="docutils">
+<dt>extra_files</dt>
+<dd>list of other paver modules to include (don&#8217;t include the .py 
+extension). By default, the following modules are included:
+defaults, path, release, setuputils, misctasks, options,
+tasks, easy</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="doctools.html"
+                        title="previous chapter">Documentation Tools (paver.doctools)</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="virtualenv.html"
+                        title="next chapter">Virtualenv Support (paver.virtual)</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/misctasks.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="virtualenv.html" title="Virtualenv Support (paver.virtual)"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="doctools.html" title="Documentation Tools (paver.doctools)"
+             >previous</a> |</li>
+        <li><a href="index.html">Paver v1.0.1 documentation</a> &raquo;</li>
+          <li><a href="paverstdlib.html" >The Paver Standard Library</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2008, SitePen, Inc..
+      Last updated on Nov 11, 2010.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+    </div>
+  </body>
+</html>

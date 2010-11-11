@@ -1,0 +1,127 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Paver コマンドライン &mdash; Paver v1.0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Paver v1.0.1 documentation" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">Paver v1.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <span class="target" id="cmdline"></span><div class="section" id="paver">
+<h1>Paver コマンドライン<a class="headerlink" href="#paver" title="Permalink to this headline">¶</a></h1>
+<p>Paver はグローバルに解析する洗練されたコマンドラインと各タスクを提供します。</p>
+<blockquote>
+paver [-q] [-n] [-v] [-f pavement] [-h] [option.name=key] [taskname] [taskoptions] [taskname...]</blockquote>
+<p>コマンドラインオプションは次の通りです。</p>
+<table class="docutils option-list" frame="void" rules="none">
+<col class="option" />
+<col class="description" />
+<tbody valign="top">
+<tr><td class="option-group">
+<kbd><span class="option">-q</span></kbd></td>
+<td>quiet... 情報をたくさん表示しない (デバッグ情報は表示されません)</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">-n</span></kbd></td>
+<td>dry run... 破壊的なコマンドを実際には実行しない</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">-v</span></kbd></td>
+<td>verbose... デバッグレベルの出力を表示する</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">-h</span></kbd></td>
+<td>コマンドラインオプションと利用可能なタスクのリストを表示する、-h はどのようなタスクに対してもそのタスクの詳細ヘルプとコマンドラインオプションを表示するために提供されることに注意してください</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">-f <var>&lt;pavement&gt;</var></span></kbd></td>
+<td>&#8220;pavement.py&#8221; ではなく違うファイルを使用する</td></tr>
+</tbody>
+</table>
+<p>タスクなしで paver を実行するなら &#8220;auto&#8221; タスクが存在すればそれのみを実行します。もしくは Paver は何もしません。</p>
+<p><tt class="docutils literal"><span class="pre">paver</span> <span class="pre">help</span></tt> は <tt class="docutils literal"><span class="pre">paver</span> <span class="pre">-h</span></tt> と等価です。そして <tt class="docutils literal"><span class="pre">paver</span> <span class="pre">help</span> <span class="pre">taskname</span></tt> は <tt class="docutils literal"><span class="pre">paver</span> <span class="pre">taskname</span> <span class="pre">-h</span></tt> と等価です。</p>
+<p>optionname=value を提供することでコマンドラインを通してビルドオプションをセットすることができます。
+オプション名はドット表記なので <tt class="docutils literal"><span class="pre">foo.bar.baz=something</span></tt> はオプションの options[&#8216;foo&#8217;][&#8216;bar&#8217;][&#8216;baz&#8217;] = &#8216;something&#8217; にセットされます。
+複数の単語で値を入力する必要があるなら、クォートでスペースを含む部分を囲んでください。</p>
+<p><cite>重要且つ役に立つ</cite>: オプションはコマンドラインに現れる位置でセットされます。最初のタスクの前にオプションをセットして、次のタスクのために別の値をオプションにセットすることができます。</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/jp/cmdline.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">Paver v1.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2008, SitePen, Inc..
+      Last updated on Nov 11, 2010.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,258 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Paver: ソフトウェアプロジェクトのための簡易スクリプティング &mdash; Paver v1.0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Paver v1.0.1 documentation" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">Paver v1.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="paver">
+<h1>Paver: ソフトウェアプロジェクトのための簡易スクリプティング<a class="headerlink" href="#paver" title="Permalink to this headline">¶</a></h1>
+<img alt="../_images/paver_banner.jpg" src="../_images/paver_banner.jpg" style="width: 240px; height: 126px;" />
+<p>Paver は Make や Rake によく似た Python ベースのソフトウェアプロジェクトのスクリプティングツールです。例えば C 言語のプログラムのように必要な依存関係を追跡して扱うようには設計されていません。Python 構文と豊富なライブラリコードの利便性により、雑多な全ての繰り返しタスク(ドキュメントを生成する、関連ファイルを移動する、ダウンロードする)に対して
+補助するように <em>設計されています</em> 。</p>
+<p>もしあなたが Python でアプリケーションを開発しているなら、なおさら使用してみましょう。大半の Python のパブリックプロジェクトは再配布向けのソース tarball を作成するために distutils か setuptools を使用します(プライベートプロジェクトもこの利点を得ることができる！)。あなたはこれまでにソースディストリビューションを作成する前にドキュメントを生成したことがありますか？Paver を使えばまさにそれができます。次に完全な pavement.py があります。</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">paver.easy</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">paver.setuputils</span> <span class="kn">import</span> <span class="n">setup</span>
+
+<span class="n">setup</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s">&quot;MyCoolProject&quot;</span><span class="p">,</span>
+    <span class="n">packages</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;mycool&#39;</span><span class="p">],</span>
+    <span class="n">version</span><span class="o">=</span><span class="s">&quot;1.0&quot;</span><span class="p">,</span>
+    <span class="n">url</span><span class="o">=</span><span class="s">&quot;http://www.blueskyonmars.com/&quot;</span><span class="p">,</span>
+    <span class="n">author</span><span class="o">=</span><span class="s">&quot;Kevin Dangoor&quot;</span><span class="p">,</span>
+    <span class="n">author_email</span><span class="o">=</span><span class="s">&quot;dangoor@gmail.com&quot;</span>
+<span class="p">)</span>
+
+<span class="nd">@task</span>
+<span class="nd">@needs</span><span class="p">([</span><span class="s">&#39;html&#39;</span><span class="p">,</span> <span class="s">&quot;distutils.command.sdist&quot;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">sdist</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Generate docs and source distribution.&quot;&quot;&quot;</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<p>この pavement ファイルを使用して、ただ <tt class="docutils literal"><span class="pre">paver</span> <span class="pre">sdist</span></tt> を実行するだけでドキュメントがソースディストリビューションを作成する前に自動的にリビルドされます。そして、生成したドキュメントを他のディレクトリへ移動することも簡単です(もちろん Paver にそのドキュメントをデフォルトの場所以外にどこへ置くかを教えることができます)。</p>
+<div class="section" id="id1">
+<h2>機能<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>ビルドファイルは <a class="reference internal" href="features.html#justpython"><em>ただの Python</em></a> プログラムです</li>
+<li><a class="reference internal" href="features.html#onefile"><em>1つの構文で1つのファイル</em></a> , pavement.py はプロジェクトの管理方法を知っています</li>
+<li><a class="reference internal" href="features.html#pathmodule"><em>File 操作</em></a> は Jason Orendorff が作成した path.py のビルトインを使用して信じられないぐらい簡単です</li>
+<li>5行でできることに必要なコードは？ <a class="reference internal" href="features.html#fivelines"><em>やはり5行だけです</em></a></li>
+<li>必要に応じてカスタマイズできるように完全に <a class="reference internal" href="../setuptools.html#setuptools"><em>distutils と setuptools</em></a> を内包します</li>
+<li>ドキュメントを生成するために <a class="reference internal" href="doctools.html#doctools"><em>Sphinx</em></a> をラップして、テストされたサンプルコードを組み込み易くするためのユーティリティを追加します</li>
+<li>チェックアウトするコードと共に動作する <a class="reference internal" href="../svn.html#svn"><em>Subversion</em></a> をラップする</li>
+<li>仮想環境を構築して実行するブートストラップスクリプトの作成を許容する <a class="reference internal" href="../virtualenv.html#virtualenv"><em>virtualenv</em></a> をラップする、これは影響範囲が制限された環境にパッケージをインストールするための素晴らしい方法です</li>
+<li>これらのうち全てのライブラリを使用できますが <a class="reference internal" href="features.html#nodeps"><em>依存関係がありません</em></a></li>
+<li>Paver のインストールや関連内容をユーザが学習することなく簡単に setup.py から変換します！(サンプルは <a class="reference internal" href="getting_started.html#gettingstarted"><em>スタートガイド</em></a> を参照)</li>
+</ul>
+<p>Paver がどのように動作するかを見てください！ <a class="reference internal" href="getting_started.html#gettingstarted"><em>スタートガイド</em></a> をチェックアウトしよう。</p>
+<p>Paver は <a class="reference external" href="http://sitepen.com">SitePen</a> に所属する <a class="reference external" href="http://blueskyonmars.com">Kevin Dangoor</a> が作成しました。</p>
+</div>
+<div class="section" id="id2">
+<h2>ステータス<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>Paver は2008年中頃に本番環境で使用されています。そして1.0 リリースから後方互換性に大きな注意が払われています。</p>
+<p>最新の改善内容は <a class="reference internal" href="changelog.html#changelog"><em>changelog</em></a> を参照してください。</p>
+</div>
+<div class="section" id="id3">
+<h2>インストール<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="http://peak.telecommunity.com/DevCenter/EasyInstall">setuptools</a> をインストールしているなら Paver をインストールする最も簡単な方法です。</p>
+<p><tt class="docutils literal"><span class="pre">easy_install</span> <span class="pre">Paver</span></tt></p>
+<p>setuptools がなくても本当に簡単です。 <a class="reference external" href="http://pypi.python.org/pypi/Paver/">Paver の Cheeseshop ページ</a> から Paver の .tgz ファイルをダウンロードして解凍して次のように実行してください。</p>
+<p><tt class="docutils literal"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">install</span></tt></p>
+</div>
+<div class="section" id="id4">
+<h2>ヘルプと開発<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>困ったときは <a class="reference external" href="http://groups.google.com/group/paver">メーリングリスト</a> で質問することができます。</p>
+<p>Paver を支援したいなら Googlecode からそのコードをチェックアウトすることができます。</p>
+<p><tt class="docutils literal"><span class="pre">svn</span> <span class="pre">checkout</span> <span class="pre">http://paver.googlecode.com/svn/trunk/</span> <span class="pre">paver-read-only</span></tt></p>
+<p><a class="reference external" href="http://code.google.com/p/paver/">Googlecode の Paver プロジェクト</a> で見ることもできます。</p>
+</div>
+<div class="section" id="id6">
+<h2>ライセンス<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<p>Paver は BSD ライセンスを採用します。配布に関しては LICENSE.txt を参照してください。</p>
+</div>
+<div class="section" id="id7">
+<h2>コンテンツ<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="foreword.html">序文: どうして Paver？</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="foreword.html#id1">宣言型/命令型の分割</a></li>
+<li class="toctree-l2"><a class="reference internal" href="foreword.html#id4">プロジェクトに関するタスクの統合性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="foreword.html#id5">それが Paver が今日に存在する理由</a></li>
+<li class="toctree-l2"><a class="reference internal" href="foreword.html#id6">移行を簡単にする</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="features.html">Paver の機能</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="features.html#python">ファイルはただの Python プログラム</a></li>
+<li class="toctree-l2"><a class="reference internal" href="features.html#id1">1つの構文で1つのファイル</a></li>
+<li class="toctree-l2"><a class="reference internal" href="features.html#id2">簡単なファイル操作</a></li>
+<li class="toctree-l2"><a class="reference internal" href="features.html#id3">小さな作業をするのに小さな変更</a></li>
+<li class="toctree-l2"><a class="reference internal" href="features.html#id4">ライブラリは利用しますが依存はしません</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">スタートガイド</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#id2">旧い方法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#id6">新しい方法</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pavement.html">徹底的に pavement.py</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pavement.html#id1">タスクを定義する</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pavement.html#id2">手動でタスクを呼び出す</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pavement.html#id3">どのようにタスク名が動作するか</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pavement.html#id4">タスクパラメータ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pavement.html#id5">コマンドライン引数</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="paverstdlib.html">Paver 標準ライブラリ</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="setuptools.html">distutils と setuptools (paver.setuputils)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="files.html">Paver でファイルを扱う (paver.path)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="doctools.html">ドキュメントツール (paver.doctools)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misctasks.html">その他のタスク (paver.misctasks)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="virtualenv.html">Virtualenv サポート (paver.virtual)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="virtualenv.html#module-paver.virtual">paver.virtual タスク</a></li>
+<li class="toctree-l2"><a class="reference internal" href="svn.html">Subversion (paver.svn) で使用する</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bzr.html">Bazaar-NG (bzr) (paver.bzr) を使用する</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ssh.html">SSH リモートアクセスサポート (paver.ssh)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cmdline.html">Paver コマンドライン</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tips.html">Tips と Tricks</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tips.html#id1">設定ファイルを使用する</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="articles.html">Paver についての記事</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Paver Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#unreleased">1.0.4 (unreleased)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#june-1-2010">1.0.3 (June 1, 2010)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#march-8-2010">1.0.2 (March 8, 2010)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#may-4-2009">1.0.1 (May 4, 2009)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#march-22-2009">1.0 (March 22, 2009)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#b1-march-13-2009">1.0b1 (March 13, 2009)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#a4-march-6-2009">1.0a4 (March 6, 2009)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#a3-march-6-2009">1.0a3 (March 6, 2009)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#a2-february-26-2009">1.0a2 (February 26, 2009)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#a1-january-28-2009">1.0a1 (January 28, 2009)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#june-2-2008">0.8.1 (June 2, 2008)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#may-19-2008">0.8 (May 19, 2008)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#may-16-2008">0.7.3 (May 16, 2008)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#may-8-2008">0.7.2 (May 8, 2008)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id1">0.7.1 (May 8, 2008)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#may-7-2008">0.7 (May 7, 2008)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#april-22-2008">0.4 (April 22, 2008)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="credits.html">クレジット</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="id8">
+<h2>インデックスとテーブル<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference internal" href="../genindex.html"><em>Index</em></a></li>
+<li><a class="reference internal" href="../py-modindex.html"><em>Module Index</em></a></li>
+<li><a class="reference internal" href="../search.html"><em>Search Page</em></a></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Paver: ソフトウェアプロジェクトのための簡易スクリプティング</a><ul>
+<li><a class="reference internal" href="#id1">機能</a></li>
+<li><a class="reference internal" href="#id2">ステータス</a></li>
+<li><a class="reference internal" href="#id3">インストール</a></li>
+<li><a class="reference internal" href="#id4">ヘルプと開発</a></li>
+<li><a class="reference internal" href="#id6">ライセンス</a></li>
+<li><a class="reference internal" href="#id7">コンテンツ</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#id8">インデックスとテーブル</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/jp/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">Paver v1.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2008, SitePen, Inc..
+      Last updated on Nov 11, 2010.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+    </div>
+  </body>
+</html>
