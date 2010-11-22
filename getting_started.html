@@ -89,7 +89,7 @@ package. We create a setup.py file that looks like this:</p>
 # sh('ls -l docs/samples/started/oldway/dist')
 # ==&gt;
 celkem 4
--rw-r--r-- 1 almad almad 629 11. lis 22.19 TheOldWay-1.0.tar.gz
+-rw-r--r-- 1 lukas.linhart lukas.linhart 638 22. lis 16.59 TheOldWay-1.0.tar.gz
 # &lt;==end==&gt;</pre>
 </div>
 <p>Then your users can run the familiar:</p>
@@ -206,8 +206,7 @@ use the <tt class="docutils literal"><span class="pre">paver.setuputils.setup</s
 above, or call <tt class="docutils literal"><span class="pre">paver.setuputils.install_distutils_tasks()</span></tt>.</p>
 <p>We can see this in action by looking at <tt class="docutils literal"><span class="pre">paver</span> <span class="pre">help</span></tt>:</p>
 <div class="highlight-python"><pre># &lt;== sh('cd docs/samples/started/newway; paver help')==&gt;
-Could not load entry point: upload_docs = setuptools.command.upload_docs:upload_docs
----&gt; paver.tasks.help
+[?1034h---&gt; paver.tasks.help
 Usage: paver [global options] taskname [task options] [taskname [taskoptions]]
 
 Options:
@@ -244,6 +243,7 @@ Tasks from paver.misctasks:
   generate_setup   - Generates a setup
   minilib          - Create a Paver mini library that contains enough for a simple
     pavement
+  paverdocs        - Open your web browser and display Paver's documentation
 
 Tasks from paver.tasks:
   help             - This help display
@@ -253,7 +253,7 @@ Tasks from setuptools.command:
   bdist_egg        - create an "egg" distribution
   bdist_rpm        - create an RPM distribution
   bdist_wininst    - create an executable installer for MS Windows
-  build_ext        - build C/C++ and Pyrex extensions (compile/link to build directory)
+  build_ext        - build C/C++ extensions (compile/link to build directory)
   build_py         - "build" pure Python modules (copy to build directory)
   develop          - install package in 'development mode'
   easy_install     - Find/get/install Python packages
@@ -268,6 +268,7 @@ Tasks from setuptools.command:
   sdist            - create a source distribution (tarball, zip file, etc.)
   setopt           - set an option in setup.cfg or another config file
   test             - run unit tests after in-place build
+  upload_docs      - Upload documentation to PyPI
 
 Tasks from sphinx.setup_command:
   build_sphinx     - Build Sphinx documentation
@@ -298,7 +299,7 @@ equivalent output file:</p>
 # sh('ls -l docs/samples/started/newway/dist')
 # ==&gt;
 celkem 32
--rw-r--r-- 1 almad almad 28859 11. lis 22.19 TheNewWay-1.0.tar.gz
+-rw-r--r-- 1 lukas.linhart lukas.linhart 28971 22. lis 17.00 TheNewWay-1.0.tar.gz
 # &lt;==end==&gt;</pre>
 </div>
 <p>It also means that users of The New Way can also run <tt class="docutils literal"><span class="pre">paver</span> <span class="pre">install</span></tt>
@@ -329,7 +330,7 @@ for that file and use it if it sees it.</p>
 #    insert_output=False)
 # sh('ls -l docs/samples/started/newway/paver-minilib.zip')
 # ==&gt;
--rw-r--r-- 1 almad almad 27309 11. lis 22.19 docs/samples/started/newway/paver-minilib.zip
+-rw-r--r-- 1 lukas.linhart lukas.linhart 27309 22. lis 17.00 docs/samples/started/newway/paver-minilib.zip
 # &lt;==end==&gt;</pre>
 </div>
 <p>Paver itself is bootstrapped with a generated setup file and a
@@ -377,8 +378,7 @@ and, in your pavement.py, <tt class="docutils literal"><span class="pre">import<
 the import will make the doctools-related tasks available.
 <tt class="docutils literal"><span class="pre">paver</span> <span class="pre">help</span> <span class="pre">html</span></tt> will tell us how to use the html command:</p>
 <div class="highlight-python"><pre># &lt;== sh('paver help paver.doctools.html')==&gt;
-Could not load entry point: upload_docs = setuptools.command.upload_docs:upload_docs
----&gt; paver.tasks.help
+[?1034h---&gt; paver.tasks.help
 
 paver.doctools.html
 -------------------
@@ -681,8 +681,8 @@ projects.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2008, SitePen, Inc..
-      Last updated on Nov 11, 2010.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+      Last updated on Nov 22, 2010.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
     </div>
   </body>
 </html>
