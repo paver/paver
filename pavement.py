@@ -24,7 +24,8 @@ options(
         packages_to_install=["nose", "Sphinx>=0.6b1", "docutils", "virtualenv"],
         install_paver=False,
         script_name='bootstrap.py',
-        paver_command_line=None
+        paver_command_line=None,
+        dest_dir="virtualenv"
     ),
     cog=Bunch(
         includedir="docs/samples",
