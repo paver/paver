@@ -1,4 +1,4 @@
-from paver import svn, runtime
+from paver import svn
 from paver.tests.mock import Mock, patch
 
 @patch(svn, "sh")
