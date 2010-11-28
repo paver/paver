@@ -14,6 +14,6 @@ easy. More importantly, dealing with *your* applications specific needs and
 requirements is also easy.""",
     author='Kevin Dangoor',
     author_email='dangoor+paver@gmail.com',
-    url='http://www.blueskyonmars.com/projects/paver/',
+    url='http://paver.github.com/',
     packages=['paver', 'paver.cog']
 )
