@@ -1,2 +1,15 @@
-*.pyc
-virtualenv
+*.py[c|o]
+*.egg
+*.egg-info
+/build
+/dist
+/nbproject/
+pip-log.txt
+/.project
+/.pydevproject
+/include
+/lib
+/lib64
+/bin
+/virtualenv
+
