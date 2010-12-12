@@ -6,6 +6,9 @@ Paver Changelog
 1.0.4 (unreleased)
 ------------------
 * Fixed md5 deprecation warnings in the bundled cog (thanks to jszakmeister, issue #56)
+* Project moved to github
+* Fixed problems with negative command-line options for distutils (thanks to Nao Nakashima for bugreport, github issue #2)
+* Japanese translation moved to `https://github.com/paver/paver-docs-jp  <http://paver.github.com/paver-docs-jp/>`_
 
 1.0.3 (June 1, 2010)
 --------------------
