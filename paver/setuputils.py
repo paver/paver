@@ -135,6 +135,7 @@ class DistutilsTask(tasks.Task):
         self.option_names = set()
         self.needs = []
         self.user_options = command_class.user_options
+        self.negative_opt = getattr(command_class, "negative_opt", {})
         # Parse distutils config files.
         distribution.parse_config_files()
         

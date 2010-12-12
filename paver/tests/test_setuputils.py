@@ -1,4 +1,3 @@
-from pprint import pprint
 from distutils.core import Command
 
 from paver.setuputils import install_distutils_tasks, \
@@ -11,9 +10,9 @@ class _sdist(Command):
     called = False
     foo_set = False
     fin = None
-    user_options = [("foo", "f", "Foo")]
+    user_options = [("foo", "f", "Foo"), ("no-foo", None, "No Foo")]
     boolean_options = ['foo']
-    negative_opt = {}
+    negative_opt = {'no-foo' : 'foo'}
     
     def initialize_options(self):
         self.foo = False
@@ -32,6 +31,10 @@ class _sdist(Command):
         cls.foo_set = False
         cls.fin = None
 
+
+class _sdist_with_default_foo(_sdist):
+    def initialize_options(self):
+        self.foo = True
 
 #----------------------------------------------------------------------
 def test_override_distutils_command():
@@ -132,4 +135,17 @@ def test_needs_sdist_without_options():
     assert t1.called
     cmd = d.get_command_obj('sdist')
     assert not cmd.foo
+    assert not _sdist.foo_set
+
+def test_negative_opts_handled_for_distutils():
+    _sdist.reset()
+    env = _set_environment()
+    env.options = options.Bunch(setup=options.Bunch())
+    install_distutils_tasks()
+    d = _get_distribution()
+    d.cmdclass['sdist'] = _sdist_with_default_foo
+
+    tasks._process_commands(['sdist', '--no-foo'])
+
+    assert _sdist.called
     assert not _sdist.foo_set

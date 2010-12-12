@@ -238,6 +238,7 @@ class Task(object):
         self.name = "%s.%s" % (func.__module__, func.__name__)
         self.option_names = set()
         self.user_options = []
+        self.negative_opt = {}
         try:
             self.__doc__ = func.__doc__
         except AttributeError:
@@ -250,7 +251,7 @@ class Task(object):
     
     def __repr__(self):
         return "Task: " + self.__name__
-    
+
     @property    
     def parser(self):
         options = self.user_options
@@ -265,6 +266,7 @@ class Task(object):
             if not task:
                 raise PavementError("Task %s needed by %s does not exist"
                     % (task_name, self))
+
             for option in task.user_options:
                 try:
                     longname = option[0]
@@ -294,6 +296,7 @@ by another task in the dependency chain.""" % (self, option, task))
                 except IndexError:
                     raise PavementError("Invalid option format provided for %r: %s"
                                         % (self, option))
+
         return parser
         
     def display_help(self, parser=None):
@@ -320,15 +323,21 @@ by another task in the dependency chain.""" % (self, option, task))
             sys.exit(0)
             
         for task_name, option_name in self.option_names:
+            dist_option_name = option_name
             option_name = option_name.replace('-', '_')
             try:
                 optholder = environment.options[task_name]
             except KeyError:
                 optholder = paver.options.Bunch()
                 environment.options[task_name] = optholder
+
             value = getattr(options, option_name)
             if value is not None:
-                optholder[option_name] = getattr(options, option_name)
+                if dist_option_name in getattr(self, "negative_opt"):
+                    optholder[self.negative_opt[dist_option_name].replace('-', '_')] = False
+                else:
+                    optholder[option_name] = getattr(options, option_name)
+
         return args
         
     @property
