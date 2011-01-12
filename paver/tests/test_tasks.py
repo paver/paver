@@ -249,6 +249,30 @@ def test_options_inherited_via_needs():
     tasks._process_commands("t2 --foo 1 -b 2".split())
     assert t1.called
     assert t2.called
+
+def test_options_inherited_via_needs_even_from_grandparents():
+    @tasks.task
+    @tasks.cmdopts([('foo=', 'f', "Foo!")])
+    def t1(options):
+        assert options.t1.foo == "1"
+    
+    @tasks.task
+    @tasks.needs('t1')
+    @tasks.cmdopts([('bar=', 'b', "Bar!")])
+    def t2(options):
+        assert options.t2.bar == '2'
+
+    @tasks.task
+    @tasks.needs('t2')
+    @tasks.cmdopts([('spam=', 's', "Spam!")])
+    def t3(options):
+        assert options.t3.spam == '3'
+        
+    environment = _set_environment(t1=t1, t2=t2, t3=t3)
+    tasks._process_commands("t3 --foo 1 -b 2 -s 3".split())
+    assert t1.called
+    assert t2.called
+    assert t3.called
     
 def test_options_shouldnt_overlap():
     @tasks.task
