@@ -261,7 +261,7 @@ class Task(object):
         parser.add_option('-h', '--help', action="store_true",
                         help="display this help information")
         
-        needs_tasks = [(environment.get_task(task), task) for task in self.needs]
+        needs_tasks = [(environment.get_task(task), task) for task in self.needs_closure]
         for task, task_name in itertools.chain([(self, self.name)], needs_tasks):
             if not task:
                 raise PavementError("Task %s needed by %s does not exist"
@@ -350,6 +350,22 @@ by another task in the dependency chain.""" % (self, option, task))
         else:
             doc = ""
         return doc
+    
+    @property
+    def needs_closure(self):
+        stack = [] + self.needs
+        rv = []
+        while stack:
+            top = stack.pop()
+            if (not top in rv):
+                rv.append(top)
+                needs = []
+                if (environment.get_task(top)):
+                    needs = environment.get_task(top).needs
+                for t in needs:
+                    stack.append(t)
+    
+        return rv
 
 
 def task(func):

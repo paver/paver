@@ -9,6 +9,7 @@ Paver Changelog
 * Project moved to github
 * Fixed problems with negative command-line options for distutils (thanks to Nao Nakashima for bugreport, github issue #2)
 * Japanese translation moved to `https://github.com/paver/paver-docs-jp  <http://paver.github.com/paver-docs-jp/>`_
+* Tasks take cmdopts even from grandparents (thanks to aurelianito, github issue #4)
 
 1.0.3 (June 1, 2010)
 --------------------
