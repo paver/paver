@@ -6,8 +6,8 @@ Paver: Easy Scripting for Software Projects
     :height: 126
     :width: 240
 
-New! Read the docs `in Japanese <http://paver.github.com/paver-docs-jp/>`_ thanks to
-Tetsuya Morimoto.
+`Japanese translation available <http://paver.github.com/paver-docs-jp/>`_
+thanks to Tetsuya Morimoto.
 
 Paver is a Python-based software project scripting tool along the
 lines of Make or Rake. It is not designed to handle the dependency
