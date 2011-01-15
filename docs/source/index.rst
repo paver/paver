@@ -102,13 +102,17 @@ Help and Development
 
 You can get help from the `mailing list`_.
 
-If you'd like to help out with Paver, you can check the code out from Googlecode:
+If you'd like to help out with Paver, you can check the code out from github:
 
-``svn checkout http://paver.googlecode.com/svn/trunk/ paver-read-only``
+``git clone https://github.com/paver/paver.git``
 
-You can also take a look at `Paver's project page on Googlecode <http://code.google.com/p/paver/>`_.
+Ideally, create a fork, fix an issue from `Paver's list of issues`_ (or create an issue
+Yourself) and send a pull request.
+
+Your help is appreciated!
 
 .. _mailing list: http://groups.google.com/group/paver
+.. _Paver's list of issues: https://github.com/paver/paver/issues
 
 License
 -------
