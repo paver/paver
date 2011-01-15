@@ -1,6 +1,8 @@
 import os
 from pprint import pprint
 
+from nose.tools import assert_equals
+
 from paver import setuputils, misctasks, tasks, options
 
 from paver.tests.mock import Mock
@@ -484,3 +486,32 @@ def test_calling_a_function_rather_than_task():
         assert False, "Expected a BuildFailure when calling something that is not a task."
     except tasks.BuildFailure:
         pass
+
+def test_description_retrieval_trial():
+    @tasks.task
+    def t1():
+        """ Task it is """
+    
+    assert_equals("Task it is", t1.description)
+
+def test_description_empty_without_docstring():
+    @tasks.task
+    def t1():
+        pass
+    
+    assert_equals("", t1.description)
+
+def test_description_retrieval_first_sentence():
+    @tasks.task
+    def t1():
+        """ Task it is. Not with another sentence. """
+    
+    assert_equals("Task it is", t1.description)
+
+def test_description_retrieval_first_sentence_even_with_version_numbers():
+    @tasks.task
+    def t1():
+        """ Task it is, installs Django 1.0. Not with another sentence. """
+    
+    assert_equals("Task it is, installs Django 1.0", t1.description)
+

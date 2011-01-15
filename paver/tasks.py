@@ -1,6 +1,7 @@
 import sys
 import os
 import optparse
+import re
 import types
 import inspect
 import itertools
@@ -342,14 +343,10 @@ by another task in the dependency chain.""" % (self, option, task))
         
     @property
     def description(self):
-        doc = self.__doc__
-        if doc:
-            period = doc.find(".")
-            if period > -1:
-                doc = doc[0:period]
+        if self.__doc__:
+            return re.split("\.\s+", self.__doc__, maxsplit=1)[0].strip()
         else:
-            doc = ""
-        return doc
+            return ""
     
     @property
     def needs_closure(self):

@@ -10,6 +10,8 @@ Paver Changelog
 * Fixed problems with negative command-line options for distutils (thanks to Nao Nakashima for bugreport, github issue #2)
 * Japanese translation moved to `https://github.com/paver/paver-docs-jp  <http://paver.github.com/paver-docs-jp/>`_
 * Tasks take cmdopts even from grandparents (thanks to aurelianito, github issue #4)
+* Task description is taken from the first sentence, where the end of the sentence is dot followed by alphanumeric character (google code bug #44). Description is also stripped now.
+
 
 1.0.3 (June 1, 2010)
 --------------------
