@@ -3,7 +3,7 @@
 Paver Changelog
 ===============
 
-1.0.4 (January 15, 2011)
+1.0.4 (January 16, 2011)
 ------------------------
 * Fixed md5 deprecation warnings in the bundled cog (thanks to jszakmeister, issue #56)
 * Project moved to github
