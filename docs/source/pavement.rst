@@ -151,3 +151,30 @@ the ``options`` under a namespace matching the name of the task. In the
 case above, options.deploy.username would be set if the user ran
 paver deploy -u my-user-name. Note that an equivalent command line would be
 paver deploy.username=my-user-name deploy
+
+You may share ``@cmdopts`` between tasks. To do that and to avoid confusion,
+You have to add share_with argument::
+
+    @task
+    @cmdopts([
+        ('username=', 'u', 'Username to use when logging in to the servers')
+    ])
+    def deploy_to_linux(options):
+        pass
+
+
+    @task
+    @needs(['deploy_to_linux'])
+    @cmdopts([
+        ('username=', 'u', 'Username to use when logging in to the servers')
+    ], share_with=['deploy_to_linux'])
+    def deploy(options):
+        pass
+
+
+For sharing, following must be fullfilled:
+
+* Both long and short option names must be same
+* ``share_with`` argument must be specified on top-level task
+
+Otherwise, ``PavementError`` is raised.
