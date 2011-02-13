@@ -3,6 +3,11 @@
 Paver Changelog
 ===============
 
+1.0.5 (TBA)
+------------------------
+* Ability to share command line options between tasks (github issue `#7 <https://github.com/paver/paver/issues/issue/7>`_)
+
+
 1.0.4 (January 16, 2011)
 ------------------------
 * Fixed md5 deprecation warnings in the bundled cog (thanks to jszakmeister, issue #56)

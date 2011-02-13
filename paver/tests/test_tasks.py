@@ -291,7 +291,64 @@ def test_options_shouldnt_overlap():
     environment = _set_environment(t1=t1, t2=t2)
     try:
         tasks._process_commands("t2 -f 1".split())
-        assert False, "shoudl have gotten a PavementError"
+        assert False, "should have gotten a PavementError"
+    except tasks.PavementError:
+        pass
+
+def test_options_shouldnt_overlap_when_bad_task_specified():
+    @tasks.task
+    @tasks.cmdopts([('foo=', 'f', "Foo!")])
+    def t1(options):
+        assert False
+    
+    @tasks.task
+    @tasks.needs('t1')
+    @tasks.cmdopts([('force=', 'f', "Force!")], share_with=['nonexisting_task'])
+    def t2(options):
+        assert False
+        
+    environment = _set_environment(t1=t1, t2=t2)
+    try:
+        tasks._process_commands("t2 -f 1".split())
+        assert False, "should have gotten a PavementError"
+    except tasks.PavementError:
+        pass
+
+def test_options_may_overlap_if_explicitly_allowed():
+    @tasks.task
+    @tasks.cmdopts([('foo=', 'f', "Foo!")])
+    def t1(options):
+        assert options.t1.foo == "1"
+    
+    @tasks.task
+    @tasks.needs('t1')
+    @tasks.cmdopts([('foo=', 'f', "Foo!")], share_with=['t1'])
+    def t2(options):
+        assert options.t2.foo == "1"
+        
+    environment = _set_environment(t1=t1, t2=t2)
+
+    tasks._process_commands("t2 -f 1".split())
+
+    assert t1.called
+    assert t2.called
+
+def test_exactly_same_parameters_must_be_specified_in_order_to_allow_sharing():
+    @tasks.task
+    @tasks.cmdopts([('foo=', 'f', "Foo!")])
+    def t1(options):
+        assert False
+    
+    @tasks.task
+    @tasks.needs('t1')
+    @tasks.cmdopts([('force=', 'f', "Force!")], share_with=['t1'])
+    def t2(options):
+        assert False
+        
+    environment = _set_environment(t1=t1, t2=t2)
+    try:
+        tasks._process_commands("t2 -f 1".split())
+        assert False, "should have gotten a PavementError"
     except tasks.PavementError:
         pass
 
