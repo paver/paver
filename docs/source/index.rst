@@ -13,7 +13,7 @@ Paver is a Python-based software project scripting tool along the
 lines of Make or Rake. It is not designed to handle the dependency
 tracking requirements of, for example, a C program. It *is* designed
 to help out with all of your other repetitive tasks (run documentation
-generators, moving files about, downloading things), all with the
+generators, moving files around, downloading things), all with the
 convenience of Python's syntax and massive library of code.
 
 If you're developing applications in Python, you get even more...
