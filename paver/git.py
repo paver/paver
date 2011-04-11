@@ -25,18 +25,27 @@ def pull(destination, remote="origin", branch="master"):
     sh("cd %(destination)s; git pull %(remote)s %(branch)s" % dict(
         destination=destination, remote=remote, branch=branch) )
 
-def branch_list(path="", __override__=None):
-    """Returns a Python tuple. The first item in the tuple will be the current
+def branch_list(path="", remote_branches_only=False, __override__=None):
+    """
+    Lists git branches for the repository specified (or CWD).
+    If remote_branches_only is specified will list branches that exist
+    on the remote. These branches may, or may not, have corresponding remote
+    tracking branches.
+    
+    Returns a Python tuple. The first item in the tuple will be the current
     branch, and the other item will be a list of branches for the repository.
     
     Optional parameter path: the path to the git repo. Else uses os.getcwd()
     """
     
     git_output = None
+    remote_branches = ""
+    if remote_branches_only:
+        remote_branches = "-r"
     
     if __override__ == None:
-        git_output = sh(  "cd %(repo_path)s; git branch" % dict(
-            repo_path = _format_path(path) )  )
+        git_output = sh(  "cd %(repo_path)s; git branch %(remote)s" % dict(
+            repo_path = _format_path(path), remote = remote_branches ), capture=True  )
     else:
         git_output = __override__
     
