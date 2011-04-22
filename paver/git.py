@@ -14,6 +14,9 @@ def _format_path(provided_path):
     else:
         return os.getcwd()
 
+def _split_remote_branch_name(provided_name):
+    return provided_name.split("/")[1]
+
 def clone(url, dest_folder):
     sh("git clone %(url)s %(path)s" % dict(url=url, path=dest_folder) )
 
@@ -81,3 +84,12 @@ def branch_checkout(branch_name, path=""):
     sh( "cd %(repo_path)s; git checkout %(branch_name)s" % dict(
         repo_path = _format_path(path),
         branch_name=branch_name) )
+     
+def branch_track_remote(remote_branch_name, local_branch_name=None, path=""):
+    local_branch_name = ( local_branch_name or _split_remote_branch_name(remote_branch_name) )
+    
+    sh( "cd %(repo_path)s; git checkout -b %(branch_name)s --track %(remote_branch_name)s" % dict(
+        repo_path = _format_path(path),
+        branch_name=local_branch_name,
+        remote_branch_name=remote_branch_name) )
+    

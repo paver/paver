@@ -32,12 +32,6 @@ def test_branch_chekout_cwd(sh):
     )
     
 @patch(git, "sh")
-def test_branch_list(sh):
-    git.branch_list(path="repo_path")
-    assert sh.called
-    assert sh.call_args[0][0] == "cd repo_path; git branch"
-    
-@patch(git, "sh")
 def test_branch_list_correctly_parses_git_output(sh):
     output = git.branch_list(path="repo_path", __override__="""
 * git_support
@@ -46,3 +40,25 @@ def test_branch_list_correctly_parses_git_output(sh):
     """)
     
     assert output == ("git_support", ["git_support", "master", "virtualenv_in_folder"])
+    
+@patch(git, "sh")
+def test_branch_list_correctly_parses_remote_branch_output(sh):
+    output = git.branch_list(path="repo_path", 
+        remote_branches_only = True,
+        __override__="""
+    github/gh-pages
+    github/git_support
+    github/master""")
+    
+    assert output == ('',
+        ["github/gh-pages", "github/git_support", "github/master"])
+
+@patch(git, "sh")
+def test_branch_track_remote(sh):
+    git.branch_track_remote("origin/alpha_two", path="repo_path")
+    
+    assert sh.called
+    assert sh.call_args[0][0] == "cd %(current_path)s; git checkout -b alpha_two --track origin/alpha_two" % dict(
+        current_path="repo_path"
+    )
+     
