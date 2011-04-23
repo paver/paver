@@ -22,8 +22,6 @@ def clone(url, dest_folder):
 
 def pull(destination, remote="origin", branch="master"):
     """Perform a git pull. Destination must be absolute path.
-    
-    Will raise 
     """
     sh("cd %(destination)s; git pull %(remote)s %(branch)s" % dict(
         destination=destination, remote=remote, branch=branch) )
