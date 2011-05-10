@@ -5,13 +5,13 @@ Paver Changelog
 
 1.1.0 (Not Yet Released)
 ------------------------
-...
+* Minilib is now imported only if full paver is not available (github `issue #13 <https://github.com/paver/paver/issues/13>`_)
 
 1.0.4 (January 16, 2011)
 ------------------------
 * Fixed md5 deprecation warnings in the bundled cog (thanks to jszakmeister, issue #56)
 * Project moved to github
-* Fixed problems with negative command-line options for distutils (thanks to Nao Nakashima for bugreport, github issue #2)
+* Fixed problems with negative command-line options for distutils (thanks to Nao Nakashima for bugreport, github `issue #2 <https://github.com/paver/paver/issues/2>`_)
 * Japanese translation moved to `https://github.com/paver/paver-docs-jp  <http://paver.github.com/paver-docs-jp/>`_
 * Tasks take cmdopts even from grandparents (thanks to aurelianito, github issue #4)
 * Task description is taken from the first sentence, where the end of the sentence is dot followed by alphanumeric character (google code bug #44). Description is also stripped now.
