@@ -69,6 +69,8 @@ Features
 * Easily transition from setup.py without making your users learn about or
   even install Paver! (See the :ref:`Getting Started Guide <gettingstarted>` 
   for an example).
+* Task discovery: Integrate variety of tools under Single Console Entry Point
+  (See the :ref:`Task discovery <discovery>` for more details).
 
 See how it works! Check out the :ref:`Getting Started Guide <gettingstarted>`.
 
@@ -131,6 +133,7 @@ Contents
    getting_started
    pavement
    paverstdlib
+   discovery
    cmdline
    tips
    articles
