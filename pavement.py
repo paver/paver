@@ -115,4 +115,3 @@ def deploy():
             (htmlfiles, options.username, options.server,
              options.deploydir)
     sh(command)
-    

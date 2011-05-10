@@ -241,12 +241,18 @@ class Task(object):
         self.user_options = []
         self.negative_opt = {}
         self.share_options_with = []
+        self.use_virtualenv = None
+        self.virtualenv_dir = None
         try:
             self.__doc__ = func.__doc__
         except AttributeError:
             pass
         
     def __call__(self, *args, **kw):
+        if self.use_virtualenv and self.virtualenv_dir:
+            #TODO: Environment recovery?
+            activate_this = os.path.join(self.virtualenv_dir, "bin", "activate_this.py")
+            execfile(activate_this, dict(__file__=activate_this))
         retval = environment._run_task(self.name, self.needs, self.func)
         self.called = True
         return retval
@@ -405,7 +411,6 @@ class Task(object):
                     stack.append(t)
     
         return rv
-
 
 def task(func):
     """Specifies that this function is a task.
