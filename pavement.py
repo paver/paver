@@ -32,9 +32,6 @@ options(
         beginspec="<==",
         endspec="==>",
         endoutput="<==end==>"
-    ),
-    deploy=Bunch(
-        deploydir="blueskyonmars.com/projects/paver"
     )
 )
 
@@ -105,15 +102,4 @@ def clean():
 def commit():
     """Removes the generated code from the docs and then commits to bzr."""
     sh("git commit -av")
-    
-@task
-@cmdopts([("username=", "u", "Username for remote server"),
-          ("server=", "s", "Server to deploy to")])
-def deploy():
-    """Copy the Paver website up."""
-    htmlfiles = path("paver/docs")
-    command = "rsync -avz -e ssh %s/ %s@%s:%s/" % \
-            (htmlfiles, options.username, options.server,
-             options.deploydir)
-    sh(command)
     
