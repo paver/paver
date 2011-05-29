@@ -98,6 +98,7 @@ def clean():
     path("bin").rmtree()
     path("lib").rmtree()
     path(".Python").remove()
+    path("virtualenv").remove()
     
 @task
 @needs("uncog")
