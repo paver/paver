@@ -21,3 +21,9 @@ Following tools are supported by Paver standard library:
 * fabric
 * django manage.py commands
 
+Writing discovery plugins
+--------------------------
+
+* Always name your function discover_<plugin> (to avoid nameclashes in pavement)
+
+

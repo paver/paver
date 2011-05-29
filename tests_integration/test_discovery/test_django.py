@@ -37,24 +37,7 @@ class TestBasicDjangoDiscovery(object):
         except ImportError:
             raise SkipTest("Django must be installed for django discovery tests")
 
-        pavement = """
-from paver.easy import *
-from paver.setuputils import setup
-
-setup(
-    name="MyCoolProject",
-    packages=['mycool'],
-    version="1.0",
-    url="http://www.blueskyonmars.com/",
-    author="Kevin Dangoor",
-    author_email="dangoor@gmail.com"
-)
-        """
-
         self.testbed = mkdtemp(prefix="paver-test-django-")
-
-        with open(os.path.join(self.testbed, "pavement.py"), 'w') as f:
-            f.write(pavement)
 
         self.djangoroot = os.path.join(self.testbed, "cooldjangoproject")
         os.mkdir(self.djangoroot)
@@ -69,21 +52,52 @@ setup(
         with open(os.path.join(self.djangoroot, "settings.py"), 'w') as f:
             f.write(DJANGO_SETTINGS)
 
+        pavement = """
+from paver.easy import *
+from paver.setuputils import setup
+
+from paver.discovery import discover_django
+
+setup(
+    name="MyCoolProject",
+    packages=['mycool'],
+    version="1.0",
+    url="http://www.blueskyonmars.com/",
+    author="Kevin Dangoor",
+    author_email="dangoor@gmail.com"
+)
+
+options(
+    discovery = Bunch(
+        django = Bunch(
+            settings_path = "%s"
+        )
+    )
+)
+
+discover_django(options)
+        """ % self.djangoroot
+        
+        with open(os.path.join(self.testbed, "pavement.py"), 'w') as f:
+            f.write(pavement)
+
+
     def test_namespaced_django_commands_available(self):
 
-        p = Popen(["python", "manage.py", "help", "validate"], cwd=self.djangoroot, stdout=PIPE, stderr=PIPE)
-        p.communicate()
+        p = Popen(["python", "manage.py", "validate"], cwd=self.djangoroot, stdout=PIPE, stderr=PIPE)
+        expected_output, _ = p.communicate()
 
         assert_equals(0, p.returncode, "Unexpected failure when communicating with django's manage.py -- is it installed properly?")
 
-        expected_output = p.stdout
-
-        p = Popen(["paver", "django.help", "validate"], cwd=self.testbed, stdout=PIPE, stderr=PIPE)
-        p.communicate()
+        p = Popen(["paver", "django.validate"], cwd=self.testbed, stdout=PIPE, stderr=PIPE)
+        output, _ = p.communicate()
 
         assert_equals(0, p.returncode)
 
-        assert_equals(expected_output, p.stdout)
+        #FIXME: Useful funcname of course
+        paver_annotation = "---> paver.discovery.<lambda>\n"
+
+        assert_equals(paver_annotation+expected_output, output)
 
     def tearDown(self):
         rmtree(self.testbed)
