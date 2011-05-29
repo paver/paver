@@ -103,3 +103,14 @@ def commit():
     """Removes the generated code from the docs and then commits to bzr."""
     sh("git commit -av")
     
+
+@task
+@consume_args
+def integrate(args):
+    """ Run integration test suite. """
+    import nose
+
+    nose.run_exit(
+        argv = ["nosetests"] + args,
+        defaultTest = "tests_integration",
+    )
