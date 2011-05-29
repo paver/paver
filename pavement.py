@@ -100,7 +100,7 @@ def clean():
 @task
 @needs("uncog")
 def commit():
-    """Removes the generated code from the docs and then commits to bzr."""
+    """Removes the generated code from the docs and then commits to repository."""
     sh("git commit -av")
     
 
