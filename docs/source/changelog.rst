@@ -6,6 +6,7 @@ Paver Changelog
 1.1.0 (Not Yet Released)
 ------------------------
 * Minilib is now imported only if full paver is not available (github `issue #13 <https://github.com/paver/paver/issues/13>`_)
+* @cmdopts (task.user_options, respectively) now may contain ``optparse.Option`` instances
 
 1.0.4 (January 16, 2011)
 ------------------------

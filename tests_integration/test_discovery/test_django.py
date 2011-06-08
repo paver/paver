@@ -90,9 +90,26 @@ discover_django(options)
         assert_equals(0, p.returncode, "Unexpected failure when communicating with django's manage.py -- is it installed properly?")
 
         p = Popen(["paver", "django.validate"], cwd=self.testbed, stdout=PIPE, stderr=PIPE)
-        output, _ = p.communicate()
+        output, stderr = p.communicate()
 
-        assert_equals(0, p.returncode)
+        assert_equals(0, p.returncode, "Command failed: stdout: %s, stderr: %s" % (output, stderr))
+
+        #FIXME: Useful funcname of course
+        paver_annotation = "---> paver.discovery.<lambda>\n"
+
+        assert_equals(paver_annotation+expected_output, output)
+
+    def test_options_propagated_properly_to_command(self):
+
+        p = Popen(["python", "manage.py", "validate", "--traceback"], cwd=self.djangoroot, stdout=PIPE, stderr=PIPE)
+        expected_output, _ = p.communicate()
+
+        assert_equals(0, p.returncode, "Unexpected failure when communicating with django's manage.py -- is it installed properly?")
+
+        p = Popen(["paver", "django.validate", "--traceback"], cwd=self.testbed, stdout=PIPE, stderr=PIPE)
+        output, stderr = p.communicate()
+
+        assert_equals(0, p.returncode, "Command failed: stdout: %s, stderr: %s" % (output, stderr))
 
         #FIXME: Useful funcname of course
         paver_annotation = "---> paver.discovery.<lambda>\n"

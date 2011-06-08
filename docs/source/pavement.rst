@@ -151,3 +151,6 @@ the ``options`` under a namespace matching the name of the task. In the
 case above, options.deploy.username would be set if the user ran
 paver deploy -u my-user-name. Note that an equivalent command line would be
 paver deploy.username=my-user-name deploy
+
+Instead of tuples, You may use ``optparse.Option`` instances for some
+fine-tuning.

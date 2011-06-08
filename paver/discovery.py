@@ -1,16 +1,19 @@
 from paver import tasks
 
-
-
 class DjangoTaskFinder(object):
     def __init__(self, options):
         self.options = options
 
     def get_task(self, taskname):
         from django.core.management import call_command
+        from django.core.management.base import BaseCommand
         if taskname.startswith('django.'):
             taskname = taskname[len('django.'):]
-        return tasks.Task(lambda: call_command(taskname))
+
+        task = tasks.Task(lambda: call_command(taskname))
+        task.user_options = BaseCommand.option_list
+        return task
+
 
     def get_tasks(self):
         from django.core.management import get_commands
