@@ -3,9 +3,6 @@
 Task discovery (paver.discovery)
 ==================================
 
-.. warning::
-    This is just an design idea. Nothing actually implemented...yet.
-
 Paver is an excellent point of entry to your application. To facilitate this,
 there is an easy way to unify other common tools under one Paver umbrella.
 
@@ -26,4 +23,39 @@ Writing discovery plugins
 
 * Always name your function discover_<plugin> (to avoid nameclashes in pavement)
 
+
+Discovery in standard library
+-------------------------------
+
+Setuptools
+~~~~~~~~~~~~~
+
+Discovery of distutils/setuptools commands is tightly integrated into Paver.
+See separate :ref:`setuptools <setuptools>` chapter.
+
+Unlike other discoveries, setuptools commands are not namespaced.
+
+Django
+~~~~~~~~~~~~~
+
+To use Django commands, you must tell paver where your project settings are::
+
+    options(
+        discovery = Bunch(
+            django = Bunch(
+                settings_path = "%s"
+            )
+        )
+    )
+
+and explicitly add them::
+
+
+    from paver.discovery import discover_django
+
+    discover_django(options)
+
+Now you can use all django commands, namespaced by ``django.`` prefix, i.e.::
+
+    paver django.validate --traceback
 
