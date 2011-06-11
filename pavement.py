@@ -114,3 +114,14 @@ def integrate(args):
         argv = ["nosetests"] + args,
         defaultTest = "tests_integration",
     )
+
+@task
+@consume_args
+def unit(args):
+    """ Run unit test suite. """
+    import nose
+
+    nose.run_exit(
+        argv = ["nosetests"] + args,
+        defaultTest = "paver",
+    )
