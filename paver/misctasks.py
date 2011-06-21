@@ -1,7 +1,10 @@
 """Miscellaneous tasks that don't fit into one of the other groupings."""
 import os
+import pkgutil
+import zipfile
+from StringIO import StringIO
 
-from paver.easy import dry, path, task
+from paver.easy import dry, task
 
 _docsdir = os.path.join(os.path.dirname(__file__), "docs")
 if os.path.exists(_docsdir):
@@ -27,21 +30,25 @@ def minilib(options):
         defaults, path, release, setuputils, misctasks, options,
         tasks, easy
     """
-    import paver
-    paverdir = path(paver.__file__).dirname()
     filelist = ['__init__', 'defaults', 'path', 'path25', 'release',
                 'setuputils', "misctasks", "options", "tasks", "easy"]
     filelist.extend(options.get('extra_files', []))
     output_file = 'paver-minilib.zip'
 
     def generate_zip():
-        import zipfile
-        destfile = zipfile.ZipFile(output_file, "w", zipfile.ZIP_DEFLATED)
+        # Write the mini library to a buffer.
+        buf = StringIO()
+        destfile = zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED)
         for filename in filelist:
-            destfile.write(
-                paverdir / (filename + ".py"),
-                "paver/" + (filename + ".py"))
+            destfile.writestr(
+                "paver/" + (filename + ".py"),
+                pkgutil.get_data('paver', filename + ".py"))
         destfile.close()
+
+        # Write the buffer to disk.
+        f = open(output_file, "w")
+        f.write(buf.getvalue())
+        f.close()
     dry("Generate %s" % output_file, generate_zip)
     
 @task
