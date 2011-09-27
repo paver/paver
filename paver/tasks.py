@@ -67,6 +67,7 @@ class Environment(object):
     
     def _print(self, output):
         print output
+        sys.stdout.flush()
     
     def _exit(self, code):
         sys.exit(1)
