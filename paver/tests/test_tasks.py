@@ -603,3 +603,16 @@ def test_auto_task_is_run_when_present():
     assert t1.called
     assert auto.called
 
+def test_task_can_be_called_repeatedly():
+    @tasks.consume_args
+    @tasks.task
+    def t1(options, info):
+        info(options.args[0])
+
+    env = _set_environment(t1=t1, patch_print=True)
+    
+    tasks._process_commands(['t1', 'spam'])
+    tasks._process_commands(['t1', 'eggs'])
+
+    assert_equals('eggs', env.patch_captured[~0])
+    assert_equals('spam', env.patch_captured[~2])
