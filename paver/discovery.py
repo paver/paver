@@ -23,8 +23,10 @@ class DjangoTaskFinder(object):
 def discover_django(options):
     """ Look for manage.py and import it's task into main pavement """
     import os, sys
-    os.environ['DJANGO_SETTINGS_MODULE'] = "settings"
-    sys.path.append(options.discovery.django.settings_path)
+    os.environ['DJANGO_SETTINGS_MODULE'] = getattr(options.discovery.django, "settings_module", "settings")
+    if getattr(options.discovery.django, "settings_path", None):
+        sys.path.append(options.discovery.django.settings_path)
+    
     env = tasks.environment
     if not hasattr(env, "_django_tasks_installed"):
         env.task_finders.append(DjangoTaskFinder(options))
