@@ -572,3 +572,34 @@ def test_description_retrieval_first_sentence_even_with_version_numbers():
     
     assert_equals("Task it is, installs Django 1.0", t1.description)
 
+def test_auto_task_is_not_run_with_noauto():
+    @tasks.no_auto
+    @tasks.task
+    def t1():
+        pass
+
+    @tasks.task
+    def auto():
+        pass
+
+    _set_environment(auto=auto, t1=t1)
+    tasks._process_commands(['t1'], auto_pending=True)
+    
+    assert t1.called
+    assert not auto.called, "t1 is decorated with no_auto, it should not be called"
+
+def test_auto_task_is_run_when_present():
+    @tasks.task
+    def t1():
+        pass
+
+    @tasks.task
+    def auto():
+        pass
+
+    _set_environment(auto=auto, t1=t1)
+    tasks._process_commands(['t1'], auto_pending=True)
+
+    assert t1.called
+    assert auto.called
+

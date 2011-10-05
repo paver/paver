@@ -624,7 +624,7 @@ def _process_commands(args, auto_pending=False):
     while True:
         task, args = _parse_command_line(args)
         if auto_pending:
-            if not task or not task.no_auto:
+            if task and not task.no_auto:
                 environment.call_task('auto')
                 auto_pending=False
         if task is None:
