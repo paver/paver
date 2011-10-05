@@ -15,8 +15,6 @@ import sys
 
 from sphinx.ext import autodoc
 
-from paver.tasks import Task
-
 
 # If your extensions are in another directory, add it here.
 #sys.path.append()
@@ -29,6 +27,7 @@ class TaskDocumenter(autodoc.FunctionDocumenter):
     
     @classmethod
     def can_document_member(cls, member, membername, isattr, parent):
+        from paver.tasks import Task
         return isinstance(member, Task)
         
     def import_object(self):
