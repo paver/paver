@@ -113,8 +113,29 @@ Yourself) and send a pull request.
 
 Your help is appreciated!
 
+Running test suite
+===================
+
+Paver contains both unit and integration test suite. Unittests are run by either
+``paver test`` or ``paver unit``. Integration tests can be run by ``paver integrate``.
+
+Using older, system-wide installed paver to run tests on development version can lead
+to bad interactions (see `issue 33`_). Please, run paver test suite using development
+version itself, by:
+
+* Creating virtual environment with --no-site-packages
+
+and
+
+* Installing development version with python setup.py develop
+
+or
+
+* Using embedded minilib, thus invoking commands with setup.py instead of paver
+
 .. _mailing list: http://groups.google.com/group/paver
 .. _Paver's list of issues: https://github.com/paver/paver/issues
+.. _issue 33: https://github.com/paver/paver/issues/33
 
 License
 -------
