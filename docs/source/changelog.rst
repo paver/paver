@@ -3,7 +3,7 @@
 Paver Changelog
 ===============
 
-1.0.5 (TBA)
+1.0.5 (October 21, 2011)
 ------------------------
 * Ability to share command line options between tasks (github issue `#7 <https://github.com/paver/paver/issues/issue/7>`_)
 * Flush after print (github issue `#17 <https://github.com/paver/paver/issues/issue/17>`_, thanks to Honza Kral)
