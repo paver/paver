@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -7,22 +5,21 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Getting Started with Paver &mdash; Paver v1.0.1 documentation</title>
+    <title>Getting Started with Paver &mdash; Paver v1.0.5 documentation</title>
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '1.0.1',
-        COLLAPSE_INDEX: false,
+        VERSION:     '1.0.5',
+        COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Paver v1.0.1 documentation" href="index.html" />
+    <link rel="top" title="Paver v1.0.5 documentation" href="index.html" />
     <link rel="next" title="pavement.py in depth" href="pavement.html" />
     <link rel="prev" title="Paver’s Features" href="features.html" /> 
   </head>
@@ -34,15 +31,15 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
+          <a href="modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
         <li class="right" >
           <a href="pavement.html" title="pavement.py in depth"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="features.html" title="Paver’s Features"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">Paver v1.0.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">Paver v1.0.5 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -89,7 +86,7 @@ package. We create a setup.py file that looks like this:</p>
 # sh('ls -l docs/samples/started/oldway/dist')
 # ==&gt;
 celkem 4
--rw-r--r-- 1 lukas.linhart lukas.linhart 638 22. lis 16.59 TheOldWay-1.0.tar.gz
+-rw-r--r-- 1 almad almad 626 21. říj 17.09 TheOldWay-1.0.tar.gz
 # &lt;==end==&gt;</pre>
 </div>
 <p>Then your users can run the familiar:</p>
@@ -206,7 +203,7 @@ use the <tt class="docutils literal"><span class="pre">paver.setuputils.setup</s
 above, or call <tt class="docutils literal"><span class="pre">paver.setuputils.install_distutils_tasks()</span></tt>.</p>
 <p>We can see this in action by looking at <tt class="docutils literal"><span class="pre">paver</span> <span class="pre">help</span></tt>:</p>
 <div class="highlight-python"><pre># &lt;== sh('cd docs/samples/started/newway; paver help')==&gt;
-[?1034h---&gt; paver.tasks.help
+---&gt; paver.tasks.help
 Usage: paver [global options] taskname [task options] [taskname [taskoptions]]
 
 Options:
@@ -227,7 +224,6 @@ Tasks from distutils.command:
   clean            - clean up temporary files from 'build' command
   install_data     - install data files
   install_headers  - install C/C++ header files
-  upload           - upload binary package to PyPI
 
 Tasks from nose.commands:
   nosetests        - Run unit tests using nosetests
@@ -240,13 +236,13 @@ Tasks from paver.doctools:
   uncog            - Remove the Cog generated code from files
 
 Tasks from paver.misctasks:
-  generate_setup   - Generates a setup
+  generate_setup   - Generates a setup.py file that uses paver behind the scenes
   minilib          - Create a Paver mini library that contains enough for a simple
-    pavement
-  paverdocs        - Open your web browser and display Paver's documentation
+    pavement.py to be installed using a generated setup.py
+  paverdocs        - Open your web browser and display Paver's documentation.
 
 Tasks from paver.tasks:
-  help             - This help display
+  help             - This help display.
 
 Tasks from setuptools.command:
   alias            - define a shortcut to invoke one or more commands
@@ -274,9 +270,9 @@ Tasks from sphinx.setup_command:
   build_sphinx     - Build Sphinx documentation
 
 Tasks from pavement:
-  deploy           - Deploy the HTML to the server
-  html             - Build the docs and put them into our package
-  sdist            - Overrides sdist to make sure that our setup
+  deploy           - Deploy the HTML to the server.
+  html             - Build the docs and put them into our package.
+  sdist            - Overrides sdist to make sure that our setup.py is generated.
 # &lt;==end==&gt;</pre>
 </div>
 <p>That command is listing all of the available tasks, and you can see
@@ -299,7 +295,7 @@ equivalent output file:</p>
 # sh('ls -l docs/samples/started/newway/dist')
 # ==&gt;
 celkem 32
--rw-r--r-- 1 lukas.linhart lukas.linhart 28971 22. lis 17.00 TheNewWay-1.0.tar.gz
+-rw-r--r-- 1 almad almad 29050 21. říj 17.09 TheNewWay-1.0.tar.gz
 # &lt;==end==&gt;</pre>
 </div>
 <p>It also means that users of The New Way can also run <tt class="docutils literal"><span class="pre">paver</span> <span class="pre">install</span></tt>
@@ -330,7 +326,7 @@ for that file and use it if it sees it.</p>
 #    insert_output=False)
 # sh('ls -l docs/samples/started/newway/paver-minilib.zip')
 # ==&gt;
--rw-r--r-- 1 lukas.linhart lukas.linhart 27309 22. lis 17.00 docs/samples/started/newway/paver-minilib.zip
+-rw-r--r-- 1 almad almad 27499 21. říj 17.09 docs/samples/started/newway/paver-minilib.zip
 # &lt;==end==&gt;</pre>
 </div>
 <p>Paver itself is bootstrapped with a generated setup file and a
@@ -378,7 +374,7 @@ and, in your pavement.py, <tt class="docutils literal"><span class="pre">import<
 the import will make the doctools-related tasks available.
 <tt class="docutils literal"><span class="pre">paver</span> <span class="pre">help</span> <span class="pre">html</span></tt> will tell us how to use the html command:</p>
 <div class="highlight-python"><pre># &lt;== sh('paver help paver.doctools.html')==&gt;
-[?1034h---&gt; paver.tasks.help
+---&gt; paver.tasks.help
 
 paver.doctools.html
 -------------------
@@ -596,8 +592,8 @@ above, it&#8217;s easy to get Paver into your workflow, even with existing
 projects.</p>
 <p>Use the <tt class="docutils literal"><span class="pre">paver</span> <span class="pre">help</span></tt> command.</p>
 <p>If you really want more detail now, you&#8217;ll want to read more about
-<a class="reference internal" href="pavement.html#pavement"><em>pavement files</em></a> and the
-<a class="reference internal" href="paverstdlib.html#stdlib"><em>Paver Standard Library</em></a>.</p>
+<a class="reference external" href="pavement.html#pavement"><em>pavement files</em></a> and the
+<a class="reference external" href="paverstdlib.html#stdlib"><em>Paver Standard Library</em></a>.</p>
 </div>
 </div>
 </div>
@@ -608,55 +604,55 @@ projects.</p>
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Getting Started with Paver</a><ul>
-<li><a class="reference internal" href="#the-old-way">The Old Way</a><ul>
-<li><a class="reference internal" href="#the-old-way-s-docs">The Old Way&#8217;s Docs</a></li>
-<li><a class="reference internal" href="#work-with-me-here">Work with me here</a></li>
+            <h3><a href="index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#">Getting Started with Paver</a><ul>
+<li><a class="reference external" href="#the-old-way">The Old Way</a><ul>
+<li><a class="reference external" href="#the-old-way-s-docs">The Old Way&#8217;s Docs</a></li>
+<li><a class="reference external" href="#work-with-me-here">Work with me here</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#the-new-way">The New Way</a><ul>
-<li><a class="reference internal" href="#id1">Getting Started with Paver</a></li>
-<li><a class="reference internal" href="#paver-is-compatible-with-distutils">Paver is compatible with distutils</a></li>
-<li><a class="reference internal" href="#but-people-are-used-to-setup-py">But people are used to setup.py!</a></li>
-<li><a class="reference internal" href="#but-people-don-t-have-paver-yet">But people don&#8217;t have Paver yet!</a></li>
-<li><a class="reference internal" href="#hey-didn-t-you-just-create-more-work-for-me">Hey! Didn&#8217;t you just create more work for me?</a></li>
-<li><a class="reference internal" href="#tackling-the-docs">Tackling the Docs</a></li>
-<li><a class="reference internal" href="#getting-rid-of-our-docs-shell-script">Getting rid of our docs shell script</a></li>
-<li><a class="reference internal" href="#fixing-another-wart-in-the-old-way">Fixing another wart in The Old Way</a></li>
-<li><a class="reference internal" href="#bonus-deployment-example">Bonus Deployment Example</a></li>
-<li><a class="reference internal" href="#where-to-go-from-here">Where to go from here</a></li>
+<li><a class="reference external" href="#the-new-way">The New Way</a><ul>
+<li><a class="reference external" href="#id1">Getting Started with Paver</a></li>
+<li><a class="reference external" href="#paver-is-compatible-with-distutils">Paver is compatible with distutils</a></li>
+<li><a class="reference external" href="#but-people-are-used-to-setup-py">But people are used to setup.py!</a></li>
+<li><a class="reference external" href="#but-people-don-t-have-paver-yet">But people don&#8217;t have Paver yet!</a></li>
+<li><a class="reference external" href="#hey-didn-t-you-just-create-more-work-for-me">Hey! Didn&#8217;t you just create more work for me?</a></li>
+<li><a class="reference external" href="#tackling-the-docs">Tackling the Docs</a></li>
+<li><a class="reference external" href="#getting-rid-of-our-docs-shell-script">Getting rid of our docs shell script</a></li>
+<li><a class="reference external" href="#fixing-another-wart-in-the-old-way">Fixing another wart in The Old Way</a></li>
+<li><a class="reference external" href="#bonus-deployment-example">Bonus Deployment Example</a></li>
+<li><a class="reference external" href="#where-to-go-from-here">Where to go from here</a></li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="features.html"
-                        title="previous chapter">Paver&#8217;s Features</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="pavement.html"
-                        title="next chapter">pavement.py in depth</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/getting_started.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" size="18" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="features.html"
+                                  title="previous chapter">Paver&#8217;s Features</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="pavement.html"
+                                  title="next chapter">pavement.py in depth</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="_sources/getting_started.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -668,7 +664,7 @@ projects.</p>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
+          <a href="modindex.html" title="Global Module Index"
              >modules</a> |</li>
         <li class="right" >
           <a href="pavement.html" title="pavement.py in depth"
@@ -676,13 +672,13 @@ projects.</p>
         <li class="right" >
           <a href="features.html" title="Paver’s Features"
              >previous</a> |</li>
-        <li><a href="index.html">Paver v1.0.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">Paver v1.0.5 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2008, SitePen, Inc..
-      Last updated on Nov 22, 2010.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+      &copy; Copyright 2008, SitePen, Inc..
+      Last updated on Oct 21, 2011.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.6.
     </div>
   </body>
 </html>

@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -7,22 +5,21 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Paver Changelog &mdash; Paver v1.0.1 documentation</title>
+    <title>Paver Changelog &mdash; Paver v1.0.5 documentation</title>
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '1.0.1',
-        COLLAPSE_INDEX: false,
+        VERSION:     '1.0.5',
+        COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Paver v1.0.1 documentation" href="index.html" />
+    <link rel="top" title="Paver v1.0.5 documentation" href="index.html" />
     <link rel="next" title="Credits" href="credits.html" />
     <link rel="prev" title="Articles about Paver" href="articles.html" /> 
   </head>
@@ -34,15 +31,15 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
+          <a href="modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
         <li class="right" >
           <a href="credits.html" title="Credits"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="articles.html" title="Articles about Paver"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">Paver v1.0.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">Paver v1.0.5 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -53,10 +50,24 @@
             
   <div class="section" id="paver-changelog">
 <span id="changelog"></span><h1>Paver Changelog<a class="headerlink" href="#paver-changelog" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="unreleased">
-<h2>1.0.4 (unreleased)<a class="headerlink" href="#unreleased" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="october-21-2011">
+<h2>1.0.5 (October 21, 2011)<a class="headerlink" href="#october-21-2011" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Ability to share command line options between tasks (github issue <a class="reference external" href="https://github.com/paver/paver/issues/issue/7">#7</a>)</li>
+<li>Flush after print (github issue <a class="reference external" href="https://github.com/paver/paver/issues/issue/17">#17</a>, thanks to Honza Kral)</li>
+<li>Minilib is now compatible with zipimport (github issue <a class="reference external" href="https://github.com/paver/paver/issues/issue/19">#19</a>, thanks to Piet Delport)</li>
+<li>Auto task is now properly not called when target task is decorated with no_auto (github issue <a class="reference external" href="https://github.com/paver/paver/issues/issue/24">#4</a>)</li>
+</ul>
+</div>
+<div class="section" id="january-16-2011">
+<h2>1.0.4 (January 16, 2011)<a class="headerlink" href="#january-16-2011" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>Fixed md5 deprecation warnings in the bundled cog (thanks to jszakmeister, issue #56)</li>
+<li>Project moved to github</li>
+<li>Fixed problems with negative command-line options for distutils (thanks to Nao Nakashima for bugreport, github issue #2)</li>
+<li>Japanese translation moved to <a class="reference external" href="http://paver.github.com/paver-docs-jp/">https://github.com/paver/paver-docs-jp</a></li>
+<li>Tasks take cmdopts even from grandparents (thanks to aurelianito, github issue #4)</li>
+<li>Task description is taken from the first sentence, where the end of the sentence is dot followed by alphanumeric character (google code bug #44). Description is also stripped now.</li>
 </ul>
 </div>
 <div class="section" id="june-1-2010">
@@ -295,8 +306,8 @@ svn:externals that&#8217;s a bit more readable and easier to control, in my opin
 The new version contains .py files.</li>
 </ul>
 </div>
-<div class="section" id="id1">
-<h2>0.7.1 (May 8, 2008)<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id5">
+<h2>0.7.1 (May 8, 2008)<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>0.7 had a broken paver-minilib.zip (missing misctasks.py, which is now part of the
 standard minilib)</li>
@@ -373,54 +384,55 @@ help and paverdocs</li>
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Paver Changelog</a><ul>
-<li><a class="reference internal" href="#unreleased">1.0.4 (unreleased)</a></li>
-<li><a class="reference internal" href="#june-1-2010">1.0.3 (June 1, 2010)</a></li>
-<li><a class="reference internal" href="#march-8-2010">1.0.2 (March 8, 2010)</a></li>
-<li><a class="reference internal" href="#may-4-2009">1.0.1 (May 4, 2009)</a></li>
-<li><a class="reference internal" href="#march-22-2009">1.0 (March 22, 2009)</a></li>
-<li><a class="reference internal" href="#b1-march-13-2009">1.0b1 (March 13, 2009)</a></li>
-<li><a class="reference internal" href="#a4-march-6-2009">1.0a4 (March 6, 2009)</a></li>
-<li><a class="reference internal" href="#a3-march-6-2009">1.0a3 (March 6, 2009)</a></li>
-<li><a class="reference internal" href="#a2-february-26-2009">1.0a2 (February 26, 2009)</a></li>
-<li><a class="reference internal" href="#a1-january-28-2009">1.0a1 (January 28, 2009)</a></li>
-<li><a class="reference internal" href="#june-2-2008">0.8.1 (June 2, 2008)</a></li>
-<li><a class="reference internal" href="#may-19-2008">0.8 (May 19, 2008)</a></li>
-<li><a class="reference internal" href="#may-16-2008">0.7.3 (May 16, 2008)</a></li>
-<li><a class="reference internal" href="#may-8-2008">0.7.2 (May 8, 2008)</a></li>
-<li><a class="reference internal" href="#id1">0.7.1 (May 8, 2008)</a></li>
-<li><a class="reference internal" href="#may-7-2008">0.7 (May 7, 2008)</a></li>
-<li><a class="reference internal" href="#april-22-2008">0.4 (April 22, 2008)</a></li>
+            <h3><a href="index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#">Paver Changelog</a><ul>
+<li><a class="reference external" href="#october-21-2011">1.0.5 (October 21, 2011)</a></li>
+<li><a class="reference external" href="#january-16-2011">1.0.4 (January 16, 2011)</a></li>
+<li><a class="reference external" href="#june-1-2010">1.0.3 (June 1, 2010)</a></li>
+<li><a class="reference external" href="#march-8-2010">1.0.2 (March 8, 2010)</a></li>
+<li><a class="reference external" href="#may-4-2009">1.0.1 (May 4, 2009)</a></li>
+<li><a class="reference external" href="#march-22-2009">1.0 (March 22, 2009)</a></li>
+<li><a class="reference external" href="#b1-march-13-2009">1.0b1 (March 13, 2009)</a></li>
+<li><a class="reference external" href="#a4-march-6-2009">1.0a4 (March 6, 2009)</a></li>
+<li><a class="reference external" href="#a3-march-6-2009">1.0a3 (March 6, 2009)</a></li>
+<li><a class="reference external" href="#a2-february-26-2009">1.0a2 (February 26, 2009)</a></li>
+<li><a class="reference external" href="#a1-january-28-2009">1.0a1 (January 28, 2009)</a></li>
+<li><a class="reference external" href="#june-2-2008">0.8.1 (June 2, 2008)</a></li>
+<li><a class="reference external" href="#may-19-2008">0.8 (May 19, 2008)</a></li>
+<li><a class="reference external" href="#may-16-2008">0.7.3 (May 16, 2008)</a></li>
+<li><a class="reference external" href="#may-8-2008">0.7.2 (May 8, 2008)</a></li>
+<li><a class="reference external" href="#id5">0.7.1 (May 8, 2008)</a></li>
+<li><a class="reference external" href="#may-7-2008">0.7 (May 7, 2008)</a></li>
+<li><a class="reference external" href="#april-22-2008">0.4 (April 22, 2008)</a></li>
 </ul>
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="articles.html"
-                        title="previous chapter">Articles about Paver</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="credits.html"
-                        title="next chapter">Credits</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/changelog.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" size="18" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="articles.html"
+                                  title="previous chapter">Articles about Paver</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="credits.html"
+                                  title="next chapter">Credits</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="_sources/changelog.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -432,7 +444,7 @@ help and paverdocs</li>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
+          <a href="modindex.html" title="Global Module Index"
              >modules</a> |</li>
         <li class="right" >
           <a href="credits.html" title="Credits"
@@ -440,13 +452,13 @@ help and paverdocs</li>
         <li class="right" >
           <a href="articles.html" title="Articles about Paver"
              >previous</a> |</li>
-        <li><a href="index.html">Paver v1.0.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">Paver v1.0.5 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2008, SitePen, Inc..
-      Last updated on Nov 22, 2010.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+      &copy; Copyright 2008, SitePen, Inc..
+      Last updated on Oct 21, 2011.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.6.
     </div>
   </body>
 </html>

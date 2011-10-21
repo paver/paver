@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -7,22 +5,21 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>pavement.py in depth &mdash; Paver v1.0.1 documentation</title>
+    <title>pavement.py in depth &mdash; Paver v1.0.5 documentation</title>
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '1.0.1',
-        COLLAPSE_INDEX: false,
+        VERSION:     '1.0.5',
+        COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Paver v1.0.1 documentation" href="index.html" />
+    <link rel="top" title="Paver v1.0.5 documentation" href="index.html" />
     <link rel="next" title="The Paver Standard Library" href="paverstdlib.html" />
     <link rel="prev" title="Getting Started with Paver" href="getting_started.html" /> 
   </head>
@@ -34,15 +31,15 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
+          <a href="modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
         <li class="right" >
           <a href="paverstdlib.html" title="The Paver Standard Library"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="getting_started.html" title="Getting Started with Paver"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">Paver v1.0.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">Paver v1.0.5 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -186,6 +183,31 @@ the <tt class="docutils literal"><span class="pre">options</span></tt> under a n
 case above, options.deploy.username would be set if the user ran
 paver deploy -u my-user-name. Note that an equivalent command line would be
 paver deploy.username=my-user-name deploy</p>
+<p>You may share <tt class="docutils literal"><span class="pre">&#64;cmdopts</span></tt> between tasks. To do that and to avoid confusion,
+You have to add share_with argument:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@task</span>
+<span class="nd">@cmdopts</span><span class="p">([</span>
+    <span class="p">(</span><span class="s">&#39;username=&#39;</span><span class="p">,</span> <span class="s">&#39;u&#39;</span><span class="p">,</span> <span class="s">&#39;Username to use when logging in to the servers&#39;</span><span class="p">)</span>
+<span class="p">])</span>
+<span class="k">def</span> <span class="nf">deploy_to_linux</span><span class="p">(</span><span class="n">options</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+
+<span class="nd">@task</span>
+<span class="nd">@needs</span><span class="p">([</span><span class="s">&#39;deploy_to_linux&#39;</span><span class="p">])</span>
+<span class="nd">@cmdopts</span><span class="p">([</span>
+    <span class="p">(</span><span class="s">&#39;username=&#39;</span><span class="p">,</span> <span class="s">&#39;u&#39;</span><span class="p">,</span> <span class="s">&#39;Username to use when logging in to the servers&#39;</span><span class="p">)</span>
+<span class="p">],</span> <span class="n">share_with</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;deploy_to_linux&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">deploy</span><span class="p">(</span><span class="n">options</span><span class="p">):</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<p>For sharing, following must be fullfilled:</p>
+<ul class="simple">
+<li>Both long and short option names must be same</li>
+<li><tt class="docutils literal"><span class="pre">share_with</span></tt> argument must be specified on top-level task</li>
+</ul>
+<p>Otherwise, <tt class="docutils literal"><span class="pre">PavementError</span></tt> is raised.</p>
 </div>
 </div>
 
@@ -195,42 +217,42 @@ paver deploy.username=my-user-name deploy</p>
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">pavement.py in depth</a><ul>
-<li><a class="reference internal" href="#defining-tasks">Defining Tasks</a></li>
-<li><a class="reference internal" href="#manually-calling-tasks">Manually Calling Tasks</a></li>
-<li><a class="reference internal" href="#how-task-names-work">How Task Names Work</a></li>
-<li><a class="reference internal" href="#task-parameters">Task Parameters</a></li>
-<li><a class="reference internal" href="#command-line-arguments">Command Line Arguments</a></li>
+            <h3><a href="index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#">pavement.py in depth</a><ul>
+<li><a class="reference external" href="#defining-tasks">Defining Tasks</a></li>
+<li><a class="reference external" href="#manually-calling-tasks">Manually Calling Tasks</a></li>
+<li><a class="reference external" href="#how-task-names-work">How Task Names Work</a></li>
+<li><a class="reference external" href="#task-parameters">Task Parameters</a></li>
+<li><a class="reference external" href="#command-line-arguments">Command Line Arguments</a></li>
 </ul>
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="getting_started.html"
-                        title="previous chapter">Getting Started with Paver</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="paverstdlib.html"
-                        title="next chapter">The Paver Standard Library</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/pavement.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" size="18" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="getting_started.html"
+                                  title="previous chapter">Getting Started with Paver</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="paverstdlib.html"
+                                  title="next chapter">The Paver Standard Library</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="_sources/pavement.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -242,7 +264,7 @@ paver deploy.username=my-user-name deploy</p>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
+          <a href="modindex.html" title="Global Module Index"
              >modules</a> |</li>
         <li class="right" >
           <a href="paverstdlib.html" title="The Paver Standard Library"
@@ -250,13 +272,13 @@ paver deploy.username=my-user-name deploy</p>
         <li class="right" >
           <a href="getting_started.html" title="Getting Started with Paver"
              >previous</a> |</li>
-        <li><a href="index.html">Paver v1.0.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">Paver v1.0.5 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2008, SitePen, Inc..
-      Last updated on Nov 22, 2010.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+      &copy; Copyright 2008, SitePen, Inc..
+      Last updated on Oct 21, 2011.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.6.
     </div>
   </body>
 </html>
