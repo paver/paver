@@ -241,6 +241,7 @@ class Task(object):
         self.option_names = set()
         self.user_options = []
         self.negative_opt = {}
+        self.share_options_with = []
         try:
             self.__doc__ = func.__doc__
         except AttributeError:
@@ -264,12 +265,17 @@ class Task(object):
                         help="display this help information")
         
         needs_tasks = [(environment.get_task(task), task) for task in self.needs_closure]
+        
+        shared_tasks = {}
+        parser.mirrored_options = {}
+        
         for task, task_name in itertools.chain([(self, self.name)], needs_tasks):
             if not task:
                 raise PavementError("Task %s needed by %s does not exist"
                     % (task_name, self))
 
             for option in task.user_options:
+                add_options = True
                 try:
                     longname = option[0]
                     if longname.endswith('='):
@@ -277,24 +283,49 @@ class Task(object):
                         longname = longname[:-1]
                     else:
                         action = "store_true"
+                    
+                    destination = longname.replace('-', '_')
             
                     environment.debug("Task %s: adding option %s (%s)" %
                                      (self.name, longname, option[1]))
-                    try:
-                        if option[1] is None:
-                            parser.add_option("--" + longname, action=action, 
-                                              dest=longname.replace('-', '_'),
-                                              help=option[2])
-                        else:
-                            parser.add_option("-" + option[1], 
-                                              "--" + longname, action=action, 
-                                              dest=longname.replace('-', '_'),
-                                              help=option[2])
-                    except optparse.OptionConflictError:
-                        raise PavementError("""In setting command options for %r, 
-option %s for %r is already in use
-by another task in the dependency chain.""" % (self, option, task))
-                    self.option_names.add((task.shortname, longname))
+                    
+                    if getattr(self, "share_options_with", None):
+                        options = (option[1], longname)
+
+                        if options in shared_tasks and len(
+                                    shared_tasks[options] & set(self.share_options_with)
+                                ) > 0:
+                            environment.debug("Task %s: NOT adding option %s (%s), \
+                                is present; setting up mirror" %
+                                             (self.name, longname, option[1]))
+                            
+                            if destination not in parser.mirrored_options:
+                                parser.mirrored_options[destination] = []
+                            parser.mirrored_options[destination].append(task_name)
+                            add_options = False
+
+                        if options not in shared_tasks:
+                                shared_tasks[options] = set()
+                                
+                        if getattr(task, "share_options_with", None):
+                            shared_tasks[options] |= set(task.share_options_with)
+
+                    if add_options:
+                        try:
+                            if option[1] is None:
+                                parser.add_option("--" + longname, action=action, 
+                                                  dest=destination,
+                                                  help=option[2])
+                            else:
+                                parser.add_option("-" + option[1], 
+                                                  "--" + longname, action=action, 
+                                                  dest=destination,
+                                                  help=option[2])
+                        except optparse.OptionConflictError:
+                            raise PavementError("""In setting command options for %r, 
+    option %s for %r is already in use
+    by another task in the dependency chain.""" % (self, option, task))
+                        self.option_names.add((task.shortname, longname))
                 except IndexError:
                     raise PavementError("Invalid option format provided for %r: %s"
                                         % (self, option))
@@ -313,6 +344,20 @@ by another task in the dependency chain.""" % (self, option, task))
         print self.__doc__
         print
     
+    def _set_value_to_task(self, task_name, option_name, dist_option_name, value):
+        import paver.options
+        try:
+            optholder = environment.options[task_name]
+        except KeyError:
+            optholder = paver.options.Bunch()
+            environment.options[task_name] = optholder
+
+        if value is not None:
+            if dist_option_name in getattr(self, "negative_opt"):
+                optholder[self.negative_opt[dist_option_name].replace('-', '_')] = False
+            else:
+                optholder[option_name] = value
+    
     def parse_args(self, args):
         import paver.options
         environment.debug("Task %s: Parsing args %s" % (self.name, args))
@@ -320,6 +365,7 @@ by another task in the dependency chain.""" % (self, option, task))
                                                    paver.options.Bunch())
         parser = self.parser
         options, args = parser.parse_args(args)
+        
         if options.help:
             self.display_help(parser)
             sys.exit(0)
@@ -327,18 +373,14 @@ by another task in the dependency chain.""" % (self, option, task))
         for task_name, option_name in self.option_names:
             dist_option_name = option_name
             option_name = option_name.replace('-', '_')
-            try:
-                optholder = environment.options[task_name]
-            except KeyError:
-                optholder = paver.options.Bunch()
-                environment.options[task_name] = optholder
-
+            
             value = getattr(options, option_name)
-            if value is not None:
-                if dist_option_name in getattr(self, "negative_opt"):
-                    optholder[self.negative_opt[dist_option_name].replace('-', '_')] = False
-                else:
-                    optholder[option_name] = getattr(options, option_name)
+                    
+            self._set_value_to_task(task_name, option_name, dist_option_name, value)
+            
+            if option_name in parser.mirrored_options:
+                for task_name in parser.mirrored_options[option_name]:
+                    self._set_value_to_task(task_name, option_name, dist_option_name, value)
 
         return args
         
@@ -403,7 +445,7 @@ def needs(*args):
         return func
     return entangle
 
-def cmdopts(options):
+def cmdopts(options, share_with=None):
     """Sets the command line options that can be set for this task.
     This uses the same format as the distutils command line option
     parser. It's a list of tuples, each with three elements:
@@ -414,10 +456,13 @@ def cmdopts(options):
     All of the options will be stored in the options dict with
     the name of the task. Each value that gets stored in that
     dict will be stored with a key that is based on the long option
-    name (the only difference is that - is replaced by _)."""
+    name (the only difference is that - is replaced by _).
+    
+    """
     def entangle(func):
         func = task(func)
         func.user_options = options
+        func.share_options_with = share_with
         return func
     return entangle
 
@@ -579,7 +624,7 @@ def _process_commands(args, auto_pending=False):
     while True:
         task, args = _parse_command_line(args)
         if auto_pending:
-            if not task or not task.no_auto:
+            if task and not task.no_auto:
                 environment.call_task('auto')
                 auto_pending=False
         if task is None:

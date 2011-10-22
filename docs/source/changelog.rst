@@ -7,6 +7,13 @@ Paver Changelog
 ------------------------
 * Minilib is now imported only if full paver is not available (github `issue #13 <https://github.com/paver/paver/issues/13>`_)
 
+1.0.5 (October 21, 2011)
+------------------------
+* Ability to share command line options between tasks (github issue `#7 <https://github.com/paver/paver/issues/issue/7>`_)
+* Flush after print (github issue `#17 <https://github.com/paver/paver/issues/issue/17>`_, thanks to Honza Kral)
+* Minilib is now compatible with zipimport (github issue `#19 <https://github.com/paver/paver/issues/issue/19>`_, thanks to Piet Delport)
+* Auto task is now properly not called when target task is decorated with no_auto (github issue `#4 <https://github.com/paver/paver/issues/issue/24>`_)
+
 1.0.4 (January 16, 2011)
 ------------------------
 * Fixed md5 deprecation warnings in the bundled cog (thanks to jszakmeister, issue #56)
