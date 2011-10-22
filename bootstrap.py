@@ -1246,7 +1246,7 @@ def after_install(options, home_dir):
         bin_dir = join(home_dir, 'Scripts')
     else:
         bin_dir = join(home_dir, 'bin')
-    subprocess.call([join(bin_dir, 'easy_install'), 'paver==1.0.5'])
+    subprocess.call([join(bin_dir, 'easy_install'), 'paver==1.1'])
     subprocess.call([join(bin_dir, 'easy_install'), 'nose'])
     subprocess.call([join(bin_dir, 'easy_install'), 'Sphinx>=0.6b1'])
     subprocess.call([join(bin_dir, 'easy_install'), 'docutils'])
