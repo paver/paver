@@ -176,7 +176,7 @@ class Environment(object):
 Captured Task Output:
 ---------------------
 """)
-                self._print("\n".join(self._task_output))
+                self._print("\n".join(map(str, self._task_output)))
                 if isinstance(e, BuildFailure):
                     self._print("\nBuild failed running %s: %s" % 
                                 (self._task_in_progress, e))
