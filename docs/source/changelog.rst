@@ -3,9 +3,10 @@
 Paver Changelog
 ===============
 
-1.1.0 (Not Yet Released)
+1.1.0 (TBA)
 ------------------------
 * Minilib is now imported only if full paver is not available (github `issue #13 <https://github.com/paver/paver/issues/13>`_)
+* Option instances may now be passed to @cmdopts (github issues `#41 <https://github.com/paver/paver/issues/41>`_ and `#42 <https://github.com/paver/paver/issues/42>`_, thanks to David Cramer)
 
 1.0.5 (October 21, 2011)
 ------------------------

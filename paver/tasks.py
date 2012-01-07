@@ -266,7 +266,11 @@ class Task(object):
 
         destination = longname.replace('-', '_')
 
-        opts = ['-' + option[1]]
+        opts = []
+
+        if option[1]:
+            opts.append('-' + option[1])
+
         if longname:
             opts.append('--' + longname)
 
@@ -309,8 +313,7 @@ class Task(object):
                     try:
                         shortname = option._short_opts[0]
                     except IndexError:
-                        raise PavementError("Option is missing required short name for %r: %s"
-                                                % (self, option))
+                        shortname = None
 
                     # XXX: this probably needs refactored to handle commands with multiple
                     # long or short options
@@ -320,9 +323,9 @@ class Task(object):
                         if options in shared_tasks and len(
                                     shared_tasks[options] & set(self.share_options_with)
                                 ) > 0:
-                            environment.debug("Task %s: NOT adding option %s (%s), \
-                                is present; setting up mirror" %
-                                             (self.name, option))
+                            environment.debug("Task %s: NOT adding option %s, %s " \
+                                "is present; setting up mirror" %
+                                             (self.name, option, str(shared_tasks[options] & set(self.share_options_with))))
 
                             if option.dest not in parser.mirrored_options:
                                 parser.mirrored_options[option.dest] = []
@@ -342,7 +345,8 @@ class Task(object):
                             raise PavementError("""In setting command options for %r,
     option %s for %r is already in use
     by another task in the dependency chain.""" % (self, option, task))
-                        self.option_names.add((task.shortname, longname))
+                        # add just names; longname now contains --initial-dashes
+                        self.option_names.add((task.shortname, longname[2:]))
                 except IndexError:
                     raise PavementError("Invalid option format provided for %r: %s"
                                         % (self, option))
@@ -688,6 +692,7 @@ def _launch_pavement(args):
         auto_pending = isinstance(auto_task, Task)
         _process_commands(args, auto_pending=auto_pending)
     except PavementError, e:
+        raise
         print "\n\n*** Problem with pavement:\n%s\n%s\n\n" % (
                     os.path.abspath(environment.pavement_file), e)
 
