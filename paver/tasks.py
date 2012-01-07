@@ -28,7 +28,7 @@ class Environment(object):
     interactive = False
     quiet = False
     _file = "pavement.py"
-    
+
     def __init__(self, pavement=None):
         self.pavement = pavement
         self.task_finders = []
@@ -41,16 +41,16 @@ class Environment(object):
             self.options.pavement_file = self.pavement_file
         except ImportError:
             pass
-    
+
     def info(self, message, *args):
         self._log(2, message, args)
-        
+
     def debug(self, message, *args):
         self._log(1, message, args)
-    
+
     def error(self, message, *args):
         self._log(3, message, args)
-    
+
     def _log(self, level, message, args):
         # This conditional fixes an issue which arises if the message contains
         # formatting directives but no args are provided.
@@ -64,11 +64,11 @@ class Environment(object):
         if level > 2 or (level > 1 and not self.quiet) or \
             self.verbose:
             self._print(output)
-    
+
     def _print(self, output):
         print output
         sys.stdout.flush()
-    
+
     def _exit(self, code):
         sys.exit(1)
 
@@ -78,12 +78,12 @@ class Environment(object):
             self.options.dry_run = dr
         except AttributeError:
             pass
-    
+
     def _get_dry_run(self):
         return self._dry_run
-        
+
     dry_run = property(_get_dry_run, _set_dry_run)
-        
+
     def _set_pavement_file(self, pavement_file):
         self._file = pavement_file
         try:
@@ -95,12 +95,12 @@ class Environment(object):
         return self._file
 
     pavement_file = property(_get_pavement_file, _set_pavement_file)
-    
+
     file = property(fset=_set_pavement_file)
 
     def get_task(self, taskname):
         task = getattr(self.pavement, taskname, None)
-        
+
         # delegate to task finders next
         if not task:
             for finder in self.task_finders:
@@ -111,7 +111,7 @@ class Environment(object):
         # try to look up by full name
         if not task:
             task = _import_task(taskname)
-            
+
         # if there's nothing by full name, look up by
         # short name
         if not task:
@@ -125,11 +125,11 @@ class Environment(object):
             elif matches:
                 task = matches[0]
         return task
-        
+
     def call_task(self, task_name):
         task = self.get_task(task_name)
         task()
-    
+
     def _run_task(self, task_name, needs, func):
         (funcargs, varargs, varkw, defaults) = inspect.getargspec(func)
         kw = dict()
@@ -147,7 +147,7 @@ class Environment(object):
                 except AttributeError:
                     raise PavementError("Task %s requires an argument (%s) that is "
                         "not present in the environment" % (task_name, arg))
-        
+
         if not self._task_in_progress:
             self._task_in_progress = task_name
             self._task_output = []
@@ -178,7 +178,7 @@ Captured Task Output:
 """)
                 self._print("\n".join(map(str, self._task_output)))
                 if isinstance(e, BuildFailure):
-                    self._print("\nBuild failed running %s: %s" % 
+                    self._print("\nBuild failed running %s: %s" %
                                 (self._task_in_progress, e))
                 else:
                     self._print(traceback.format_exc())
@@ -187,7 +187,7 @@ Captured Task Output:
             self._exit(1)
         else:
             return do_task()
-    
+
     def get_tasks(self):
         if self._all_tasks:
             return self._all_tasks
@@ -206,7 +206,7 @@ Captured Task Output:
             result.update(finder.get_tasks())
         self._all_tasks = result
         return result
-    
+
 environment_stack = []
 environment = Environment()
 
@@ -229,9 +229,9 @@ class Task(object):
     called = False
     consume_args = False
     no_auto = False
-    
+
     __doc__ = ""
-    
+
     def __init__(self, func):
         self.func = func
         self.needs = []
@@ -246,16 +246,34 @@ class Task(object):
             self.__doc__ = func.__doc__
         except AttributeError:
             pass
-        
+
     def __call__(self, *args, **kw):
         retval = environment._run_task(self.name, self.needs, self.func)
         self.called = True
         return retval
-    
+
     def __repr__(self):
         return "Task: " + self.__name__
 
-    @property    
+    def _make_option_from_tuple(self, option):
+        # option is (longname, short, desc)
+        longname = option[0]
+        if longname and longname.endswith('='):
+            action = "store"
+            longname = longname[:-1]
+        else:
+            action = "store_true"
+
+        destination = longname.replace('-', '_')
+
+        opts = ['-' + option[1]]
+        if longname:
+            opts.append('--' + longname)
+
+        return optparse.make_option(*opts,
+          action=action, dest=destination, help=option[2])
+
+    @property
     def parser(self):
         options = self.user_options
         parser = optparse.OptionParser(add_help_option=False,
@@ -263,12 +281,12 @@ class Task(object):
         parser.disable_interspersed_args()
         parser.add_option('-h', '--help', action="store_true",
                         help="display this help information")
-        
+
         needs_tasks = [(environment.get_task(task), task) for task in self.needs_closure]
-        
+
         shared_tasks = {}
         parser.mirrored_options = {}
-        
+
         for task, task_name in itertools.chain([(self, self.name)], needs_tasks):
             if not task:
                 raise PavementError("Task %s needed by %s does not exist"
@@ -277,52 +295,51 @@ class Task(object):
             for option in task.user_options:
                 add_options = True
                 try:
-                    longname = option[0]
-                    if longname.endswith('='):
-                        action = "store"
-                        longname = longname[:-1]
-                    else:
-                        action = "store_true"
-                    
-                    destination = longname.replace('-', '_')
-            
-                    environment.debug("Task %s: adding option %s (%s)" %
-                                     (self.name, longname, option[1]))
-                    
+                    if not isinstance(option, optparse.Option):
+                        option = self._make_option_from_tuple(option)
+
+                    environment.debug("Task %s: adding option %s" %
+                                     (self.name, str(option)))
+
+                    try:
+                        longname = option._long_opts[0]
+                    except IndexError:
+                        longname = None
+
+                    try:
+                        shortname = option._short_opts[0]
+                    except IndexError:
+                        raise PavementError("Option is missing required short name for %r: %s"
+                                                % (self, option))
+
+                    # XXX: this probably needs refactored to handle commands with multiple
+                    # long or short options
                     if getattr(self, "share_options_with", None):
-                        options = (option[1], longname)
+                        options = (shortname, longname)
 
                         if options in shared_tasks and len(
                                     shared_tasks[options] & set(self.share_options_with)
                                 ) > 0:
                             environment.debug("Task %s: NOT adding option %s (%s), \
                                 is present; setting up mirror" %
-                                             (self.name, longname, option[1]))
-                            
-                            if destination not in parser.mirrored_options:
-                                parser.mirrored_options[destination] = []
-                            parser.mirrored_options[destination].append(task_name)
+                                             (self.name, option))
+
+                            if option.dest not in parser.mirrored_options:
+                                parser.mirrored_options[option.dest] = []
+                            parser.mirrored_options[option.dest].append(task_name)
                             add_options = False
 
                         if options not in shared_tasks:
-                                shared_tasks[options] = set()
-                                
+                            shared_tasks[options] = set()
+
                         if getattr(task, "share_options_with", None):
                             shared_tasks[options] |= set(task.share_options_with)
 
                     if add_options:
                         try:
-                            if option[1] is None:
-                                parser.add_option("--" + longname, action=action, 
-                                                  dest=destination,
-                                                  help=option[2])
-                            else:
-                                parser.add_option("-" + option[1], 
-                                                  "--" + longname, action=action, 
-                                                  dest=destination,
-                                                  help=option[2])
+                            parser.add_option(option)
                         except optparse.OptionConflictError:
-                            raise PavementError("""In setting command options for %r, 
+                            raise PavementError("""In setting command options for %r,
     option %s for %r is already in use
     by another task in the dependency chain.""" % (self, option, task))
                         self.option_names.add((task.shortname, longname))
@@ -331,11 +348,11 @@ class Task(object):
                                         % (self, option))
 
         return parser
-        
+
     def display_help(self, parser=None):
         if not parser:
             parser = self.parser
-            
+
         name = self.name
         print "\n%s" % name
         print "-" * (len(name))
@@ -343,7 +360,7 @@ class Task(object):
         print
         print self.__doc__
         print
-    
+
     def _set_value_to_task(self, task_name, option_name, dist_option_name, value):
         import paver.options
         try:
@@ -357,40 +374,40 @@ class Task(object):
                 optholder[self.negative_opt[dist_option_name].replace('-', '_')] = False
             else:
                 optholder[option_name] = value
-    
+
     def parse_args(self, args):
         import paver.options
         environment.debug("Task %s: Parsing args %s" % (self.name, args))
-        optholder = environment.options.setdefault(self.shortname, 
+        optholder = environment.options.setdefault(self.shortname,
                                                    paver.options.Bunch())
         parser = self.parser
         options, args = parser.parse_args(args)
-        
+
         if options.help:
             self.display_help(parser)
             sys.exit(0)
-            
+
         for task_name, option_name in self.option_names:
             dist_option_name = option_name
             option_name = option_name.replace('-', '_')
-            
+
             value = getattr(options, option_name)
-                    
+
             self._set_value_to_task(task_name, option_name, dist_option_name, value)
-            
+
             if option_name in parser.mirrored_options:
                 for task_name in parser.mirrored_options[option_name]:
                     self._set_value_to_task(task_name, option_name, dist_option_name, value)
 
         return args
-        
+
     @property
     def description(self):
         if self.__doc__:
             return re.split("\.\s+", self.__doc__, maxsplit=1)[0].strip()
         else:
             return ""
-    
+
     @property
     def needs_closure(self):
         stack = [] + self.needs
@@ -404,13 +421,13 @@ class Task(object):
                     needs = environment.get_task(top).needs
                 for t in needs:
                     stack.append(t)
-    
+
         return rv
 
 
 def task(func):
     """Specifies that this function is a task.
-    
+
     Note that this decorator does not actually replace the function object.
     It just keeps track of the task and sets an is_task flag on the
     function object."""
@@ -450,14 +467,14 @@ def cmdopts(options, share_with=None):
     This uses the same format as the distutils command line option
     parser. It's a list of tuples, each with three elements:
     long option name, short option, description.
-    
+
     If the long option name ends with '=', that means that the
     option takes a value. Otherwise the option is just boolean.
     All of the options will be stored in the options dict with
     the name of the task. Each value that gets stored in that
     dict will be stored with a key that is based on the long option
     name (the only difference is that - is replaced by _).
-    
+
     """
     def entangle(func):
         func = task(func)
@@ -472,7 +489,7 @@ def consume_args(func):
     func = task(func)
     func.consume_args = True
     return func
-    
+
 def no_auto(func):
     """Specify that this task does not depend on the auto task,
     and don't run the auto task just for this one."""
@@ -510,7 +527,7 @@ def _parse_global_options(args):
         """Usage: %prog [global options] taskname [task options] """
         """[taskname [taskoptions]]""", version="Paver %s" % (VERSION),
         add_help_option=False)
-    
+
     environment.help_function = parser.print_help
 
     parser.add_option('-n', '--dry-run', action='store_true',
@@ -533,26 +550,26 @@ def _parse_global_options(args):
         args.insert(0, "help")
     for key, value in vars(options).items():
         setattr(environment, key, value)
-        
+
     return args
 
 def _parse_command_line(args):
     task, taskname, args = _preparse(args)
-    
+
     if not task:
         args = _parse_global_options(args)
         if not args:
             return None, []
-        
+
         taskname = args.pop(0)
         task = environment.get_task(taskname)
-        
+
         if not task:
             raise BuildFailure("Unknown task: %s" % taskname)
-    
+
     if not isinstance(task, Task):
         raise BuildFailure("%s is not a Task" % taskname)
-        
+
     if task.consume_args:
         try:
             environment.options.args = args
@@ -575,7 +592,7 @@ def _cmp_task_names(a, b):
     if b_in_pavement and not a_in_pavement:
         return -1
     return cmp(a, b)
-    
+
 def _group_by_module(items):
     groups = []
     current_group_name = None
@@ -604,12 +621,12 @@ def help(args, help_function):
         if not task:
             print "Task not found: %s" % (task_name)
             return
-        
+
         task.display_help()
         return
-    
+
     help_function()
-    
+
     task_list = environment.get_tasks()
     task_list = sorted(task_list, cmp=_cmp_task_names)
     maxlen, task_list = _group_by_module(task_list)
@@ -657,13 +674,13 @@ def call_pavement(new_pavement, args):
 def _launch_pavement(args):
     mod = types.ModuleType("pavement")
     environment.pavement = mod
-    
+
     if not os.path.exists(environment.pavement_file):
         environment.pavement_file = None
         exec "from paver.easy import *\n" in mod.__dict__
         _process_commands(args)
         return
-        
+
     mod.__file__ = environment.pavement_file
     try:
         execfile(environment.pavement_file, mod.__dict__)
