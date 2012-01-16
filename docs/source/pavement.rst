@@ -152,6 +152,16 @@ case above, options.deploy.username would be set if the user ran
 paver deploy -u my-user-name. Note that an equivalent command line would be
 paver deploy.username=my-user-name deploy
 
+For fine-tuning, you may add ``optparse.Option`` instances::
+
+    @tasks.task
+    @tasks.cmdopts([
+        make_option("-f", "--foo", help="foo")
+    ])
+    def foo_instead_of_spam_and_eggs(options):
+        pass
+
+
 You may share ``@cmdopts`` between tasks. To do that and to avoid confusion,
 You have to add share_with argument::
 

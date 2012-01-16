@@ -616,3 +616,19 @@ def test_task_can_be_called_repeatedly():
 
     assert_equals('eggs', env.patch_captured[~0])
     assert_equals('spam', env.patch_captured[~2])
+
+
+def test_options_passed_to_task():
+    from optparse import make_option
+
+    @tasks.task
+    @tasks.cmdopts([
+        make_option("-f", "--foo", help="foo")
+    ])
+    def t1(options):
+        assert options.foo == "1"
+        assert options.t1.foo == "1"
+
+    environment = _set_environment(t1=t1)
+    tasks._process_commands(['t1', '--foo', '1'])
+    assert t1.called
