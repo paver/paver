@@ -692,7 +692,6 @@ def _launch_pavement(args):
         auto_pending = isinstance(auto_task, Task)
         _process_commands(args, auto_pending=auto_pending)
     except PavementError, e:
-        raise
         print "\n\n*** Problem with pavement:\n%s\n%s\n\n" % (
                     os.path.abspath(environment.pavement_file), e)
 
