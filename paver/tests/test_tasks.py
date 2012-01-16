@@ -544,6 +544,22 @@ def test_calling_a_function_rather_than_task():
     except tasks.BuildFailure:
         pass
 
+def test_depending_on_a_function_rather_than_task():
+    def bar():
+        pass
+
+    @tasks.task
+    @tasks.needs('bar')
+    def foo():
+        pass
+
+    env = _set_environment(foo=foo, bar=bar)
+    try:
+        tasks._process_commands(['foo'])
+        assert False, "Expected a BuildFailure when depending on something that is not a task."
+    except tasks.BuildFailure:
+        pass
+
 def test_description_retrieval_trial():
     @tasks.task
     def t1():

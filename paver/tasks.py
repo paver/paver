@@ -422,7 +422,13 @@ class Task(object):
                 rv.append(top)
                 needs = []
                 if (environment.get_task(top)):
-                    needs = environment.get_task(top).needs
+                    deptask = environment.get_task(top)
+
+                    if not isinstance(deptask, Task):
+                        raise BuildFailure("Dependency %s is not a Task (only tasks allowed in @needs)" % deptask)
+
+                    needs = deptask.needs
+
                 for t in needs:
                     stack.append(t)
 
