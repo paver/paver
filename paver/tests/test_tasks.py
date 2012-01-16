@@ -648,3 +648,18 @@ def test_options_passed_to_task():
     environment = _set_environment(t1=t1)
     tasks._process_commands(['t1', '--foo', '1'])
     assert t1.called
+
+# We could mock stdout/err, but seriously -- to integration test for this one
+# once integration test suite is merged into master
+
+#def test_hiding_from_help():
+#    @tasks.task
+#    @tasks.no_help
+#    def hidden_task(options):
+#        pass
+#
+#    environment = _set_environment(hidden_task=hidden_task, help=tasks.help)
+#    args = tasks._parse_global_options(['-h'])
+#    output = tasks._process_commands(args)
+#
+#    assert 'hidden_task' not in output

@@ -290,6 +290,7 @@ class Task(object):
 
         shared_tasks = {}
         parser.mirrored_options = {}
+        parser.options_to_hide_from_help = []
 
         for task, task_name in itertools.chain([(self, self.name)], needs_tasks):
             if not task:
@@ -347,6 +348,11 @@ class Task(object):
     by another task in the dependency chain.""" % (self, option, task))
                         # add just names; longname now contains --initial-dashes
                         self.option_names.add((task.shortname, longname[2:]))
+                        if getattr(task, 'no_help', False):
+                            if shortname:
+                                parser.options_to_hide_from_help.append(shortname)
+                            elif longname:
+                                parser.options_to_hide_from_help.append(longname)
                 except IndexError:
                     raise PavementError("Invalid option format provided for %r: %s"
                                         % (self, option))
@@ -356,6 +362,12 @@ class Task(object):
     def display_help(self, parser=None):
         if not parser:
             parser = self.parser
+
+        for opt_str in parser.options_to_hide_from_help:
+            try:
+                parser.remove_option(opt_str)
+            except ValueError:
+                environment.error("Option %s added for hiding, but it's not in parser...?" % opt_str)
 
         name = self.name
         print "\n%s" % name
@@ -507,6 +519,12 @@ def no_auto(func):
     func.no_auto = True
     return func
 
+def no_help(func):
+    """Do not show this task in paver help."""
+    func = task(func)
+    func.no_help = True
+    return func
+
 def _preparse(args):
     task = None
     taskname = None
@@ -647,7 +665,8 @@ def help(args, help_function):
     for group_name, group in task_list:
         print "\nTasks from %s:" % (group_name)
         for task in group:
-            print(fmt % (task.shortname, task.description))
+            if not getattr(task, "no_help", False):
+                print(fmt % (task.shortname, task.description))
 
 def _process_commands(args, auto_pending=False):
     first_loop = True

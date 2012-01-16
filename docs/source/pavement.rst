@@ -188,3 +188,20 @@ For sharing, following must be fullfilled:
 * ``share_with`` argument must be specified on top-level task
 
 Otherwise, ``PavementError`` is raised.
+
+Hiding tasks
+---------------
+
+Some tasks may only exist as a shared dependency between other tasks and may not
+make sense to be called directly.
+
+There is no way to provide that, however you can hide them from ``paver help``
+to reduce noise. Just decorate function with ``@no_help`` decorator::
+
+    @task
+    @no_help
+    def hidden_dependency():
+        pass
+
+Of course, this should not be used usually. If task is not to be called at all,
+why not just make them a g'old function?

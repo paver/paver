@@ -115,8 +115,3 @@ def deploy():
             (htmlfiles, options.username, options.server,
              options.deploydir)
     sh(command)
-    
-@task
-@cmdopts([("test", None, "test")])
-def testit():
-    pass

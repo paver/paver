@@ -9,6 +9,7 @@ Paver Changelog
 * Option instances may now be passed to @cmdopts (github issues `#41 <https://github.com/paver/paver/issues/41>`_ and `#42 <https://github.com/paver/paver/issues/42>`_, thanks to David Cramer)
 * ``--propagate-traceback`` option for debugging ``BuildFailure``s (github issue `#43 <https://github.com/paver/paver/issues/43>`_)
 * Fix misleading error message when non-task is passed to ``@needs`` (github issue `#37 <https://github.com/paver/paver/issues/37>`_)
+* ``@no_help`` to provide a way to hide task from ``paver help`` (github issue `#36 <https://github.com/paver/paver/issues/36>`_)
 
 1.0.5 (October 21, 2011)
 ------------------------
