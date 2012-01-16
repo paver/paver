@@ -116,3 +116,7 @@ def deploy():
              options.deploydir)
     sh(command)
     
+@task
+@cmdopts([("test", None, "test")])
+def testit():
+    pass

@@ -546,6 +546,9 @@ def _parse_global_options(args):
                     help="read tasks from FILE [%default]")
     parser.add_option('-h', "--help", action="store_true",
                     help="display this help information")
+    parser.add_option("--propagate-traceback", action="store_true",
+                    help="propagate traceback, do not hide it under BuildFailure"
+                        "(for debugging)")
     parser.set_defaults(file=environment.pavement_file)
 
     parser.disable_interspersed_args()
@@ -692,6 +695,11 @@ def _launch_pavement(args):
         auto_pending = isinstance(auto_task, Task)
         _process_commands(args, auto_pending=auto_pending)
     except PavementError, e:
+        # this is hacky, but it is needed if problem would occur within
+        # argument parsing, which is actually quite common
+        if getattr(environment.options, "propagate_traceback", False) \
+            or '--propagate-traceback' in args:
+            raise
         print "\n\n*** Problem with pavement:\n%s\n%s\n\n" % (
                     os.path.abspath(environment.pavement_file), e)
 
