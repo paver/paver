@@ -205,3 +205,39 @@ to reduce noise. Just decorate function with ``@no_help`` decorator::
 
 Of course, this should not be used usually. If task is not to be called at all,
 why not just make them a g'old function?
+
+More complex dependencies
+--------------------------
+
+``@needs`` might not cover all your needs. For example, depending on argument
+or environment, you might decide to call an appropriate task in the middle of
+another one.
+
+There are two key options for fixing that::
+
+# ``@might_call`` decorator, which indicates that task might invoke ``call_task`` on one or more of the specified tasks. This allows you to provide command line options to task that might be called (it is inserted in dependency chain)::
+
+    @task
+    @cmdopts([
+        ('username=', 'u', 'Whom to greet')
+    ], share_with=['deploy_to_linux'])
+    def say_hello(options):
+        if not hasattr(options, "username"):
+            print 'SPAM'
+        else:
+            print 'Hello, my dear user %s' % options.username
+
+
+    @task
+    @might_call('say_hello')
+    def greet_user(options):
+        setup_environment()
+
+        call_task('say_hello')
+
+        do_cleanup()
+
+# Providing arguments/options to another task directly. They are temporarily inserted into environment and removed after the call::
+
+    (Not Implemented Yet)
+

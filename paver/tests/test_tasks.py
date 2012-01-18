@@ -663,3 +663,31 @@ def test_options_passed_to_task():
 #    output = tasks._process_commands(args)
 #
 #    assert 'hidden_task' not in output
+
+#def test_calling_task_with_arguments():
+#    @tasks.task
+#    @tasks.cmdopts([('foo=', 'f', "Foo!")])
+#    def t1(true_story):
+#        assert true_story is True
+#        #assert args[0] == 'meh'
+#
+#    env = _set_environment(t1=t1)
+#
+#    env.call_task('t1', options={
+#
+#    })
+
+def test_options_might_be_provided_if_task_might_be_called():
+
+    @tasks.task
+    @tasks.cmdopts([('foo=', 'f', "Foo!")])
+    def t1(options):
+        assert options.foo == "YOUHAVEBEENFOOD"
+
+    @tasks.task
+    @tasks.might_call('t1')
+    def t2(options):
+        pass
+
+    environment = _set_environment(t1=t1, t2=t2)
+    tasks._process_commands("t2 -f YOUHAVEBEENFOOD".split())

@@ -126,7 +126,7 @@ class Environment(object):
                 task = matches[0]
         return task
 
-    def call_task(self, task_name):
+    def call_task(self, task_name, args=None, options=None):
         task = self.get_task(task_name)
         task()
 
@@ -233,8 +233,12 @@ class Task(object):
     __doc__ = ""
 
     def __init__(self, func):
+
+        super(Task, self).__init__()
+
         self.func = func
         self.needs = []
+        self.might_call = []
         self.__name__ = func.__name__
         self.shortname = func.__name__
         self.name = "%s.%s" % (func.__module__, func.__name__)
@@ -287,6 +291,10 @@ class Task(object):
                         help="display this help information")
 
         needs_tasks = [(environment.get_task(task), task) for task in self.needs_closure]
+
+        # backward compatibility: tasks that inherit from Task and override constructor
+        if getattr(self, "might_call", None):
+            needs_tasks.extend((environment.get_task(task), task) for task in self.might_call)
 
         shared_tasks = {}
         parser.mirrored_options = {}
@@ -504,6 +512,27 @@ def cmdopts(options, share_with=None):
         func.share_options_with = share_with
         return func
     return entangle
+
+def might_call(*args):
+    """
+
+    """
+    def entangle(func):
+        req = args
+        func = task(func)
+        might_call = func.might_call
+        if len(req) == 1:
+            req = req[0]
+        if isinstance(req, basestring):
+            might_call.append(req)
+        elif isinstance(req, (list, tuple)):
+            might_call.extend(req)
+        else:
+            raise PavementError("'might_call' decorator requires a list or string "
+                                "but got %s" % req)
+        return func
+    return entangle
+
 
 def consume_args(func):
     """Any command line arguments that appear after this task on the

@@ -93,6 +93,7 @@ call_task = _SimpleProxy(environment, "call_task")
 call_pavement = tasks.call_pavement
 task = tasks.task
 needs = tasks.needs
+might_call = tasks.might_call
 cmdopts = tasks.cmdopts
 consume_args = tasks.consume_args
 no_auto = tasks.no_auto
