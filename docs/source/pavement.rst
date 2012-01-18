@@ -256,7 +256,7 @@ There are two key options for fixing that::
             'long_username' : 'Kitty'
         })
 
-Arguments as they appear on console::
+Console arguments (args) should be passed as in console::
 
     @task
     @consume_args
@@ -266,6 +266,7 @@ Arguments as they appear on console::
 
     @task
     def greet_user(options):
-        call_task('say_hello', options={
-            'username' : 'Kitty'
-        })
+        call_task('say_hello', args = [
+            'Arthur Pewtey',
+            'The Reverend Arthur Belling',
+        ])
