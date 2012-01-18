@@ -128,6 +128,9 @@ class Environment(object):
 
     def call_task(self, task_name, args=None, options=None):
         task = self.get_task(task_name)
+        if options:
+            for option in options:
+                task._set_value_to_task(task_name, option, None, options[option])
         task()
 
     def _run_task(self, task_name, needs, func):

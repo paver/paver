@@ -237,7 +237,22 @@ There are two key options for fixing that::
 
         do_cleanup()
 
-# Providing arguments/options to another task directly. They are temporarily inserted into environment and removed after the call::
+# Providing options and arguments to another tasks directly. Options are provided with final assignet value::
 
-    (Not Implemented Yet)
+    @task
+    @cmdopts([
+        ('long-username=', 'u', 'Whom to greet')
+    ], share_with=['deploy_to_linux'])
+    def say_hello(options):
+        if not hasattr(options, "username"):
+            print 'SPAM'
+        else:
+            print 'Hello, my dear user %s' % options.long_username
+
+
+    @task
+    def greet_user(options):
+        call_task('say_hello', options={
+            'long_username' : 'Kitty'
+        })
 

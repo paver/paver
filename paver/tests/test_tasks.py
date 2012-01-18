@@ -664,18 +664,41 @@ def test_options_passed_to_task():
 #
 #    assert 'hidden_task' not in output
 
-#def test_calling_task_with_arguments():
-#    @tasks.task
-#    @tasks.cmdopts([('foo=', 'f', "Foo!")])
-#    def t1(true_story):
-#        assert true_story is True
-#        #assert args[0] == 'meh'
-#
-#    env = _set_environment(t1=t1)
-#
-#    env.call_task('t1', options={
-#
-#    })
+def test_calling_task_with_arguments():
+    @tasks.task
+    @tasks.cmdopts([('foo=', 'f', "Foo!")])
+    def t1(options):
+        assert options.foo == 'true story'
+
+    env = _set_environment(t1=t1)
+
+    env.call_task('t1', options={
+        'foo' : 'true story'
+    })
+
+def test_calling_task_with_arguments_do_not_overwrite_it_for_other_tasks():
+    @tasks.task
+    @tasks.cmdopts([('foo=', 'f', "Foo!")])
+    def t3(options):
+        assert options.foo == 'cool story'
+
+    @tasks.task
+    @tasks.cmdopts([('foo=', 'f', "Foo!")])
+    def t2(options):
+        assert options.foo == 'true'
+
+
+    @tasks.task
+    @tasks.needs('t2')
+    def t1(options):
+        env.call_task('t3', options={
+            'foo' : 'cool story'
+        })
+
+    env = _set_environment(t1=t1, t2=t2, t3=t3)
+
+    tasks._process_commands(['t1', '--foo', 'true'])
+
 
 def test_options_might_be_provided_if_task_might_be_called():
 
@@ -691,3 +714,4 @@ def test_options_might_be_provided_if_task_might_be_called():
 
     environment = _set_environment(t1=t1, t2=t2)
     tasks._process_commands("t2 -f YOUHAVEBEENFOOD".split())
+
