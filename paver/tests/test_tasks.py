@@ -664,7 +664,7 @@ def test_options_passed_to_task():
 #
 #    assert 'hidden_task' not in output
 
-def test_calling_task_with_arguments():
+def test_calling_task_with_option_arguments():
     @tasks.task
     @tasks.cmdopts([('foo=', 'f', "Foo!")])
     def t1(options):
@@ -715,3 +715,37 @@ def test_options_might_be_provided_if_task_might_be_called():
     environment = _set_environment(t1=t1, t2=t2)
     tasks._process_commands("t2 -f YOUHAVEBEENFOOD".split())
 
+def test_calling_task_with_arguments():
+    @tasks.task
+    @tasks.consume_args
+    def t2(args):
+        assert args[0] == 'SOPA'
+
+
+    @tasks.task
+    def t1(options):
+        env.call_task('t2', args=['SOPA'])
+
+    env = _set_environment(t1=t1, t2=t2)
+
+    tasks._process_commands(['t1'])
+
+def test_calling_nonconsuming_task_with_arguments():
+    @tasks.task
+    def t2():
+        pass
+
+
+    @tasks.task
+    def t1():
+        env.call_task('t2')
+
+    env = _set_environment(t1=t1, t2=t2)
+
+    try:
+        env.call_task('t1', args=['fail'])
+    except tasks.BuildFailure:
+        pass
+    else:
+        assert False, ("Task without @consume_args canot be called with them "
+                      "(BuildFailure should be raised)")

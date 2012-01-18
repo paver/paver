@@ -131,6 +131,16 @@ class Environment(object):
         if options:
             for option in options:
                 task._set_value_to_task(task_name, option, None, options[option])
+
+        if args and task.consume_args:
+            try:
+                environment.options.args = args
+            except AttributeError:
+                pass
+            environment.args = args
+        elif args and not task.consume_args:
+            raise BuildFailure("Task %s is not decorated with @consume_args,"
+                                "but has been called with them")
         task()
 
     def _run_task(self, task_name, needs, func):

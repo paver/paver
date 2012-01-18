@@ -256,3 +256,16 @@ There are two key options for fixing that::
             'long_username' : 'Kitty'
         })
 
+Arguments as they appear on console::
+
+    @task
+    @consume_args
+    def say_hello(args):
+        print 'Hello to ALL the users: %s' % ', '.join(args)
+
+
+    @task
+    def greet_user(options):
+        call_task('say_hello', options={
+            'username' : 'Kitty'
+        })
