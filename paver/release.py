@@ -17,5 +17,16 @@ requirements is also easy.""",
     maintainer='Lukas Linhart',
     maintainer_email='bugs@almad.net',
     url='http://paver.github.com/',
-    packages=['paver', 'paver.cog']
-)
+    packages=['paver', 'paver.cog'],
+    classifiers=[
+        "Development Status :: 5 - Production/Stable",
+        "Intended Audience :: Developers",
+        "License :: OSI Approved :: BSD License",
+        "Operating System :: OS Independent",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 2 :: Only",
+        "Environment :: Console",
+        "Topic :: Documentation",
+        "Topic :: Utilities",
+        "Topic :: Software Development :: Build Tool",
+    ])
