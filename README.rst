@@ -2,7 +2,7 @@
  Paver - Easy Scripting for Software Projects
 ==============================================
 
-.. image:: _static/paver_banner.jpg
+.. image:: https://github.com/paver/paver/blob/master/docs/source/_static/paver_banner.jpg?raw=true
     :height: 126
     :width: 240
 
