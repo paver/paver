@@ -101,10 +101,11 @@ def clean():
     
 @task
 @needs("uncog")
-def commit():
+@consume_args
+def commit(args):
     """Removes the generated code from the docs and then commits to bzr."""
-    sh("bzr commit")
-    
+    sh("git commit " + ' '.join(args))
+
 @task
 @cmdopts([("username=", "u", "Username for remote server"),
           ("server=", "s", "Server to deploy to")])
