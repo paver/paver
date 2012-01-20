@@ -1,18 +1,17 @@
 """ path.py - An object representing a path to a file or directory.
 
-Example::
-    
-    from path import path
-    d = path('/home/guido/bin')
-    for f in d.files('*.py'):
-        f.chmod(0755)
+Authors:
+ Jason Orendorff <jason.orendorff\x40gmail\x2ecom>
+ Mikhail Gusarov <dottedmag@dottedmag.net>
+ Others - unfortunately attribution is lost
 
-This module requires Python 2.2 or later.
+Example:
 
+from path import path
+d = path('/home/guido/bin')
+for f in d.files('*.py'):
+    f.chmod(0755)
 
-:URL:     http://www.jorendorff.com/articles/python/path
-:Author:  Jason Orendorff <jason.orendorff\x40gmail\x2ecom> (and others - see the url!)
-:Date:    9 Mar 2007
 
 This has been modified from the original to avoid dry run issues.
 """
@@ -29,16 +28,11 @@ This has been modified from the original to avoid dry run issues.
 #   - guess_content_type() method?
 #   - Perhaps support arguments to touch().
 
-import sys, warnings, os, fnmatch, glob, shutil, codecs
+from __future__ import generators
 
-try:
-    from hashlib import md5
-except ImportError:
-    # compatibility for versions before 2.5
-    import md5
-    md5 = md5.new
+import sys, warnings, os, fnmatch, glob, shutil, codecs, hashlib, errno
 
-__version__ = '2.2'
+__version__ = '2.2.2'
 __all__ = ['path']
 
 # Platform-specific support for path.owner
@@ -128,11 +122,10 @@ class path(_base):
         """ Return the current working directory as a path object. """
         return cls(_getcwd())
     getcwd = classmethod(getcwd)
-    
+
     def chdir(self):
         """Change current directory."""
         os.chdir(self)
-
 
     # --- Operations on path strings.
 
@@ -778,17 +771,36 @@ class path(_base):
 
         This reads through the entire file.
         """
+        return self.read_hash('md5')
+
+    def _hash(self, hash_name):
         f = self.open('rb')
         try:
-            m = md5()
+            m = hashlib.new(hash_name)
             while True:
                 d = f.read(8192)
                 if not d:
                     break
                 m.update(d)
+            return m
         finally:
             f.close()
-        return m.digest()
+
+    def read_hash(self, hash_name):
+        """ Calculate given hash for this file.
+
+        List of supported hashes can be obtained from hashlib package. This
+        reads the entire file.
+        """
+        return self._hash(hash_name).digest()
+
+    def read_hexhash(self, hash_name):
+        """ Calculate given hash for this file, returning hexdigest.
+
+        List of supported hashes can be obtained from hashlib package. This
+        reads the entire file.
+        """
+        return self._hash(hash_name).hexdigest()
 
     # --- Methods for querying the filesystem.
 
@@ -889,6 +901,7 @@ class path(_base):
 
     def rename(self, new):
         dry("rename %s to %s" % (self, new), os.rename, self, new)
+        os.rename(self, new)
 
     def renames(self, new):
         dry("renames %s to %s" % (self, new), os.renames, self, new)
@@ -900,9 +913,23 @@ class path(_base):
         if not self.exists():
             dry("mkdir %s (mode %s)" % (self, mode), os.mkdir, self, mode)
 
+    def mkdir_p(self, mode=0777):
+        try:
+            self.mkdir(mode)
+        except OSError, e:
+            if e.errno != errno.EEXIST:
+                raise
+
     def makedirs(self, mode=0777):
         if not self.exists():
             dry("makedirs %s (mode %s)" % (self, mode), os.makedirs, self, mode)
+
+    def makedirs_p(self, mode=0777):
+        try:
+            self.makedirs(mode)
+        except OSError, e:
+            if e.errno != errno.EEXIST:
+                raise
 
     def rmdir(self):
         if self.exists():
@@ -911,7 +938,6 @@ class path(_base):
     def removedirs(self):
         if self.exists():
             dry("removedirs %s" % (self), os.removedirs, self)
-
 
     # --- Modifying operations on files
 
@@ -929,10 +955,19 @@ class path(_base):
         if self.exists():
             dry("remove %s" % (self), os.remove, self)
 
+    def remove_p(self):
+        try:
+            self.unlink()
+        except OSError, e:
+            if e.errno != errno.ENOENT:
+                raise
+
     def unlink(self):
         if self.exists():
             dry("unlink %s" % (self), os.unlink, self)
 
+    def unlink_p(self):
+        self.remove_p()
 
     # --- Links
     # TODO: mark these up for dry run XXX
@@ -968,7 +1003,6 @@ class path(_base):
 
 
     # --- High-level functions from shutil
-    
     def copy(self, dst):
         dry("copy %s %s" % (self, dst), shutil.copy, self, dst)
         
@@ -984,7 +1018,6 @@ class path(_base):
         if self.exists():
             dry("rmtree %s %s %s" % (self, args, kw), shutil.rmtree, 
                                         self, *args, **kw)
-
 
     # --- Special stuff from os
 
