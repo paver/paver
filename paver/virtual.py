@@ -1,4 +1,5 @@
 """Tasks for managing virtualenv environments."""
+from functools import wraps
 
 from paver.easy import task, options, dry, debug
 from paver.path import path
@@ -93,3 +94,13 @@ def after_install(options, home_dir):
                           dest_dir=vopts.get("dest_dir", '.'),
                           no_site_packages=vopts.get("no_site_packages", False),
                           unzip_setuptools=vopts.get("unzip_setuptools", False))
+
+
+    def virtualenv(dir):
+        """Run decorated task in specified virtual environment."""
+        def inner(func):
+            func = task(func)
+            func.use_virtualenv = True
+            func.virtualenv_dir = dir
+            return func
+        return inner
