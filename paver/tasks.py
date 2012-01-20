@@ -259,6 +259,7 @@ class Task(object):
         self.user_options = []
         self.negative_opt = {}
         self.share_options_with = []
+        self._parser = None
         try:
             self.__doc__ = func.__doc__
         except AttributeError:
@@ -296,9 +297,15 @@ class Task(object):
 
     @property
     def parser(self):
+
+        if getattr(self, '_parser', None):
+            return self._parser
+
         options = self.user_options
-        parser = optparse.OptionParser(add_help_option=False,
+
+        self._parser = parser = optparse.OptionParser(add_help_option=False,
             usage="%%prog %s [options]" % (self.name))
+
         parser.disable_interspersed_args()
         parser.add_option('-h', '--help', action="store_true",
                         help="display this help information")
@@ -339,15 +346,25 @@ class Task(object):
 
                     # XXX: this probably needs refactored to handle commands with multiple
                     # long or short options
-                    if getattr(self, "share_options_with", None):
+                    task_shares = [environment.get_task(t).name for t in (getattr(task, "share_options_with", []) or []) if environment.get_task(t)]
+
+                    if getattr(self, "share_options_with", None) or task_shares:
                         options = (shortname, longname)
 
-                        if options in shared_tasks and len(
+                        # either I am sharing with dependent task
+                        # ...or it can share with me
+                        if (
+                            options in shared_tasks and len(
                                     shared_tasks[options] & set(self.share_options_with)
-                                ) > 0:
-                            environment.debug("Task %s: NOT adding option %s, %s " \
-                                "is present; setting up mirror" %
-                                             (self.name, option, str(shared_tasks[options] & set(self.share_options_with))))
+                                ) > 0
+                            ) \
+                            or \
+                            (
+                            self.name in [environment.get_task(t).name for t in (getattr(task, "share_options_with", []) or []) if environment.get_task(t)]
+                        ):
+                            environment.debug("Task %s: NOT adding option %s," \
+                                "already present; setting up mirror" %
+                                             (self.name, option))
 
                             if option.dest not in parser.mirrored_options:
                                 parser.mirrored_options[option.dest] = []

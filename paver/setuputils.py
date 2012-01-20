@@ -134,6 +134,10 @@ class DistutilsTask(tasks.Task):
         self.command_class = command_class
         self.option_names = set()
         self.needs = []
+        self.might_call = []
+        self._parser = None
+        self.share_options_with = []
+
         self.user_options = command_class.user_options
         self.negative_opt = getattr(command_class, "negative_opt", {})
         # Parse distutils config files.

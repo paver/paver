@@ -749,3 +749,53 @@ def test_calling_nonconsuming_task_with_arguments():
     else:
         assert False, ("Task without @consume_args canot be called with them "
                       "(BuildFailure should be raised)")
+
+def test_options_may_overlap_between_multiple_tasks_even_when_specified_in_reverse_order():
+    @tasks.task
+    @tasks.cmdopts([('foo=', 'f', "Foo!")], share_with=['t2', 't3'])
+    def t1(options):
+        assert options.t1.foo == "1"
+
+    @tasks.task
+    @tasks.needs('t1')
+    @tasks.cmdopts([('foo=', 'f', "Foo!")])
+    def t2(options):
+        assert options.t2.foo == "1"
+
+    @tasks.task
+    @tasks.needs('t1')
+    @tasks.cmdopts([('foo=', 'f', "Foo!")])
+    def t3(options):
+        assert options.t3.foo == "1"
+
+    environment = _set_environment(t1=t1, t2=t2, t3=t3)
+
+    tasks._process_commands("t2 -f 1".split())
+
+    assert t1.called
+    assert t2.called
+
+    tasks._process_commands("t3 -f 1".split())
+
+    assert t1.called
+    assert t3.called
+
+
+def test_options_might_be_shared_both_way():
+    @tasks.task
+    @tasks.cmdopts([('foo=', 'f', "Foo!")], share_with=['t2'])
+    def t1(options):
+        assert options.t1.foo == "1"
+
+    @tasks.task
+    @tasks.needs('t1')
+    @tasks.cmdopts([('foo=', 'f', "Foo!")], share_with=['t1'])
+    def t2(options):
+        assert options.t2.foo == "1"
+
+    environment = _set_environment(t1=t1, t2=t2)
+
+    tasks._process_commands("t2 -f 1".split())
+
+    assert t1.called
+    assert t2.called
