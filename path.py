@@ -31,7 +31,7 @@ This has been modified from the original to avoid dry run issues.
 
 from __future__ import generators
 
-import sys, warnings, os, fnmatch, glob, shutil, codecs, hashlib
+import sys, warnings, os, fnmatch, glob, shutil, codecs, hashlib, errno
 
 __version__ = '2.2'
 __all__ = ['path']
@@ -914,9 +914,23 @@ class path(_base):
         if not self.exists():
             dry("mkdir %s (mode %s)" % (self, mode), os.mkdir, self, mode)
 
+    def mkdir_p(self, mode=0777):
+        try:
+            self.mkdir(mode)
+        except OSError, e:
+            if e.errno != errno.EEXIST:
+                raise
+
     def makedirs(self, mode=0777):
         if not self.exists():
             dry("makedirs %s (mode %s)" % (self, mode), os.makedirs, self, mode)
+
+    def makedirs_p(self, mode=0777):
+        try:
+            self.makedirs(mode)
+        except OSError, e:
+            if e.errno != errno.EEXIST:
+                raise
 
     def rmdir(self):
         if self.exists():
@@ -942,10 +956,19 @@ class path(_base):
         if self.exists():
             dry("remove %s" % (self), os.remove, self)
 
+    def remove_p(self):
+        try:
+            self.unlink()
+        except OSError, e:
+            if e.errno != errno.ENOENT:
+                raise
+
     def unlink(self):
         if self.exists():
             dry("unlink %s" % (self), os.unlink, self)
 
+    def unlink_p(self):
+        self.remove_p()
 
     # --- Links
     # TODO: mark these up for dry run XXX
