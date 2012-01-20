@@ -11,9 +11,9 @@ TempDirTestCase.testTouch() takes a while to run.  It sleeps a few
 seconds to allow some time to pass between calls to check the modify
 time on files.
 
-URL:     http://www.jorendorff.com/articles/python/path
-Author:  Jason Orendorff <jason@jorendorff.com>
-Date:    7 Mar 2004
+Authors:
+ Jason Orendorff <jason.orendorff\x40gmail\x2ecom>
+ Others - unfortunately attribution is lost
 
 """
 
@@ -22,7 +22,7 @@ import codecs, os, random, shutil, tempfile, time
 from path import path, __version__ as path_version
 
 # This should match the version of path.py being tested.
-__version__ = '2.2'
+__version__ = '2.2.1.990'
 
 
 def p(**choices):
