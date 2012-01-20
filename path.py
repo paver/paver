@@ -1,18 +1,18 @@
 """ path.py - An object representing a path to a file or directory.
 
-Example::
-    
-    from path import path
-    d = path('/home/guido/bin')
-    for f in d.files('*.py'):
-        f.chmod(0755)
+Example:
+
+from path import path
+d = path('/home/guido/bin')
+for f in d.files('*.py'):
+    f.chmod(0755)
 
 This module requires Python 2.2 or later.
 
 
-:URL:     http://www.jorendorff.com/articles/python/path
-:Author:  Jason Orendorff <jason.orendorff\x40gmail\x2ecom> (and others - see the url!)
-:Date:    9 Mar 2007
+URL:     http://www.jorendorff.com/articles/python/path
+Author:  Jason Orendorff <jason.orendorff\x40gmail\x2ecom> (and others - see the url!)
+Date:    9 Mar 2007
 
 This has been modified from the original to avoid dry run issues.
 """
@@ -29,7 +29,7 @@ This has been modified from the original to avoid dry run issues.
 #   - guess_content_type() method?
 #   - Perhaps support arguments to touch().
 
-import sys, warnings, os, fnmatch, glob, shutil, codecs
+from __future__ import generators
 
 import sys, warnings, os, fnmatch, glob, shutil, codecs, hashlib
 
@@ -123,11 +123,10 @@ class path(_base):
         """ Return the current working directory as a path object. """
         return cls(_getcwd())
     getcwd = classmethod(getcwd)
-    
+
     def chdir(self):
         """Change current directory."""
         os.chdir(self)
-
 
     # --- Operations on path strings.
 
@@ -903,6 +902,7 @@ class path(_base):
 
     def rename(self, new):
         dry("rename %s to %s" % (self, new), os.rename, self, new)
+        os.rename(self, new)
 
     def renames(self, new):
         dry("renames %s to %s" % (self, new), os.renames, self, new)
@@ -925,7 +925,6 @@ class path(_base):
     def removedirs(self):
         if self.exists():
             dry("removedirs %s" % (self), os.removedirs, self)
-
 
     # --- Modifying operations on files
 
@@ -982,7 +981,6 @@ class path(_base):
 
 
     # --- High-level functions from shutil
-    
     def copy(self, dst):
         dry("copy %s %s" % (self, dst), shutil.copy, self, dst)
         
@@ -998,7 +996,6 @@ class path(_base):
         if self.exists():
             dry("rmtree %s %s %s" % (self, args, kw), shutil.rmtree, 
                                         self, *args, **kw)
-
 
     # --- Special stuff from os
 
