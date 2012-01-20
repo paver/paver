@@ -31,12 +31,7 @@ This has been modified from the original to avoid dry run issues.
 
 import sys, warnings, os, fnmatch, glob, shutil, codecs
 
-try:
-    from hashlib import md5
-except ImportError:
-    # compatibility for versions before 2.5
-    import md5
-    md5 = md5.new
+import sys, warnings, os, fnmatch, glob, shutil, codecs, hashlib
 
 __version__ = '2.2'
 __all__ = ['path']
@@ -778,9 +773,17 @@ class path(_base):
 
         This reads through the entire file.
         """
+        return self.read_hash('md5')
+
+    def read_hash(self, hash_name):
+        """ Calculate given hash for this file.
+
+        List of supported hashes can be obtained from hashlib package. This
+        reads the entire file.
+        """
         f = self.open('rb')
         try:
-            m = md5()
+            m = hashlib.new(hash_name)
             while True:
                 d = f.read(8192)
                 if not d:
