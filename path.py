@@ -1,18 +1,20 @@
 """ path.py - An object representing a path to a file or directory.
 
-Example:
-
-from path import path
-d = path('/home/guido/bin')
-for f in d.files('*.py'):
-    f.chmod(0755)
+Example::
+    
+    from path import path
+    d = path('/home/guido/bin')
+    for f in d.files('*.py'):
+        f.chmod(0755)
 
 This module requires Python 2.2 or later.
 
 
-URL:     http://www.jorendorff.com/articles/python/path
-Author:  Jason Orendorff <jason.orendorff\x40gmail\x2ecom> (and others - see the url!)
-Date:    9 Mar 2007
+:URL:     http://www.jorendorff.com/articles/python/path
+:Author:  Jason Orendorff <jason.orendorff\x40gmail\x2ecom> (and others - see the url!)
+:Date:    9 Mar 2007
+
+This has been modified from the original to avoid dry run issues.
 """
 
 
@@ -27,9 +29,14 @@ Date:    9 Mar 2007
 #   - guess_content_type() method?
 #   - Perhaps support arguments to touch().
 
-from __future__ import generators
+import sys, warnings, os, fnmatch, glob, shutil, codecs
 
-import sys, warnings, os, fnmatch, glob, shutil, codecs, md5
+try:
+    from hashlib import md5
+except ImportError:
+    # compatibility for versions before 2.5
+    import md5
+    md5 = md5.new
 
 __version__ = '2.2'
 __all__ = ['path']
@@ -121,6 +128,10 @@ class path(_base):
         """ Return the current working directory as a path object. """
         return cls(_getcwd())
     getcwd = classmethod(getcwd)
+    
+    def chdir(self):
+        """Change current directory."""
+        os.chdir(self)
 
 
     # --- Operations on path strings.
@@ -253,7 +264,7 @@ class path(_base):
         this path (for example, '/' or 'C:\\').  The other items in
         the list will be strings.
 
-        path.path.joinpath(*result) will yield the original path.
+        ``path.path.joinpath(*result)`` will yield the original path.
         """
         parts = []
         loc = self
@@ -339,7 +350,8 @@ class path(_base):
 
         With the optional 'pattern' argument, this only lists
         directories whose names match the given pattern.  For
-        example, d.dirs('build-*').
+        example::
+            d.dirs('build-*')
         """
         return [p for p in self.listdir(pattern) if p.isdir()]
 
@@ -350,8 +362,8 @@ class path(_base):
         This does not walk into subdirectories (see path.walkfiles).
 
         With the optional 'pattern' argument, this only lists files
-        whose names match the given pattern.  For example,
-        d.files('*.pyc').
+        whose names match the given pattern.  For example::
+            d.files('*.pyc')
         """
         
         return [p for p in self.listdir(pattern) if p.isfile()]
@@ -414,7 +426,7 @@ class path(_base):
 
         With the optional 'pattern' argument, this yields only
         directories whose names match the given pattern.  For
-        example, mydir.walkdirs('*test') yields only directories
+        example, ``mydir.walkdirs('*test')`` yields only directories
         with names ending in 'test'.
 
         The errors= keyword argument controls behavior when an
@@ -450,7 +462,7 @@ class path(_base):
 
         The optional argument, pattern, limits the results to files
         with names that match the pattern.  For example,
-        mydir.walkfiles('*.tmp') yields only files with the .tmp
+        ``mydir.walkfiles('*.tmp')`` yields only files with the .tmp
         extension.
         """
         if errors not in ('strict', 'warn', 'ignore'):
@@ -497,7 +509,7 @@ class path(_base):
         """ Return True if self.name matches the given pattern.
 
         pattern - A filename pattern with wildcards,
-            for example '*.py'.
+            for example ``'*.py'``.
         """
         return fnmatch.fnmatch(self.name, pattern)
 
@@ -515,6 +527,7 @@ class path(_base):
 
     # --- Reading or writing an entire file at once.
 
+    # TODO: file writing should not occur during dry runs XXX
     def open(self, mode='r'):
         """ Open this file.  Return a file object. """
         return file(self, mode)
@@ -767,7 +780,7 @@ class path(_base):
         """
         f = self.open('rb')
         try:
-            m = md5.new()
+            m = md5()
             while True:
                 d = f.read(8192)
                 if not d:
@@ -875,25 +888,29 @@ class path(_base):
             os.chown(self, uid, gid)
 
     def rename(self, new):
-        os.rename(self, new)
+        dry("rename %s to %s" % (self, new), os.rename, self, new)
 
     def renames(self, new):
-        os.renames(self, new)
+        dry("renames %s to %s" % (self, new), os.renames, self, new)
 
 
     # --- Create/delete operations on directories
 
     def mkdir(self, mode=0777):
-        os.mkdir(self, mode)
+        if not self.exists():
+            dry("mkdir %s (mode %s)" % (self, mode), os.mkdir, self, mode)
 
     def makedirs(self, mode=0777):
-        os.makedirs(self, mode)
+        if not self.exists():
+            dry("makedirs %s (mode %s)" % (self, mode), os.makedirs, self, mode)
 
     def rmdir(self):
-        os.rmdir(self)
+        if self.exists():
+            dry("rmdir %s" % (self), os.rmdir, self)
 
     def removedirs(self):
-        os.removedirs(self)
+        if self.exists():
+            dry("removedirs %s" % (self), os.removedirs, self)
 
 
     # --- Modifying operations on files
@@ -902,19 +919,24 @@ class path(_base):
         """ Set the access/modified times of this file to the current time.
         Create the file if it does not exist.
         """
-        fd = os.open(self, os.O_WRONLY | os.O_CREAT, 0666)
-        os.close(fd)
-        os.utime(self, None)
+        def do_touch():
+            fd = os.open(self, os.O_WRONLY | os.O_CREAT, 0666)
+            os.close(fd)
+            os.utime(self, None)
+        dry("touch %s" % (self), do_touch)
 
     def remove(self):
-        os.remove(self)
+        if self.exists():
+            dry("remove %s" % (self), os.remove, self)
 
     def unlink(self):
-        os.unlink(self)
+        if self.exists():
+            dry("unlink %s" % (self), os.unlink, self)
 
 
     # --- Links
-
+    # TODO: mark these up for dry run XXX
+    
     if hasattr(os, 'link'):
         def link(self, newpath):
             """ Create a hard link at 'newpath', pointing to this file. """
@@ -946,16 +968,22 @@ class path(_base):
 
 
     # --- High-level functions from shutil
-
-    copyfile = shutil.copyfile
-    copymode = shutil.copymode
-    copystat = shutil.copystat
-    copy = shutil.copy
-    copy2 = shutil.copy2
-    copytree = shutil.copytree
+    
+    def copy(self, dst):
+        dry("copy %s %s" % (self, dst), shutil.copy, self, dst)
+        
+    def copytree(self, dst, *args, **kw):
+        dry("copytree %s %s" % (self, dst), shutil.copytree, 
+                                        self, dst, *args, **kw)
+    
     if hasattr(shutil, 'move'):
-        move = shutil.move
-    rmtree = shutil.rmtree
+        def move(self, dst):
+            dry("move %s %s" % (self, dst), shutil.move, self, dst)
+    
+    def rmtree(self, *args, **kw):
+        if self.exists():
+            dry("rmtree %s %s %s" % (self, args, kw), shutil.rmtree, 
+                                        self, *args, **kw)
 
 
     # --- Special stuff from os
@@ -968,3 +996,4 @@ class path(_base):
         def startfile(self):
             os.startfile(self)
 
+from paver.easy import dry
