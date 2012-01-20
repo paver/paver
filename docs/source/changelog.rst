@@ -11,6 +11,7 @@ Paver Changelog
 * Fix misleading error message when non-task is passed to ``@needs`` (github issue `#37 <https://github.com/paver/paver/issues/37>`_)
 * ``@no_help`` to provide a way to hide task from ``paver help`` (github issue `#36 <https://github.com/paver/paver/issues/36>`_)
 * ``@might_call`` for more complex dependencies (see docs, not only github issue `#16 <https://github.com/paver/paver/issues/16>`_)
+* bundled path.py upgraded to patched version 2.2.2 (github issue `#15 <https://github.com/paver/paver/issues/15>`_)
 
 1.0.5 (October 21, 2011)
 ------------------------
