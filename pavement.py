@@ -125,9 +125,6 @@ def publish_docs(options):
     branch = getattr(options, 'branch', 'master')
     docs_branch = getattr(options, 'docs_branch', 'gh-pages')
     repo = getattr(options, 'git_repo', 'git@github.com:paver/paver.git')
-    key_params = []
-    if getattr(options, 'deploy_key', None):
-        key_params = ['']
 
     try:
         safe_clone = path(mkdtemp(prefix='paver-clone-'))
@@ -160,7 +157,7 @@ def publish_docs(options):
         docs_repo.chdir()
 
         sh('git init')
-        check_call(['git', 'remote', 'add', '-t', docs_branch, '-f', 'origin', 'file://'+str(current_repo)], env={"GIT_SSH" : git})
+        check_call(['git', 'remote', 'add', '-t', docs_branch, '-f', 'origin', repo], env={"GIT_SSH" : git})
         check_call(['git', 'checkout', docs_branch], env={"GIT_SSH" : git})
 
         check_call(['rsync', '-av', os.path.join(str(safe_clone), 'paver', 'docs'), str(docs_repo)])
