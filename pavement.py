@@ -163,7 +163,7 @@ def publish_docs(options):
         check_call(['git', 'remote', 'add', '-t', branch, '-f', 'origin', 'file://'+str(current_repo)], env={"GIT_SSH" : git})
         check_call(['git', 'checkout', branch], env={"GIT_SSH" : git})
 
-        sh(['rsync', '-av', os.path.join(str(safe_clone), 'paver', 'docs'), str(docs_repo)])
+        check_call(['rsync', '-av', os.path.join(str(safe_clone), 'paver', 'docs'), str(docs_repo)])
 
         sh('git add *')
 
