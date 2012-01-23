@@ -235,6 +235,9 @@ With that task in our pavement.py, ``paver sdist`` is all it takes
 to build a source distribution after generating a setup file
 and minilib.
 
+.. note:: If you are depending on distutils task (via @needs), you have to call ``setup()`` before task is defined.
+   Under the hood, ``setup`` call installs distutils/setupsools task and make them available, so do not make it conditional.
+
 Tackling the Docs
 -----------------
 
