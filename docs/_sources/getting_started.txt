@@ -45,7 +45,7 @@ to build a source distribution::
   # sh('ls -l docs/samples/started/oldway/dist')
   # ==>
   total 4
-  -rw-r--r-- 1 jenkins nogroup 618 Jan 23 14:49 TheOldWay-1.0.tar.gz
+  -rw-r--r-- 1 jenkins nogroup 617 Jan 23 14:50 TheOldWay-1.0.tar.gz
   # <==end==>
 
 Then your users can run the familiar::
@@ -278,7 +278,7 @@ equivalent output file::
   # sh('ls -l docs/samples/started/newway/dist')
   # ==>
   total 32
-  -rw-r--r-- 1 jenkins nogroup 30820 Jan 23 14:49 TheNewWay-1.0.tar.gz
+  -rw-r--r-- 1 jenkins nogroup 30820 Jan 23 14:50 TheNewWay-1.0.tar.gz
   # <==end==>
 
 It also means that users of The New Way can also run ``paver install``
@@ -315,7 +315,7 @@ Worried about bloating your package? The paver-minilib is not large::
   #    insert_output=False)
   # sh('ls -l docs/samples/started/newway/paver-minilib.zip')
   # ==>
-  -rw-r--r-- 1 jenkins nogroup 29231 Jan 23 14:49 docs/samples/started/newway/paver-minilib.zip
+  -rw-r--r-- 1 jenkins nogroup 29231 Jan 23 14:50 docs/samples/started/newway/paver-minilib.zip
   # <==end==>
 
 Paver itself is bootstrapped with a generated setup file and a
