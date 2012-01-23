@@ -160,8 +160,8 @@ def publish_docs(options):
         docs_repo.chdir()
 
         sh('git init')
-        check_call(['git', 'remote', 'add', '-t', branch, '-f', 'origin', 'file://'+str(current_repo)], env={"GIT_SSH" : git})
-        check_call(['git', 'checkout', branch], env={"GIT_SSH" : git})
+        check_call(['git', 'remote', 'add', '-t', docs_branch, '-f', 'origin', 'file://'+str(current_repo)], env={"GIT_SSH" : git})
+        check_call(['git', 'checkout', docs_branch], env={"GIT_SSH" : git})
 
         check_call(['rsync', '-av', os.path.join(str(safe_clone), 'paver', 'docs'), str(docs_repo)])
 
