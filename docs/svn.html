@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Using with Subversion (paver.svn) &mdash; Paver v1.1.0 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.1.0',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Paver v1.1.0 documentation" href="index.html" />
+    <link rel="up" title="The Paver Standard Library" href="paverstdlib.html" />
+    <link rel="next" title="Using with Bazaar-NG (bzr) (paver.bzr)" href="bzr.html" />
+    <link rel="prev" title="Virtualenv Support (paver.virtual)" href="virtualenv.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="bzr.html" title="Using with Bazaar-NG (bzr) (paver.bzr)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="virtualenv.html" title="Virtualenv Support (paver.virtual)"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Paver v1.1.0 documentation</a> &raquo;</li>
+          <li><a href="paverstdlib.html" accesskey="U">The Paver Standard Library</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-paver.svn">
+<span id="svn"></span><h1>Using with Subversion (paver.svn)<a class="headerlink" href="#module-paver.svn" title="Permalink to this headline">¶</a></h1>
+<p>Convenience functions for working with svn.</p>
+<p>This module does not include any tasks, only functions.</p>
+<p>At this point, these functions do not use any kind of library. They require
+the svn binary on the path.</p>
+<dl class="function">
+<dt id="paver.svn.checkout">
+<tt class="descclassname">paver.svn.</tt><tt class="descname">checkout</tt><big>(</big><em>url</em>, <em>dest</em>, <em>revision=''</em><big>)</big><a class="headerlink" href="#paver.svn.checkout" title="Permalink to this definition">¶</a></dt>
+<dd>Checks out the specified URL to the given destination.</dd></dl>
+
+<dl class="function">
+<dt id="paver.svn.checkup">
+<tt class="descclassname">paver.svn.</tt><tt class="descname">checkup</tt><big>(</big><em>url</em>, <em>dest</em>, <em>revision=''</em><big>)</big><a class="headerlink" href="#paver.svn.checkup" title="Permalink to this definition">¶</a></dt>
+<dd>Does a checkout or update, depending on whether the destination
+exists and is up to date (if a revision is passed in). Returns
+true if a checkout or update was performed. False otherwise.</dd></dl>
+
+<dl class="function">
+<dt id="paver.svn.export">
+<tt class="descclassname">paver.svn.</tt><tt class="descname">export</tt><big>(</big><em>url</em>, <em>dest</em>, <em>revision=''</em><big>)</big><a class="headerlink" href="#paver.svn.export" title="Permalink to this definition">¶</a></dt>
+<dd>Exports the specified URL to the given destination.</dd></dl>
+
+<dl class="function">
+<dt id="paver.svn.info">
+<tt class="descclassname">paver.svn.</tt><tt class="descname">info</tt><big>(</big><em>path=''</em><big>)</big><a class="headerlink" href="#paver.svn.info" title="Permalink to this definition">¶</a></dt>
+<dd>Retrieves the svn info for the path and returns a dictionary of 
+the values. Names are normalized to lower case with spaces converted
+to underscores.</dd></dl>
+
+<dl class="function">
+<dt id="paver.svn.update">
+<tt class="descclassname">paver.svn.</tt><tt class="descname">update</tt><big>(</big><em>path=''</em>, <em>revision=''</em><big>)</big><a class="headerlink" href="#paver.svn.update" title="Permalink to this definition">¶</a></dt>
+<dd>Run an svn update on the given path.</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="virtualenv.html"
+                                  title="previous chapter">Virtualenv Support (paver.virtual)</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="bzr.html"
+                                  title="next chapter">Using with Bazaar-NG (bzr) (paver.bzr)</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="_sources/svn.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="bzr.html" title="Using with Bazaar-NG (bzr) (paver.bzr)"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="virtualenv.html" title="Virtualenv Support (paver.virtual)"
+             >previous</a> |</li>
+        <li><a href="index.html">Paver v1.1.0 documentation</a> &raquo;</li>
+          <li><a href="paverstdlib.html" >The Paver Standard Library</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2008, SitePen, Inc..
+      Last updated on Jan 23, 2012.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.6.
+    </div>
+  </body>
+</html>

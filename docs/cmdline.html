@@ -1,0 +1,151 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Paver Command Line &mdash; Paver v1.1.0 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.1.0',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Paver v1.1.0 documentation" href="index.html" />
+    <link rel="next" title="Tips and Tricks" href="tips.html" />
+    <link rel="prev" title="SSH Remote Access Support (paver.ssh)" href="ssh.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="tips.html" title="Tips and Tricks"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="ssh.html" title="SSH Remote Access Support (paver.ssh)"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Paver v1.1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="paver-command-line">
+<span id="cmdline"></span><h1>Paver Command Line<a class="headerlink" href="#paver-command-line" title="Permalink to this headline">¶</a></h1>
+<p>Paver does sophisticated command line parsing globally and for each task:</p>
+<div class="highlight-python"><pre>paver [-q] [-n] [-v] [-f pavement] [-h] [option.name=key] [taskname] [taskoptions] [taskname...]</pre>
+</div>
+<p>The command line options are:</p>
+<table class="docutils option-list" frame="void" rules="none">
+<col class="option" />
+<col class="description" />
+<tbody valign="top">
+<tr><td class="option-group">
+<kbd><span class="option">-q</span></kbd></td>
+<td>quiet... don&#8217;t display much info (info and debug messages are not shown)</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">-n</span></kbd></td>
+<td>dry run... don&#8217;t actually run destructive commands</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">-v</span></kbd></td>
+<td>verbose... display debug level output</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">-h</span></kbd></td>
+<td>display the command line options and list of available tasks. Note
+that -h can be provided for any task to display the command line options
+and detailed help for that task.</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">-f <var>&lt;pavement&gt;</var></span></kbd></td>
+<td>use a different file than &#8220;pavement.py&#8221;</td></tr>
+</tbody>
+</table>
+<p>If you run paver without a task, it will only run the &#8220;auto&#8221; task, if there
+is one. Otherwise, Paver will do nothing.</p>
+<p><tt class="docutils literal"><span class="pre">paver</span> <span class="pre">help</span></tt> is the equivalent of <tt class="docutils literal"><span class="pre">paver</span> <span class="pre">-h</span></tt>, and <tt class="docutils literal"><span class="pre">paver</span> <span class="pre">help</span> <span class="pre">taskname</span></tt>
+is the equivalent of <tt class="docutils literal"><span class="pre">paver</span> <span class="pre">taskname</span> <span class="pre">-h</span></tt>.</p>
+<p>You can set build options via the command line by providing optionname=value.
+The option names can be in dotted notation, so <tt class="docutils literal"><span class="pre">foo.bar.baz=something</span></tt> will
+set options[&#8216;foo&#8217;][&#8216;bar&#8217;][&#8216;baz&#8217;] = &#8216;something&#8217; in the options. If you need
+to enter a value with multiple words, put quotes around the part with the space.</p>
+<p><cite>Important and useful</cite>: Options are set at the point in which they appear in
+the command line. That means that you can set an option before one task
+and then set it to another value for the next task.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="ssh.html"
+                                  title="previous chapter">SSH Remote Access Support (paver.ssh)</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="tips.html"
+                                  title="next chapter">Tips and Tricks</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="_sources/cmdline.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tips.html" title="Tips and Tricks"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="ssh.html" title="SSH Remote Access Support (paver.ssh)"
+             >previous</a> |</li>
+        <li><a href="index.html">Paver v1.1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2008, SitePen, Inc..
+      Last updated on Jan 23, 2012.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.6.
+    </div>
+  </body>
+</html>

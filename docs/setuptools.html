@@ -1,0 +1,159 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>distutils and setuptools (paver.setuputils) &mdash; Paver v1.1.0 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.1.0',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Paver v1.1.0 documentation" href="index.html" />
+    <link rel="up" title="The Paver Standard Library" href="paverstdlib.html" />
+    <link rel="next" title="File Handling in Paver (paver.path)" href="files.html" />
+    <link rel="prev" title="The Paver Standard Library" href="paverstdlib.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="files.html" title="File Handling in Paver (paver.path)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="paverstdlib.html" title="The Paver Standard Library"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Paver v1.1.0 documentation</a> &raquo;</li>
+          <li><a href="paverstdlib.html" accesskey="U">The Paver Standard Library</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-paver.setuputils">
+<span id="setuptools"></span><h1>distutils and setuptools (paver.setuputils)<a class="headerlink" href="#module-paver.setuputils" title="Permalink to this headline">¶</a></h1>
+<p>Paver makes it very easy to use and extend Python&#8217;s standard distribution
+mechanisms. The <a class="reference external" href="getting_started.html#gettingstarted"><em>Getting Started Guide</em></a> has a useful
+example of moving from distutils and setuptools to Paver.</p>
+<p>Integrates distutils/setuptools with Paver.</p>
+<dl class="function">
+<dt id="paver.setuputils.find_package_data">
+<tt class="descclassname">paver.setuputils.</tt><tt class="descname">find_package_data</tt><big>(</big><em>where='.'</em>, <em>package=''</em>, <em>exclude=('*.py'</em>, <em>'*.pyc'</em>, <em>'*~'</em>, <em>'.*'</em>, <em>'*.bak'</em>, <em>'*.swp*')</em>, <em>exclude_directories=('.*'</em>, <em>'CVS'</em>, <em>'_darcs'</em>, <em>'./build'</em>, <em>'./dist'</em>, <em>'EGG-INFO'</em>, <em>'*.egg-info')</em>, <em>only_in_packages=True</em>, <em>show_ignored=False</em><big>)</big><a class="headerlink" href="#paver.setuputils.find_package_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a dictionary suitable for use in <tt class="docutils literal"><span class="pre">package_data</span></tt>
+in a distutils <tt class="docutils literal"><span class="pre">setup.py</span></tt> file.</p>
+<p>The dictionary looks like:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span><span class="s">&#39;package&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">files</span><span class="p">]}</span>
+</pre></div>
+</div>
+<p>Where <tt class="docutils literal"><span class="pre">files</span></tt> is a list of all the files in that package that
+don&#8217;t match anything in <tt class="docutils literal"><span class="pre">exclude</span></tt>.</p>
+<p>If <tt class="docutils literal"><span class="pre">only_in_packages</span></tt> is true, then top-level directories that
+are not packages won&#8217;t be included (but directories under packages
+will).</p>
+<p>Directories matching any pattern in <tt class="docutils literal"><span class="pre">exclude_directories</span></tt> will
+be ignored; by default directories with leading <tt class="docutils literal"><span class="pre">.</span></tt>, <tt class="docutils literal"><span class="pre">CVS</span></tt>,
+and <tt class="docutils literal"><span class="pre">_darcs</span></tt> will be ignored.</p>
+<p>If <tt class="docutils literal"><span class="pre">show_ignored</span></tt> is true, then all the files that aren&#8217;t
+included in package data are shown on stderr (for debugging
+purposes).</p>
+<p>Note patterns use wildcards, or can be exact paths (including
+leading <tt class="docutils literal"><span class="pre">./</span></tt>), and all searching is case-insensitive.</p>
+<p>This function is by Ian Bicking.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="paver.setuputils.install_distutils_tasks">
+<tt class="descclassname">paver.setuputils.</tt><tt class="descname">install_distutils_tasks</tt><big>(</big><big>)</big><a class="headerlink" href="#paver.setuputils.install_distutils_tasks" title="Permalink to this definition">¶</a></dt>
+<dd>Makes distutils and setuptools commands available as Paver tasks.</dd></dl>
+
+<dl class="function">
+<dt id="paver.setuputils.setup">
+<tt class="descclassname">paver.setuputils.</tt><tt class="descname">setup</tt><big>(</big><em>**kw</em><big>)</big><a class="headerlink" href="#paver.setuputils.setup" title="Permalink to this definition">¶</a></dt>
+<dd>Updates options.setup with the keyword arguments provided,
+and installs the distutils tasks for this pavement. You can
+use paver.setuputils.setup as a direct replacement for
+the distutils.core.setup or setuptools.setup in a traditional
+setup.py.</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="paverstdlib.html"
+                                  title="previous chapter">The Paver Standard Library</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="files.html"
+                                  title="next chapter">File Handling in Paver (paver.path)</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="_sources/setuptools.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="files.html" title="File Handling in Paver (paver.path)"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="paverstdlib.html" title="The Paver Standard Library"
+             >previous</a> |</li>
+        <li><a href="index.html">Paver v1.1.0 documentation</a> &raquo;</li>
+          <li><a href="paverstdlib.html" >The Paver Standard Library</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2008, SitePen, Inc..
+      Last updated on Jan 23, 2012.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.6.
+    </div>
+  </body>
+</html>

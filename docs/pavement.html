@@ -1,0 +1,378 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pavement.py in depth &mdash; Paver v1.1.0 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.1.0',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Paver v1.1.0 documentation" href="index.html" />
+    <link rel="next" title="The Paver Standard Library" href="paverstdlib.html" />
+    <link rel="prev" title="Getting Started with Paver" href="getting_started.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="paverstdlib.html" title="The Paver Standard Library"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="getting_started.html" title="Getting Started with Paver"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Paver v1.1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="pavement-py-in-depth">
+<span id="pavement"></span><h1>pavement.py in depth<a class="headerlink" href="#pavement-py-in-depth" title="Permalink to this headline">¶</a></h1>
+<p>Paver is meant to be a hybrid declarative/imperative system for getting stuff done.
+You declare things via the options in pavement.py. And, in fact, many projects
+can get away with nothing but options in pavement.py. Consider, for example,
+an early version of Paver&#8217;s own pavement file:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">paver.easy</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">paver.doctools</span>
+
+<span class="n">options</span><span class="p">(</span>
+    <span class="n">setup</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s">&#39;paver&#39;</span><span class="p">,</span>
+    <span class="n">version</span><span class="o">=</span><span class="s">&quot;0.3&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s">&#39;Python build tool&#39;</span><span class="p">,</span>
+    <span class="n">author</span><span class="o">=</span><span class="s">&#39;Kevin Dangoor&#39;</span><span class="p">,</span>
+    <span class="n">author_email</span><span class="o">=</span><span class="s">&#39;dangoor+paver@gmail.com&#39;</span><span class="p">,</span>
+    <span class="c">#url=&#39;&#39;,</span>
+    <span class="n">packages</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;paver&#39;</span><span class="p">],</span>
+    <span class="n">package_data</span><span class="o">=</span><span class="n">setuputils</span><span class="o">.</span><span class="n">find_package_data</span><span class="p">(</span><span class="s">&quot;paver&quot;</span><span class="p">,</span> <span class="n">package</span><span class="o">=</span><span class="s">&quot;paver&quot;</span><span class="p">,</span>
+                                            <span class="n">only_in_packages</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
+    <span class="n">install_requires</span><span class="o">=</span><span class="p">[],</span>
+    <span class="n">test_suite</span><span class="o">=</span><span class="s">&#39;nose.collector&#39;</span><span class="p">,</span>
+    <span class="n">zip_safe</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+    <span class="n">entry_points</span><span class="o">=</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">    [console_scripts]</span>
+<span class="s">    paver = paver.command:main</span>
+<span class="s">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="p">),</span>
+
+    <span class="n">sphinx</span><span class="o">=</span><span class="n">Bunch</span><span class="p">(</span>
+        <span class="n">builddir</span><span class="o">=</span><span class="s">&quot;build&quot;</span><span class="p">,</span>
+        <span class="n">sourcedir</span><span class="o">=</span><span class="s">&quot;source&quot;</span>
+    <span class="p">)</span>
+
+<span class="p">)</span>
+
+<span class="nd">@task</span>
+<span class="nd">@needs</span><span class="p">(</span><span class="s">&#39;paver.doctools.html&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">html</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Build Paver&#39;s documentation and install it into paver/docs&quot;&quot;&quot;</span>
+    <span class="n">builtdocs</span> <span class="o">=</span> <span class="n">path</span><span class="p">(</span><span class="s">&quot;docs&quot;</span><span class="p">)</span> <span class="o">/</span> <span class="n">options</span><span class="o">.</span><span class="n">sphinx</span><span class="o">.</span><span class="n">builddir</span> <span class="o">/</span> <span class="s">&quot;html&quot;</span>
+    <span class="n">destdir</span> <span class="o">=</span> <span class="n">path</span><span class="p">(</span><span class="s">&quot;paver&quot;</span><span class="p">)</span> <span class="o">/</span> <span class="s">&quot;docs&quot;</span>
+    <span class="n">destdir</span><span class="o">.</span><span class="n">rmtree</span><span class="p">()</span>
+    <span class="n">builtdocs</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">destdir</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This file has both declarative and imperative aspects. The options define
+enough information for distutils, setuptools and Sphinx to do their
+respective jobs. This would function just fine without requiring you
+to define any tasks.</p>
+<p>However, for Paver&#8217;s &#8216;paverdoc&#8217; built-in task to work, we need
+Sphinx&#8217;s generated HTML to end up inside of Paver&#8217;s package tree.
+So, we override the html task to move the generated files.</p>
+<div class="section" id="defining-tasks">
+<h2>Defining Tasks<a class="headerlink" href="#defining-tasks" title="Permalink to this headline">¶</a></h2>
+<p>Tasks are just simple functions. You designate a function as being a
+task by using the &#64;task decorator.</p>
+<p>You can also specify that a task depends on another task running
+first with the &#64;needs decorator. A given task will only run once
+as a dependency for other tasks.</p>
+</div>
+<div class="section" id="manually-calling-tasks">
+<h2>Manually Calling Tasks<a class="headerlink" href="#manually-calling-tasks" title="Permalink to this headline">¶</a></h2>
+<p>Sometimes, you need to do something <cite>before</cite> running another task, so
+the &#64;needs decorator doesn&#8217;t quite do the job.</p>
+<p>Of course, tasks are just Python functions. So, you can just call the
+other task like a function!</p>
+</div>
+<div class="section" id="how-task-names-work">
+<h2>How Task Names Work<a class="headerlink" href="#how-task-names-work" title="Permalink to this headline">¶</a></h2>
+<p>Tasks have both a long name and a short name. The short name is just
+the name of the function. The long name is the fully qualified Python
+name for the function object.</p>
+<p>For example, the Sphinx support includes a task function called &#8220;html&#8221;.
+That task&#8217;s long name is &#8220;paver.doctools.html&#8221;.</p>
+<p>If you <tt class="docutils literal"><span class="pre">`import</span> <span class="pre">paver.doctools`</span></tt> in your pavement.py, you&#8217;ll be able
+to use either name to refer to that task.</p>
+<p>Tasks that you define in your pavement are always available by their
+short names. Tasks defined elsewhere are available by their short names
+unless there is a conflict where two tasks are trying to use the same
+short name.</p>
+<p>Tasks are always available unambiguously via their long names.</p>
+</div>
+<div class="section" id="task-parameters">
+<h2>Task Parameters<a class="headerlink" href="#task-parameters" title="Permalink to this headline">¶</a></h2>
+<p>Tasks don&#8217;t have to take any parameters. However, Paver allows you to work
+in a fairly clean, globals-free manner(*). Generally speaking, the easiest way
+to work with paver is to just do <tt class="docutils literal"><span class="pre">from</span> <span class="pre">paver.easy</span> <span class="pre">import</span> <span class="pre">*</span></tt>, but if you
+don&#8217;t like having so much in your namespace, you can have any attribute
+from tasks.environment sent into your function. For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@task</span>
+<span class="k">def</span> <span class="nf">my_task</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="n">info</span><span class="p">):</span>
+    <span class="c"># this task will get the options and the &quot;info&quot; logging function</span>
+    <span class="c"># sent in</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<p>(*): well, there <em>is</em> one global: tasks.environment.</p>
+</div>
+<div class="section" id="command-line-arguments">
+<h2>Command Line Arguments<a class="headerlink" href="#command-line-arguments" title="Permalink to this headline">¶</a></h2>
+<p>Tasks can specify that they accept command line arguments, via two
+other decorators. The <tt class="docutils literal"><span class="pre">&#64;consume_args</span></tt> decorator tells Paver that <em>all</em>
+command line arguments following this task&#8217;s name should be passed to the
+task. You can either look up the arguments in <tt class="docutils literal"><span class="pre">options.args</span></tt>, or just
+specify args as a parameter to your function. For example, Paver&#8217;s &#8220;help&#8221;
+task is declared like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@task</span>
+<span class="nd">@consume_args</span>
+<span class="k">def</span> <span class="nf">help</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">help_function</span><span class="p">):</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<p>The &#8220;args&#8221; parameter is just an attribute on tasks.environment (as is
+help_function), so it is passed in using the same rules described in the
+previous section.</p>
+<p>More generally, you&#8217;re not trying to consume all of the remainder of the
+command line but to just accept certain specific arguments. That&#8217;s what
+the cmdopts decorator is for:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@task</span>
+<span class="nd">@cmdopts</span><span class="p">([</span>
+    <span class="p">(</span><span class="s">&#39;username=&#39;</span><span class="p">,</span> <span class="s">&#39;u&#39;</span><span class="p">,</span> <span class="s">&#39;Username to use when logging in to the servers&#39;</span><span class="p">)</span>
+<span class="p">])</span>
+<span class="k">def</span> <span class="nf">deploy</span><span class="p">(</span><span class="n">options</span><span class="p">):</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<p>&#64;cmdopts takes a list of tuples, each with long option name, short option name
+and help text. If there&#8217;s an &#8220;=&#8221; after the long option name, that means
+that the option takes a parameter. Otherwise, the option is assumed to be
+boolean. The command line options set in this manner are all added to
+the <tt class="docutils literal"><span class="pre">options</span></tt> under a namespace matching the name of the task. In the
+case above, options.deploy.username would be set if the user ran
+paver deploy -u my-user-name. Note that an equivalent command line would be
+paver deploy.username=my-user-name deploy</p>
+<p>For fine-tuning, you may add <tt class="docutils literal"><span class="pre">optparse.Option</span></tt> instances:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@tasks.task</span>
+<span class="nd">@tasks.cmdopts</span><span class="p">([</span>
+    <span class="n">make_option</span><span class="p">(</span><span class="s">&quot;-f&quot;</span><span class="p">,</span> <span class="s">&quot;--foo&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s">&quot;foo&quot;</span><span class="p">)</span>
+<span class="p">])</span>
+<span class="k">def</span> <span class="nf">foo_instead_of_spam_and_eggs</span><span class="p">(</span><span class="n">options</span><span class="p">):</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<p>You may share <tt class="docutils literal"><span class="pre">&#64;cmdopts</span></tt> between tasks. To do that and to avoid confusion,
+You have to add share_with argument:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@task</span>
+<span class="nd">@cmdopts</span><span class="p">([</span>
+    <span class="p">(</span><span class="s">&#39;username=&#39;</span><span class="p">,</span> <span class="s">&#39;u&#39;</span><span class="p">,</span> <span class="s">&#39;Username to use when logging in to the servers&#39;</span><span class="p">)</span>
+<span class="p">])</span>
+<span class="k">def</span> <span class="nf">deploy_to_linux</span><span class="p">(</span><span class="n">options</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+
+<span class="nd">@task</span>
+<span class="nd">@needs</span><span class="p">([</span><span class="s">&#39;deploy_to_linux&#39;</span><span class="p">])</span>
+<span class="nd">@cmdopts</span><span class="p">([</span>
+    <span class="p">(</span><span class="s">&#39;username=&#39;</span><span class="p">,</span> <span class="s">&#39;u&#39;</span><span class="p">,</span> <span class="s">&#39;Username to use when logging in to the servers&#39;</span><span class="p">)</span>
+<span class="p">],</span> <span class="n">share_with</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;deploy_to_linux&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">deploy</span><span class="p">(</span><span class="n">options</span><span class="p">):</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<p>For sharing, following must be fullfilled:</p>
+<ul class="simple">
+<li>Both long and short option names must be same</li>
+<li><tt class="docutils literal"><span class="pre">share_with</span></tt> argument must be specified on top-level task</li>
+</ul>
+<p>Otherwise, <tt class="docutils literal"><span class="pre">PavementError</span></tt> is raised.</p>
+</div>
+<div class="section" id="hiding-tasks">
+<h2>Hiding tasks<a class="headerlink" href="#hiding-tasks" title="Permalink to this headline">¶</a></h2>
+<p>Some tasks may only exist as a shared dependency between other tasks and may not
+make sense to be called directly.</p>
+<p>There is no way to provide that, however you can hide them from <tt class="docutils literal"><span class="pre">paver</span> <span class="pre">help</span></tt>
+to reduce noise. Just decorate function with <tt class="docutils literal"><span class="pre">&#64;no_help</span></tt> decorator:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@task</span>
+<span class="nd">@no_help</span>
+<span class="k">def</span> <span class="nf">hidden_dependency</span><span class="p">():</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<p>Of course, this should not be used usually. If task is not to be called at all,
+why not just make them a g&#8217;old function?</p>
+</div>
+<div class="section" id="more-complex-dependencies">
+<h2>More complex dependencies<a class="headerlink" href="#more-complex-dependencies" title="Permalink to this headline">¶</a></h2>
+<p><tt class="docutils literal"><span class="pre">&#64;needs</span></tt> might not cover all your needs. For example, depending on argument
+or environment, you might decide to call an appropriate task in the middle of
+another one.</p>
+<p>There are two key options for fixing that:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># ``@might_call`` decorator, which indicates that task might invoke ``call_task`` on one or more of the specified tasks. This allows you to provide command line options to task that might be called (it is inserted in dependency chain)::</span>
+</pre></div>
+</div>
+<blockquote>
+<p>&#64;task
+&#64;cmdopts([</p>
+<blockquote>
+(&#8216;username=&#8217;, &#8216;u&#8217;, &#8216;Whom to greet&#8217;)</blockquote>
+<p>], share_with=[&#8216;deploy_to_linux&#8217;])
+def say_hello(options):</p>
+<blockquote>
+<dl class="docutils">
+<dt>if not hasattr(options, &#8220;username&#8221;):</dt>
+<dd>print &#8216;SPAM&#8217;</dd>
+<dt>else:</dt>
+<dd>print &#8216;Hello, my dear user %s&#8217; % options.username</dd>
+</dl>
+</blockquote>
+<p>&#64;task
+&#64;might_call(&#8216;say_hello&#8217;)
+def greet_user(options):</p>
+<blockquote>
+<p>setup_environment()</p>
+<p>call_task(&#8216;say_hello&#8217;)</p>
+<p>do_cleanup()</p>
+</blockquote>
+</blockquote>
+<p># Providing options and arguments to another tasks directly. Options are provided with final assignet value:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@task</span>
+<span class="nd">@cmdopts</span><span class="p">([</span>
+    <span class="p">(</span><span class="s">&#39;long-username=&#39;</span><span class="p">,</span> <span class="s">&#39;u&#39;</span><span class="p">,</span> <span class="s">&#39;Whom to greet&#39;</span><span class="p">)</span>
+<span class="p">],</span> <span class="n">share_with</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;deploy_to_linux&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">say_hello</span><span class="p">(</span><span class="n">options</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="s">&quot;username&quot;</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s">&#39;SPAM&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">print</span> <span class="s">&#39;Hello, my dear user </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">options</span><span class="o">.</span><span class="n">long_username</span>
+
+
+<span class="nd">@task</span>
+<span class="k">def</span> <span class="nf">greet_user</span><span class="p">(</span><span class="n">options</span><span class="p">):</span>
+    <span class="n">call_task</span><span class="p">(</span><span class="s">&#39;say_hello&#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">{</span>
+        <span class="s">&#39;long_username&#39;</span> <span class="p">:</span> <span class="s">&#39;Kitty&#39;</span>
+    <span class="p">})</span>
+</pre></div>
+</div>
+<p>Console arguments (args) should be passed as in console:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@task</span>
+<span class="nd">@consume_args</span>
+<span class="k">def</span> <span class="nf">say_hello</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">print</span> <span class="s">&#39;Hello to ALL the users: </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="s">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+
+
+<span class="nd">@task</span>
+<span class="k">def</span> <span class="nf">greet_user</span><span class="p">(</span><span class="n">options</span><span class="p">):</span>
+    <span class="n">call_task</span><span class="p">(</span><span class="s">&#39;say_hello&#39;</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s">&#39;Arthur Pewtey&#39;</span><span class="p">,</span>
+        <span class="s">&#39;The Reverend Arthur Belling&#39;</span><span class="p">,</span>
+    <span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#">pavement.py in depth</a><ul>
+<li><a class="reference external" href="#defining-tasks">Defining Tasks</a></li>
+<li><a class="reference external" href="#manually-calling-tasks">Manually Calling Tasks</a></li>
+<li><a class="reference external" href="#how-task-names-work">How Task Names Work</a></li>
+<li><a class="reference external" href="#task-parameters">Task Parameters</a></li>
+<li><a class="reference external" href="#command-line-arguments">Command Line Arguments</a></li>
+<li><a class="reference external" href="#hiding-tasks">Hiding tasks</a></li>
+<li><a class="reference external" href="#more-complex-dependencies">More complex dependencies</a></li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="getting_started.html"
+                                  title="previous chapter">Getting Started with Paver</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="paverstdlib.html"
+                                  title="next chapter">The Paver Standard Library</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="_sources/pavement.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="paverstdlib.html" title="The Paver Standard Library"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="getting_started.html" title="Getting Started with Paver"
+             >previous</a> |</li>
+        <li><a href="index.html">Paver v1.1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2008, SitePen, Inc..
+      Last updated on Jan 23, 2012.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.6.
+    </div>
+  </body>
+</html>
