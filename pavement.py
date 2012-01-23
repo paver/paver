@@ -129,13 +129,13 @@ def publish_docs(options):
     try:
         safe_clone = path(mkdtemp(prefix='paver-clone-'))
         docs_repo = path(mkdtemp(prefix='paver-docs-'))
-        _, git = mkstemp(prefix='tmp-git-')
+        _, git = mkstemp(prefix='tmp-git-ssh-')
         git = path(git)
 
         # TODO: I strongly believe there have to be better way to provide custom
         # identity file for git, but cannot find one...so, workaround
         f = open(git, 'w')
-        f.writelines(["#!/bin/sh", os.linesep, "git%s" % (" -i "+options.deploy_key if getattr(options, "deploy_key", None) else "")])
+        f.writelines(["#!/bin/sh", os.linesep, "ssh%s" % (" -i "+options.deploy_key if getattr(options, "deploy_key", None) else "")])
         f.close()
 
         git.chmod(777)
