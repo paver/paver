@@ -107,12 +107,86 @@ def commit(args):
     sh("git commit " + ' '.join(args))
 
 @task
-@cmdopts([("username=", "u", "Username for remote server"),
-          ("server=", "s", "Server to deploy to")])
-def deploy():
-    """Copy the Paver website up."""
-    htmlfiles = path("paver/docs")
-    command = "rsync -avz -e ssh %s/ %s@%s:%s/" % \
-            (htmlfiles, options.username, options.server,
-             options.deploydir)
-    sh(command)
+@cmdopts([
+    ("branch=", "b", "Branch from which to publish"),
+    ("docs-branch=", "d", "Docs branch to commit/push to"),
+    ("git-repo=", "g", "Github repository to use"),
+    ("deploy-key=", "k", "Deploy key to use"),
+])
+def publish_docs(options):
+    """Publish current docs/site do paver.github.com"""
+
+    # we are going to mess around with files, so do it in temporary place
+    import os
+    from subprocess import check_call, CalledProcessError
+    from tempfile import mkdtemp, mkstemp
+
+    current_repo = path(os.curdir).abspath()
+    branch = getattr(options, 'branch', 'master')
+    docs_branch = getattr(options, 'docs_branch', 'gh-pages')
+    repo = getattr(options, 'git_repo', 'git@github.com:paver/paver.git')
+    key_params = []
+    if getattr(options, 'deploy_key', None):
+        key_params = ['']
+
+    try:
+        safe_clone = path(mkdtemp(prefix='paver-clone-'))
+        docs_repo = path(mkdtemp(prefix='paver-docs-'))
+        _, git = mkstemp(prefix='tmp-git-')
+        git = path(git)
+
+        # TODO: I strongly believe there have to be better way to provide custom
+        # identity file for git, but cannot find one...so, workaround
+        f = open(git, 'w')
+        f.writelines(["#!/bin/sh", "git%s" % (" -i "+options.deploy_key if getattr(options, "deploy_key", None) else "")])
+        f.close()
+
+        git.chmod(700)
+
+
+        safe_clone.chdir()
+
+        sh('git init')
+
+        check_call(['git', 'remote', 'add', '-t', branch, '-f', 'origin', 'file://'+str(current_repo)], env={"GIT_SSH" : git})
+
+        check_call(['git', 'checkout', branch], env={"GIT_SSH" : git})
+
+        check_call(['python', os.path.join(str(current_repo), "distutils_scripts", "paver"), 'html'], env={
+            'PYTHONPATH' : os.path.join(str(current_repo))
+        })
+
+
+        docs_repo.chdir()
+
+        sh('git init')
+        check_call(['git', 'remote', 'add', '-t', branch, '-f', 'origin', 'file://'+str(current_repo)], env={"GIT_SSH" : git})
+        check_call(['git', 'checkout', branch], env={"GIT_SSH" : git})
+
+        docs = os.path.join(safe_clone, 'paver', 'docs')
+
+        for file in docs.glob("*"):
+            os.path.join(docs, file).move(docs_repo.join(file))
+
+
+        sh('git add *')
+
+        #TODO: '...from revision abc'
+        try:
+            check_call(['git', 'commit', '-a', '-m', "Commit auto-generated documentation"])
+        except CalledProcessError:
+            # usually 'working directory clean'
+            pass
+        else:
+            check_call(['git', 'push', 'origin', '%s:%s' % (docs_branch, docs_branch)], env={"GIT_SSH" : git})
+
+
+    finally:
+        safe_clone.rmtree()
+        docs_repo.rmtree()
+        git.remove()
+
+
+
+
+
