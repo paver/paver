@@ -134,7 +134,7 @@ def publish_docs(options):
         # TODO: I strongly believe there have to be better way to provide custom
         # identity file for git, but cannot find one...so, workaround
         f = os.fdopen(fd, 'w')
-        f.writelines(["#!/bin/sh", os.linesep, "ssh%s" % (" -i "+options.deploy_key if getattr(options, "deploy_key", None) else "")])
+        f.writelines(["#!/bin/sh", os.linesep, "ssh%s $*" % (" -i "+options.deploy_key if getattr(options, "deploy_key", None) else "")])
         f.close()
 
         os.chmod(git, 0777)
