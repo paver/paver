@@ -176,7 +176,7 @@ def publish_docs(options):
     finally:
         safe_clone.rmtree()
         docs_repo.rmtree()
-        os.path.remove(git)
+        os.remove(git)
 
 
 
