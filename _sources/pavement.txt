@@ -151,3 +151,122 @@ the ``options`` under a namespace matching the name of the task. In the
 case above, options.deploy.username would be set if the user ran
 paver deploy -u my-user-name. Note that an equivalent command line would be
 paver deploy.username=my-user-name deploy
+
+For fine-tuning, you may add ``optparse.Option`` instances::
+
+    @tasks.task
+    @tasks.cmdopts([
+        make_option("-f", "--foo", help="foo")
+    ])
+    def foo_instead_of_spam_and_eggs(options):
+        pass
+
+
+You may share ``@cmdopts`` between tasks. To do that and to avoid confusion,
+You have to add share_with argument::
+
+    @task
+    @cmdopts([
+        ('username=', 'u', 'Username to use when logging in to the servers')
+    ])
+    def deploy_to_linux(options):
+        pass
+
+
+    @task
+    @needs(['deploy_to_linux'])
+    @cmdopts([
+        ('username=', 'u', 'Username to use when logging in to the servers')
+    ], share_with=['deploy_to_linux'])
+    def deploy(options):
+        pass
+
+
+For sharing, following must be fullfilled:
+
+* Both long and short option names must be same
+* ``share_with`` argument must be specified on top-level task
+
+Otherwise, ``PavementError`` is raised.
+
+Hiding tasks
+---------------
+
+Some tasks may only exist as a shared dependency between other tasks and may not
+make sense to be called directly.
+
+There is no way to provide that, however you can hide them from ``paver help``
+to reduce noise. Just decorate function with ``@no_help`` decorator::
+
+    @task
+    @no_help
+    def hidden_dependency():
+        pass
+
+Of course, this should not be used usually. If task is not to be called at all,
+why not just make them a g'old function?
+
+More complex dependencies
+--------------------------
+
+``@needs`` might not cover all your needs. For example, depending on argument
+or environment, you might decide to call an appropriate task in the middle of
+another one.
+
+There are two key options for fixing that::
+
+# ``@might_call`` decorator, which indicates that task might invoke ``call_task`` on one or more of the specified tasks. This allows you to provide command line options to task that might be called (it is inserted in dependency chain)::
+
+    @task
+    @cmdopts([
+        ('username=', 'u', 'Whom to greet')
+    ], share_with=['deploy_to_linux'])
+    def say_hello(options):
+        if not hasattr(options, "username"):
+            print 'SPAM'
+        else:
+            print 'Hello, my dear user %s' % options.username
+
+
+    @task
+    @might_call('say_hello')
+    def greet_user(options):
+        setup_environment()
+
+        call_task('say_hello')
+
+        do_cleanup()
+
+# Providing options and arguments to another tasks directly. Options are provided with final assignet value::
+
+    @task
+    @cmdopts([
+        ('long-username=', 'u', 'Whom to greet')
+    ], share_with=['deploy_to_linux'])
+    def say_hello(options):
+        if not hasattr(options, "username"):
+            print 'SPAM'
+        else:
+            print 'Hello, my dear user %s' % options.long_username
+
+
+    @task
+    def greet_user(options):
+        call_task('say_hello', options={
+            'long_username' : 'Kitty'
+        })
+
+Console arguments (args) should be passed as in console::
+
+    @task
+    @consume_args
+    def say_hello(args):
+        print 'Hello to ALL the users: %s' % ', '.join(args)
+
+
+    @task
+    def greet_user(options):
+        call_task('say_hello', args = [
+            'Arthur Pewtey',
+            'The Reverend Arthur Belling',
+        ])

@@ -2,6 +2,13 @@
 Foreword: Why Paver?
 ********************
 
+    Paver occupies a sweet spot in the python toolset, the design is sound,
+    it's easier than mud to work with at a basic level, and it has a nice grade
+    of descent into more advanced things.
+
+    -- David Eyk
+
+
 I didn't want to make a new build tool. Honestly. The main reason that I created Paver
 is...
 

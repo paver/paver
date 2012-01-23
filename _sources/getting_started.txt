@@ -44,8 +44,8 @@ to build a source distribution::
   #    insert_output=False)
   # sh('ls -l docs/samples/started/oldway/dist')
   # ==>
-  celkem 4
-  -rw-r--r-- 1 lukas.linhart lukas.linhart 638 22. lis 16.59 TheOldWay-1.0.tar.gz
+  total 4
+  -rw-r--r-- 1 jenkins nogroup 615 Jan 23 14:58 TheOldWay-1.0.tar.gz
   # <==end==>
 
 Then your users can run the familiar::
@@ -180,7 +180,7 @@ above, or call ``paver.setuputils.install_distutils_tasks()``.
 We can see this in action by looking at ``paver help``::
 
   # <== sh('cd docs/samples/started/newway; paver help')==>
-  [?1034h---> paver.tasks.help
+  ---> paver.tasks.help
   Usage: paver [global options] taskname [task options] [taskname [taskoptions]]
 
   Options:
@@ -191,6 +191,9 @@ We can see this in action by looking at ``paver help``::
     -i, --interactive     enable prompting
     -f FILE, --file=FILE  read tasks from FILE [pavement.py]
     -h, --help            display this help information
+    --propagate-traceback
+                          propagate traceback, do not hide it under
+                          BuildFailure(for debugging)
 
   Tasks from distutils.command:
     bdist            - create a built (binary) distribution
@@ -214,13 +217,13 @@ We can see this in action by looking at ``paver help``::
     uncog            - Remove the Cog generated code from files
 
   Tasks from paver.misctasks:
-    generate_setup   - Generates a setup
+    generate_setup   - Generates a setup.py file that uses paver behind the scenes
     minilib          - Create a Paver mini library that contains enough for a simple
-      pavement
-    paverdocs        - Open your web browser and display Paver's documentation
+      pavement.py to be installed using a generated setup.py
+    paverdocs        - Open your web browser and display Paver's documentation.
 
   Tasks from paver.tasks:
-    help             - This help display
+    help             - This help display.
 
   Tasks from setuptools.command:
     alias            - define a shortcut to invoke one or more commands
@@ -248,9 +251,9 @@ We can see this in action by looking at ``paver help``::
     build_sphinx     - Build Sphinx documentation
 
   Tasks from pavement:
-    deploy           - Deploy the HTML to the server
-    html             - Build the docs and put them into our package
-    sdist            - Overrides sdist to make sure that our setup
+    deploy           - Deploy the HTML to the server.
+    html             - Build the docs and put them into our package.
+    sdist            - Overrides sdist to make sure that our setup.py is generated.
   # <==end==>
 
 That command is listing all of the available tasks, and you can see
@@ -275,8 +278,8 @@ equivalent output file::
   #    insert_output=False)
   # sh('ls -l docs/samples/started/newway/dist')
   # ==>
-  celkem 32
-  -rw-r--r-- 1 lukas.linhart lukas.linhart 28971 22. lis 17.00 TheNewWay-1.0.tar.gz
+  total 32
+  -rw-r--r-- 1 jenkins nogroup 30820 Jan 23 14:59 TheNewWay-1.0.tar.gz
   # <==end==>
 
 It also means that users of The New Way can also run ``paver install``
@@ -313,7 +316,7 @@ Worried about bloating your package? The paver-minilib is not large::
   #    insert_output=False)
   # sh('ls -l docs/samples/started/newway/paver-minilib.zip')
   # ==>
-  -rw-r--r-- 1 lukas.linhart lukas.linhart 27309 22. lis 17.00 docs/samples/started/newway/paver-minilib.zip
+  -rw-r--r-- 1 jenkins nogroup 29231 Jan 23 14:59 docs/samples/started/newway/paver-minilib.zip
   # <==end==>
 
 Paver itself is bootstrapped with a generated setup file and a
@@ -353,6 +356,9 @@ With that task in our pavement.py, ``paver sdist`` is all it takes
 to build a source distribution after generating a setup file
 and minilib.
 
+.. note:: If you are depending on distutils task (via @needs), you have to call ``setup()`` before task is defined.
+   Under the hood, ``setup`` call installs distutils/setupsools task and make them available, so do not make it conditional.
+
 Tackling the Docs
 -----------------
 
@@ -367,7 +373,7 @@ the import will make the doctools-related tasks available.
 ``paver help html`` will tell us how to use the html command::
 
   # <== sh('paver help paver.doctools.html')==>
-  [?1034h---> paver.tasks.help
+  ---> paver.tasks.help
 
   paver.doctools.html
   -------------------

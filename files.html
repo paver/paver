@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>File Handling in Paver (paver.path) &mdash; Paver v1.0.5 documentation</title>
+    <title>File Handling in Paver (paver.path) &mdash; Paver v1.1.0 documentation</title>
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '1.0.5',
+        VERSION:     '1.1.0',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -19,7 +19,7 @@
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Paver v1.0.5 documentation" href="index.html" />
+    <link rel="top" title="Paver v1.1.0 documentation" href="index.html" />
     <link rel="up" title="The Paver Standard Library" href="paverstdlib.html" />
     <link rel="next" title="Documentation Tools (paver.doctools)" href="doctools.html" />
     <link rel="prev" title="distutils and setuptools (paver.setuputils)" href="setuptools.html" /> 
@@ -40,7 +40,7 @@
         <li class="right" >
           <a href="setuptools.html" title="distutils and setuptools (paver.setuputils)"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">Paver v1.0.5 documentation</a> &raquo;</li>
+        <li><a href="index.html">Paver v1.1.0 documentation</a> &raquo;</li>
           <li><a href="paverstdlib.html" accesskey="U">The Paver Standard Library</a> &raquo;</li> 
       </ul>
     </div>  
@@ -204,8 +204,8 @@ of all the files users have in their bin directories.</p>
 
 <dl class="method">
 <dt id="paver.path25.path.isdir">
-<tt class="descname">isdir</tt><big>(</big><em>path</em><big>)</big><a class="headerlink" href="#paver.path25.path.isdir" title="Permalink to this definition">¶</a></dt>
-<dd>Test whether a path is a directory</dd></dl>
+<tt class="descname">isdir</tt><big>(</big><em>s</em><big>)</big><a class="headerlink" href="#paver.path25.path.isdir" title="Permalink to this definition">¶</a></dt>
+<dd>Return true if the pathname refers to an existing directory.</dd></dl>
 
 <dl class="method">
 <dt id="paver.path25.path.isfile">
@@ -308,6 +308,22 @@ but          path(&#8216;/home/guido/python.tar.gz&#8217;).namebase == &#8216;py
 <tt class="descname">parent</tt><a class="headerlink" href="#paver.path25.path.parent" title="Permalink to this definition">¶</a></dt>
 <dd><p>This path&#8217;s parent directory, as a new path object.</p>
 <p>For example, path(&#8216;/usr/local/lib/libpython.so&#8217;).parent == path(&#8216;/usr/local/lib&#8217;)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="paver.path25.path.read_hash">
+<tt class="descname">read_hash</tt><big>(</big><em>hash_name</em><big>)</big><a class="headerlink" href="#paver.path25.path.read_hash" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate given hash for this file.</p>
+<p>List of supported hashes can be obtained from hashlib package. This
+reads the entire file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="paver.path25.path.read_hexhash">
+<tt class="descname">read_hexhash</tt><big>(</big><em>hash_name</em><big>)</big><a class="headerlink" href="#paver.path25.path.read_hexhash" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate given hash for this file, returning hexdigest.</p>
+<p>List of supported hashes can be obtained from hashlib package. This
+reads the entire file.</p>
 </dd></dl>
 
 <dl class="method">
@@ -645,13 +661,13 @@ The original directory is returned. Usage is like this:</p>
         <li class="right" >
           <a href="setuptools.html" title="distutils and setuptools (paver.setuputils)"
              >previous</a> |</li>
-        <li><a href="index.html">Paver v1.0.5 documentation</a> &raquo;</li>
+        <li><a href="index.html">Paver v1.1.0 documentation</a> &raquo;</li>
           <li><a href="paverstdlib.html" >The Paver Standard Library</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
       &copy; Copyright 2008, SitePen, Inc..
-      Last updated on Oct 21, 2011.
+      Last updated on Jan 23, 2012.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.6.
     </div>
   </body>

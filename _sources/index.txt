@@ -6,14 +6,16 @@ Paver: Easy Scripting for Software Projects
     :height: 126
     :width: 240
 
-New! Read the docs `in Japanese <http://paver.github.com/paver-docs-jp/>`_ thanks to
-Tetsuya Morimoto.
+`Japanese translation available <http://paver.github.com/paver-docs-jp/>`_
+thanks to Tetsuya Morimoto. Latest stable documentation is
+`on PyPI <http://packages.python.org/Paver/>`_, latest development docs are
+`on github pages <http://paver.github.com/>`_
 
 Paver is a Python-based software project scripting tool along the
 lines of Make or Rake. It is not designed to handle the dependency
 tracking requirements of, for example, a C program. It *is* designed
 to help out with all of your other repetitive tasks (run documentation
-generators, moving files about, downloading things), all with the
+generators, moving files around, downloading things), all with the
 convenience of Python's syntax and massive library of code.
 
 If you're developing applications in Python, you get even more...
@@ -102,13 +104,38 @@ Help and Development
 
 You can get help from the `mailing list`_.
 
-If you'd like to help out with Paver, you can check the code out from Googlecode:
+If you'd like to help out with Paver, you can check the code out from github:
 
-``svn checkout http://paver.googlecode.com/svn/trunk/ paver-read-only``
+``git clone https://github.com/paver/paver.git``
 
-You can also take a look at `Paver's project page on Googlecode <http://code.google.com/p/paver/>`_.
+Ideally, create a fork, fix an issue from `Paver's list of issues`_ (or create an issue
+Yourself) and send a pull request.
+
+Your help is appreciated!
+
+Running test suite
+===================
+
+Paver contains both unit and integration test suite. Unittests are run by either
+``paver test`` or ``paver unit``. Integration tests can be run by ``paver integrate``.
+
+Using older, system-wide installed paver to run tests on development version can lead
+to bad interactions (see `issue 33`_). Please, run paver test suite using development
+version itself, by:
+
+* Creating virtual environment with --no-site-packages
+
+and
+
+* Installing development version with python setup.py develop
+
+or
+
+* Using embedded minilib, thus invoking commands with setup.py instead of paver
 
 .. _mailing list: http://groups.google.com/group/paver
+.. _Paver's list of issues: https://github.com/paver/paver/issues
+.. _issue 33: https://github.com/paver/paver/issues/33
 
 License
 -------

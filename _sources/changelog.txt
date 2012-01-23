@@ -3,9 +3,32 @@
 Paver Changelog
 ===============
 
-1.0.4 (unreleased)
-------------------
+1.1.0 (TBA)
+------------------------
+* Minilib is now imported only if full paver is not available (github `issue #13 <https://github.com/paver/paver/issues/13>`_)
+* Option instances may now be passed to @cmdopts (github issues `#41 <https://github.com/paver/paver/issues/41>`_ and `#42 <https://github.com/paver/paver/issues/42>`_, thanks to David Cramer)
+* ``--propagate-traceback`` option for debugging ``BuildFailure``s (github issue `#43 <https://github.com/paver/paver/issues/43>`_)
+* Fix misleading error message when non-task is passed to ``@needs`` (github issue `#37 <https://github.com/paver/paver/issues/37>`_)
+* ``@no_help`` to provide a way to hide task from ``paver help`` (github issue `#36 <https://github.com/paver/paver/issues/36>`_)
+* ``@might_call`` for more complex dependencies (see docs, not only github issue `#16 <https://github.com/paver/paver/issues/16>`_)
+* bundled path.py upgraded to patched version 2.2.2 (github issue `#15 <https://github.com/paver/paver/issues/15>`_)
+
+1.0.5 (October 21, 2011)
+------------------------
+* Ability to share command line options between tasks (github issue `#7 <https://github.com/paver/paver/issues/issue/7>`_)
+* Flush after print (github issue `#17 <https://github.com/paver/paver/issues/issue/17>`_, thanks to Honza Kral)
+* Minilib is now compatible with zipimport (github issue `#19 <https://github.com/paver/paver/issues/issue/19>`_, thanks to Piet Delport)
+* Auto task is now properly not called when target task is decorated with no_auto (github issue `#4 <https://github.com/paver/paver/issues/issue/24>`_)
+
+1.0.4 (January 16, 2011)
+------------------------
 * Fixed md5 deprecation warnings in the bundled cog (thanks to jszakmeister, issue #56)
+* Project moved to github
+* Fixed problems with negative command-line options for distutils (thanks to Nao Nakashima for bugreport, github `issue #2 <https://github.com/paver/paver/issues/2>`_)
+* Japanese translation moved to `https://github.com/paver/paver-docs-jp  <http://paver.github.com/paver-docs-jp/>`_
+* Tasks take cmdopts even from grandparents (thanks to aurelianito, github issue #4)
+* Task description is taken from the first sentence, where the end of the sentence is dot followed by alphanumeric character (google code bug #44). Description is also stripped now.
+
 
 1.0.3 (June 1, 2010)
 --------------------

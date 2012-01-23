@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Paver: Easy Scripting for Software Projects &mdash; Paver v1.0.5 documentation</title>
+    <title>Paver: Easy Scripting for Software Projects &mdash; Paver v1.1.0 documentation</title>
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '1.0.5',
+        VERSION:     '1.1.0',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -19,7 +19,7 @@
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Paver v1.0.5 documentation" href="#" />
+    <link rel="top" title="Paver v1.1.0 documentation" href="#" />
     <link rel="next" title="Foreword: Why Paver?" href="foreword.html" /> 
   </head>
   <body>
@@ -35,7 +35,7 @@
         <li class="right" >
           <a href="foreword.html" title="Foreword: Why Paver?"
              accesskey="N">next</a> |</li>
-        <li><a href="#">Paver v1.0.5 documentation</a> &raquo;</li> 
+        <li><a href="#">Paver v1.1.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -48,12 +48,14 @@
 <h1>Paver: Easy Scripting for Software Projects<a class="headerlink" href="#paver-easy-scripting-for-software-projects" title="Permalink to this headline">¶</a></h1>
 <img alt="_images/paver_banner.jpg" src="_images/paver_banner.jpg" style="width: 240px; height: 126px;" />
 <p><a class="reference external" href="http://paver.github.com/paver-docs-jp/">Japanese translation available</a>
-thanks to Tetsuya Morimoto.</p>
+thanks to Tetsuya Morimoto. Latest stable documentation is
+<a class="reference external" href="http://packages.python.org/Paver/">on PyPI</a>, latest development docs are
+<a class="reference external" href="http://paver.github.com/">on github pages</a></p>
 <p>Paver is a Python-based software project scripting tool along the
 lines of Make or Rake. It is not designed to handle the dependency
 tracking requirements of, for example, a C program. It <em>is</em> designed
 to help out with all of your other repetitive tasks (run documentation
-generators, moving files about, downloading things), all with the
+generators, moving files around, downloading things), all with the
 convenience of Python&#8217;s syntax and massive library of code.</p>
 <p>If you&#8217;re developing applications in Python, you get even more...
 Most public Python projects use distutils or setuptools to create source
@@ -133,6 +135,25 @@ attention is paid to backwards compatibility since the release of 1.0.</p>
 <p>Ideally, create a fork, fix an issue from <a class="reference external" href="https://github.com/paver/paver/issues">Paver&#8217;s list of issues</a> (or create an issue
 Yourself) and send a pull request.</p>
 <p>Your help is appreciated!</p>
+<div class="section" id="running-test-suite">
+<h3>Running test suite<a class="headerlink" href="#running-test-suite" title="Permalink to this headline">¶</a></h3>
+<p>Paver contains both unit and integration test suite. Unittests are run by either
+<tt class="docutils literal"><span class="pre">paver</span> <span class="pre">test</span></tt> or <tt class="docutils literal"><span class="pre">paver</span> <span class="pre">unit</span></tt>. Integration tests can be run by <tt class="docutils literal"><span class="pre">paver</span> <span class="pre">integrate</span></tt>.</p>
+<p>Using older, system-wide installed paver to run tests on development version can lead
+to bad interactions (see <a class="reference external" href="https://github.com/paver/paver/issues/33">issue 33</a>). Please, run paver test suite using development
+version itself, by:</p>
+<ul class="simple">
+<li>Creating virtual environment with &#8211;no-site-packages</li>
+</ul>
+<p>and</p>
+<ul class="simple">
+<li>Installing development version with python setup.py develop</li>
+</ul>
+<p>or</p>
+<ul class="simple">
+<li>Using embedded minilib, thus invoking commands with setup.py instead of paver</li>
+</ul>
+</div>
 </div>
 <div class="section" id="license">
 <h2>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h2>
@@ -168,6 +189,8 @@ distribution.</p>
 <li class="toctree-l2"><a class="reference external" href="pavement.html#how-task-names-work">How Task Names Work</a></li>
 <li class="toctree-l2"><a class="reference external" href="pavement.html#task-parameters">Task Parameters</a></li>
 <li class="toctree-l2"><a class="reference external" href="pavement.html#command-line-arguments">Command Line Arguments</a></li>
+<li class="toctree-l2"><a class="reference external" href="pavement.html#hiding-tasks">Hiding tasks</a></li>
+<li class="toctree-l2"><a class="reference external" href="pavement.html#more-complex-dependencies">More complex dependencies</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference external" href="paverstdlib.html">The Paver Standard Library</a><ul>
@@ -176,6 +199,7 @@ distribution.</p>
 <li class="toctree-l2"><a class="reference external" href="doctools.html">Documentation Tools (paver.doctools)</a></li>
 <li class="toctree-l2"><a class="reference external" href="misctasks.html">Miscellaneous Tasks (paver.misctasks)</a></li>
 <li class="toctree-l2"><a class="reference external" href="virtualenv.html">Virtualenv Support (paver.virtual)</a></li>
+<li class="toctree-l2"><a class="reference external" href="virtualenv.html#using-virtualenv-with-tasks">Using virtualenv with tasks</a></li>
 <li class="toctree-l2"><a class="reference external" href="virtualenv.html#module-paver.virtual">paver.virtual Tasks</a></li>
 <li class="toctree-l2"><a class="reference external" href="svn.html">Using with Subversion (paver.svn)</a></li>
 <li class="toctree-l2"><a class="reference external" href="bzr.html">Using with Bazaar-NG (bzr) (paver.bzr)</a></li>
@@ -189,6 +213,7 @@ distribution.</p>
 </li>
 <li class="toctree-l1"><a class="reference external" href="articles.html">Articles about Paver</a></li>
 <li class="toctree-l1"><a class="reference external" href="changelog.html">Paver Changelog</a><ul>
+<li class="toctree-l2"><a class="reference external" href="changelog.html#tba">1.1.0 (TBA)</a></li>
 <li class="toctree-l2"><a class="reference external" href="changelog.html#october-21-2011">1.0.5 (October 21, 2011)</a></li>
 <li class="toctree-l2"><a class="reference external" href="changelog.html#january-16-2011">1.0.4 (January 16, 2011)</a></li>
 <li class="toctree-l2"><a class="reference external" href="changelog.html#june-1-2010">1.0.3 (June 1, 2010)</a></li>
@@ -204,7 +229,7 @@ distribution.</p>
 <li class="toctree-l2"><a class="reference external" href="changelog.html#may-19-2008">0.8 (May 19, 2008)</a></li>
 <li class="toctree-l2"><a class="reference external" href="changelog.html#may-16-2008">0.7.3 (May 16, 2008)</a></li>
 <li class="toctree-l2"><a class="reference external" href="changelog.html#may-8-2008">0.7.2 (May 8, 2008)</a></li>
-<li class="toctree-l2"><a class="reference external" href="changelog.html#id5">0.7.1 (May 8, 2008)</a></li>
+<li class="toctree-l2"><a class="reference external" href="changelog.html#id14">0.7.1 (May 8, 2008)</a></li>
 <li class="toctree-l2"><a class="reference external" href="changelog.html#may-7-2008">0.7 (May 7, 2008)</a></li>
 <li class="toctree-l2"><a class="reference external" href="changelog.html#april-22-2008">0.4 (April 22, 2008)</a></li>
 </ul>
@@ -234,7 +259,10 @@ distribution.</p>
 <li><a class="reference external" href="#features">Features</a></li>
 <li><a class="reference external" href="#status">Status</a></li>
 <li><a class="reference external" href="#installation">Installation</a></li>
-<li><a class="reference external" href="#help-and-development">Help and Development</a></li>
+<li><a class="reference external" href="#help-and-development">Help and Development</a><ul>
+<li><a class="reference external" href="#running-test-suite">Running test suite</a></li>
+</ul>
+</li>
 <li><a class="reference external" href="#license">License</a></li>
 <li><a class="reference external" href="#contents">Contents</a><ul>
 </ul>
@@ -281,12 +309,12 @@ distribution.</p>
         <li class="right" >
           <a href="foreword.html" title="Foreword: Why Paver?"
              >next</a> |</li>
-        <li><a href="#">Paver v1.0.5 documentation</a> &raquo;</li> 
+        <li><a href="#">Paver v1.1.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
       &copy; Copyright 2008, SitePen, Inc..
-      Last updated on Oct 21, 2011.
+      Last updated on Jan 23, 2012.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.6.
     </div>
   </body>

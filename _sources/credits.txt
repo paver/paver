@@ -3,8 +3,9 @@
 Credits
 =======
 
+* Kevin Dangoor is the original author, designer and coder.
 * The Paver project has gotten patches from Juergen Hermann, Marc Sibson,
-  Greg Thornton, Michael Greene, Krys Wilken and Bryan Forbes.
+  Greg Thornton, Michael Greene, Krys Wilken, Bryan Forbes and Ryan Wilcox.
 * Ned Batchelder's "cog" package is included for handling inclusion of files
   into the docs.
 * Ian Bicking provided a lot of great input prior to Paver's initial release

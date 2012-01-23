@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Getting Started with Paver &mdash; Paver v1.0.5 documentation</title>
+    <title>Getting Started with Paver &mdash; Paver v1.1.0 documentation</title>
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '1.0.5',
+        VERSION:     '1.1.0',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -19,7 +19,7 @@
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Paver v1.0.5 documentation" href="index.html" />
+    <link rel="top" title="Paver v1.1.0 documentation" href="index.html" />
     <link rel="next" title="pavement.py in depth" href="pavement.html" />
     <link rel="prev" title="Paver’s Features" href="features.html" /> 
   </head>
@@ -39,7 +39,7 @@
         <li class="right" >
           <a href="features.html" title="Paver’s Features"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">Paver v1.0.5 documentation</a> &raquo;</li> 
+        <li><a href="index.html">Paver v1.1.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -85,8 +85,8 @@ package. We create a setup.py file that looks like this:</p>
 #    insert_output=False)
 # sh('ls -l docs/samples/started/oldway/dist')
 # ==&gt;
-celkem 4
--rw-r--r-- 1 almad almad 626 21. říj 17.09 TheOldWay-1.0.tar.gz
+total 4
+-rw-r--r-- 1 jenkins nogroup 615 Jan 23 14:58 TheOldWay-1.0.tar.gz
 # &lt;==end==&gt;</pre>
 </div>
 <p>Then your users can run the familiar:</p>
@@ -214,6 +214,9 @@ Options:
   -i, --interactive     enable prompting
   -f FILE, --file=FILE  read tasks from FILE [pavement.py]
   -h, --help            display this help information
+  --propagate-traceback
+                        propagate traceback, do not hide it under
+                        BuildFailure(for debugging)
 
 Tasks from distutils.command:
   bdist            - create a built (binary) distribution
@@ -224,6 +227,7 @@ Tasks from distutils.command:
   clean            - clean up temporary files from 'build' command
   install_data     - install data files
   install_headers  - install C/C++ header files
+  upload           - upload binary package to PyPI
 
 Tasks from nose.commands:
   nosetests        - Run unit tests using nosetests
@@ -294,8 +298,8 @@ equivalent output file:</p>
 #    insert_output=False)
 # sh('ls -l docs/samples/started/newway/dist')
 # ==&gt;
-celkem 32
--rw-r--r-- 1 almad almad 29050 21. říj 17.09 TheNewWay-1.0.tar.gz
+total 32
+-rw-r--r-- 1 jenkins nogroup 30820 Jan 23 14:59 TheNewWay-1.0.tar.gz
 # &lt;==end==&gt;</pre>
 </div>
 <p>It also means that users of The New Way can also run <tt class="docutils literal"><span class="pre">paver</span> <span class="pre">install</span></tt>
@@ -326,7 +330,7 @@ for that file and use it if it sees it.</p>
 #    insert_output=False)
 # sh('ls -l docs/samples/started/newway/paver-minilib.zip')
 # ==&gt;
--rw-r--r-- 1 almad almad 27499 21. říj 17.09 docs/samples/started/newway/paver-minilib.zip
+-rw-r--r-- 1 jenkins nogroup 29231 Jan 23 14:59 docs/samples/started/newway/paver-minilib.zip
 # &lt;==end==&gt;</pre>
 </div>
 <p>Paver itself is bootstrapped with a generated setup file and a
@@ -362,6 +366,11 @@ help output.</p>
 <p>With that task in our pavement.py, <tt class="docutils literal"><span class="pre">paver</span> <span class="pre">sdist</span></tt> is all it takes
 to build a source distribution after generating a setup file
 and minilib.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If you are depending on distutils task (via &#64;needs), you have to call <tt class="docutils literal"><span class="pre">setup()</span></tt> before task is defined.
+Under the hood, <tt class="docutils literal"><span class="pre">setup</span></tt> call installs distutils/setupsools task and make them available, so do not make it conditional.</p>
+</div>
 </div>
 <div class="section" id="tackling-the-docs">
 <h3>Tackling the Docs<a class="headerlink" href="#tackling-the-docs" title="Permalink to this headline">¶</a></h3>
@@ -672,12 +681,12 @@ projects.</p>
         <li class="right" >
           <a href="features.html" title="Paver’s Features"
              >previous</a> |</li>
-        <li><a href="index.html">Paver v1.0.5 documentation</a> &raquo;</li> 
+        <li><a href="index.html">Paver v1.1.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
       &copy; Copyright 2008, SitePen, Inc..
-      Last updated on Oct 21, 2011.
+      Last updated on Jan 23, 2012.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.6.
     </div>
   </body>
