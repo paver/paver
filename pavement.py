@@ -130,7 +130,6 @@ def publish_docs(options):
         safe_clone = path(mkdtemp(prefix='paver-clone-'))
         docs_repo = path(mkdtemp(prefix='paver-docs-'))
         _, git = mkstemp(prefix='tmp-git-ssh-')
-        git = path(git)
 
         # TODO: I strongly believe there have to be better way to provide custom
         # identity file for git, but cannot find one...so, workaround
@@ -177,7 +176,7 @@ def publish_docs(options):
     finally:
         safe_clone.rmtree()
         docs_repo.rmtree()
-        git.remove()
+        os.path.remove(git)
 
 
 
