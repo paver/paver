@@ -166,7 +166,7 @@ def publish_docs(options):
         docs = os.path.join(safe_clone, 'paver', 'docs')
 
         for file in docs.glob("*"):
-            os.path.join(docs, file).move(docs_repo.join(file))
+            os.path.join(docs, file).move(os.path.join(str(docs_repo), file))
 
 
         sh('git add *')
