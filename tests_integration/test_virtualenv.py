@@ -50,7 +50,9 @@ def t1():
             f.close()
 
             chdir(pavement_dir)
-            check_call(["paver", "t1"])
+
+            paver_bin = join(dirname(__file__), pardir, 'distutils_scripts', 'paver')
+            check_call(['python', paver_bin, "t1"], env={'PYTHONPATH' : join(dirname(__file__), pardir)})
 
         finally:
             rmtree(pavement_dir)
