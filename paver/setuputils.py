@@ -42,6 +42,15 @@ standard_exclude = ('*.py', '*.pyc', '*~', '.*', '*.bak', '*.swp*')
 standard_exclude_directories = ('.*', 'CVS', '_darcs', './build',
                                 './dist', 'EGG-INFO', '*.egg-info')
 
+
+def _dispatch_setuptools_install(distribution, command_name):
+    cmd = distribution.get_command_obj(command_name)
+    cmd.do_egg_install()
+
+_extra_command_dispatch = {
+    'setuptools.command.install.install': _dispatch_setuptools_install,
+}
+
 def find_package_data(
     where='.', package='',
     exclude=standard_exclude,
@@ -148,7 +157,11 @@ class DistutilsTask(tasks.Task):
         opt_dict = self.distribution.get_option_dict(self.command_name)
         for (name, value) in options.items():
             opt_dict[name.replace('-', '_')] = ("command line", value)
-        self.distribution.run_command(self.command_name)
+
+        if str(self.command_class) in _extra_command_dispatch:
+            _extra_command_dispatch[str(self.command_class)](self.distribution, self.command_name)
+        else:
+            self.distribution.run_command(self.command_name)
         
     @property
     def description(self):
