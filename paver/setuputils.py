@@ -3,7 +3,6 @@
 import re
 import os
 import sys
-import distutils
 from fnmatch import fnmatchcase
 from distutils.util import convert_path
 from distutils import log
@@ -42,11 +41,23 @@ standard_exclude = ('*.py', '*.pyc', '*~', '.*', '*.bak', '*.swp*')
 standard_exclude_directories = ('.*', 'CVS', '_darcs', './build',
                                 './dist', 'EGG-INFO', '*.egg-info')
 
-
 def _dispatch_setuptools_install(distribution, command_name):
+    """
+    setuptools hack:
+    - setuptools check where is `install` command called from:
+    - if it's not called directly (case of paver), use `install` from distutils
+        (no deps handling)
+    - if it's called directly, it handles `install_requires` deps as well
+        (which is what we want, but what we do not get... until this hack)
+    """
     cmd = distribution.get_command_obj(command_name)
-    cmd.do_egg_install()
+    if hasattr(cmd, 'do_egg_install'):
+        cmd.do_egg_install()
+    else:
+        print >> sys.stderr, "Setuptools install-dependencies hack failed"
+        distribution.run_command(command_name)
 
+# storage of extra dispatchers for distutils/setuptools commands
 _extra_command_dispatch = {
     'setuptools.command.install.install': _dispatch_setuptools_install,
 }
@@ -158,6 +169,7 @@ class DistutilsTask(tasks.Task):
         for (name, value) in options.items():
             opt_dict[name.replace('-', '_')] = ("command line", value)
 
+        # see if we don't have extra dispatcher for command
         if str(self.command_class) in _extra_command_dispatch:
             _extra_command_dispatch[str(self.command_class)](self.distribution, self.command_name)
         else:
