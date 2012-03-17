@@ -15,6 +15,7 @@ Paver Changelog
 * correctly handle dependencies in ``install_requires`` directive for `setup.py install` command (github issue `#49 <https://github.com/paver/paver/issues/49>`_)
 * fix creating virtualenv (github issue `#44 <https://github.com/paver/paver/issues/44>`_)
 * fix virtualenv example in docs (github issue `#48 <https://github.com/paver/paver/issues/48>`_)
+* path.rename() do not call rename twice (github issue `#47 <https://github.com/paver/paver/issues/47>`_)
 
 1.0.5 (October 21, 2011)
 ------------------------
