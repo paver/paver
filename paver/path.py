@@ -901,7 +901,6 @@ class path(_base):
 
     def rename(self, new):
         dry("rename %s to %s" % (self, new), os.rename, self, new)
-        os.rename(self, new)
 
     def renames(self, new):
         dry("renames %s to %s" % (self, new), os.renames, self, new)
