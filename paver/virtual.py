@@ -6,7 +6,7 @@ from paver.path import path
 from paver.release import setup_meta
 
 try:
-    import virtualenv
+    import virtualenv as venv
     has_virtualenv = True
 except ImportError:
     has_virtualenv = False
@@ -50,7 +50,7 @@ def after_install(options, home_dir):
             extra_text += "    subprocess.call([join(bin_dir, 'paver'),%s)" % repr(command_list)[1:]
 
         extra_text += more_text
-        bootstrap_contents = virtualenv.create_bootstrap_script(extra_text)
+        bootstrap_contents = venv.create_bootstrap_script(extra_text)
         fn = script_name
         
         debug("Bootstrap script extra text: " + extra_text)

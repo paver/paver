@@ -13,6 +13,7 @@ Paver Changelog
 * ``@might_call`` for more complex dependencies (see docs, not only github issue `#16 <https://github.com/paver/paver/issues/16>`_)
 * bundled path.py upgraded to patched version 2.2.2 (github issue `#15 <https://github.com/paver/paver/issues/15>`_)
 * correctly handle dependencies in ``install_requires`` directive for `setup.py install` command (github issue `#49 <https://github.com/paver/paver/issues/49>`_)
+* fix creating virtualenv (github issue `#44 <https://github.com/paver/paver/issues/44>`_)
 
 1.0.5 (October 21, 2011)
 ------------------------
