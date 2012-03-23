@@ -1,20 +1,19 @@
 """Miscellaneous tasks that don't fit into one of the other groupings."""
-import os
 import pkgutil
 import zipfile
 from StringIO import StringIO
-
+from os.path import join, dirname, exists, abspath
 from paver.easy import dry, task
+from paver.tasks import VERSION
 
-_docsdir = os.path.join(os.path.dirname(__file__), "docs")
-if os.path.exists(_docsdir):
+_docsdir = join(dirname(__file__), "docs")
+if exists(_docsdir):
     @task
     def paverdocs():
         """Open your web browser and display Paver's documentation."""
         import webbrowser
-        webbrowser.open("file://"
-            + (os.path.join(os.path.abspath(_docsdir), 'index.html')))
-
+        webbrowser.open("file://%s"  % join(abspath(_docsdir), 'index.html') )
+        
 @task
 def minilib(options):
     """Create a Paver mini library that contains enough for a simple
@@ -33,7 +32,7 @@ def minilib(options):
     filelist = ['__init__', 'defaults', 'path', 'path25', 'release',
                 'setuputils', "misctasks", "options", "tasks", "easy"]
     filelist.extend(options.get('extra_files', []))
-    output_file = 'paver-minilib.zip'
+    output_file = 'paver-minilib-%s.zip' % VERSION
 
     def generate_zip():
         # Write the mini library to a buffer.
@@ -57,21 +56,19 @@ def generate_setup():
     setup.py file will look in the directory that the user is running it
     in for a paver-minilib.zip and will add that to sys.path if available.
     Otherwise, it will just assume that paver is available."""
-    from paver.easy import dry
     def write_setup():
         setup = open("setup.py", "w")
         setup.write("""try:
     import paver.tasks
 except ImportError:
     import os
-    if os.path.exists("paver-minilib.zip"):
+    if os.path.exists("paver-minilib-%(VERSION)s.zip"):
         import sys
-        sys.path.insert(0, "paver-minilib.zip")
+        sys.path.insert(0, "paver-minilib-%(VERSION)s.zip")
     import paver.tasks
 
 paver.tasks.main()
-""")
+""" % {'VERSION': VERSION})
         setup.close()
 
     dry("Write setup.py", write_setup)
-
