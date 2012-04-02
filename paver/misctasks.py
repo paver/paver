@@ -61,8 +61,8 @@ def generate_setup():
         setup.write("""try:
     import paver.tasks
 except ImportError:
-    import os
-    if os.path.exists("paver-minilib-%(VERSION)s.zip"):
+    from os.path import exists
+    if exists("paver-minilib-%(VERSION)s.zip"):
         import sys
         sys.path.insert(0, "paver-minilib-%(VERSION)s.zip")
     import paver.tasks

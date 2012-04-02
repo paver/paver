@@ -3,6 +3,7 @@
 import re
 import os
 import sys
+from os.path import *
 from fnmatch import fnmatchcase
 from distutils.util import convert_path
 from distutils import log
@@ -102,8 +103,8 @@ def find_package_data(
     while stack:
         where, prefix, package, only_in_packages = stack.pop(0)
         for name in os.listdir(where):
-            fn = os.path.join(where, name)
-            if os.path.isdir(fn):
+            fn = join(where, name)
+            if isdir(fn):
                 bad_name = False
                 for pattern in exclude_directories:
                     if (fnmatchcase(name, pattern)
@@ -116,7 +117,7 @@ def find_package_data(
                         break
                 if bad_name:
                     continue
-                if os.path.isfile(os.path.join(fn, '__init__.py')):
+                if isfile(join(fn, '__init__.py')):
                     if not package:
                         new_package = name
                     else:
