@@ -31,6 +31,7 @@ This has been modified from the original to avoid dry run issues.
 from __future__ import generators
 
 import sys, warnings, os, fnmatch, glob, shutil, codecs, hashlib, errno
+from paver.easy import dry
 
 __version__ = '2.2.2'
 __all__ = ['path']
@@ -932,11 +933,11 @@ class path(_base):
 
     def rmdir(self):
         if self.exists():
-            dry("rmdir %s" % (self), os.rmdir, self)
+            dry("rmdir %s" % self, os.rmdir, self)
 
     def removedirs(self):
         if self.exists():
-            dry("removedirs %s" % (self), os.removedirs, self)
+            dry("removedirs %s" % self, os.removedirs, self)
 
     # --- Modifying operations on files
 
@@ -952,7 +953,7 @@ class path(_base):
 
     def remove(self):
         if self.exists():
-            dry("remove %s" % (self), os.remove, self)
+            dry("remove %s" % self, os.remove, self)
 
     def remove_p(self):
         try:
@@ -969,17 +970,15 @@ class path(_base):
         self.remove_p()
 
     # --- Links
-    # TODO: mark these up for dry run XXX
-    
     if hasattr(os, 'link'):
         def link(self, newpath):
             """ Create a hard link at 'newpath', pointing to this file. """
-            os.link(self, newpath)
+            dry("link %s" % self, os.link, self)
 
     if hasattr(os, 'symlink'):
         def symlink(self, newlink):
             """ Create a symbolic link at 'newlink', pointing here. """
-            os.symlink(self, newlink)
+            dry("symlink %s" % self, os.symlink, self)
 
     if hasattr(os, 'readlink'):
         def readlink(self):
@@ -1027,5 +1026,3 @@ class path(_base):
     if hasattr(os, 'startfile'):
         def startfile(self):
             os.startfile(self)
-
-from paver.easy import dry
