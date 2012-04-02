@@ -5,14 +5,11 @@ This module does not include any tasks, only functions.
 At this point, these functions do not use any kind of library. They require
 the git binary on the path."""
 
-from paver.easy import sh, Bunch, path
+from paver.easy import sh
 import os, re
 
 def _format_path(provided_path):
-    if provided_path:
-        return provided_path
-    else:
-        return os.getcwd()
+    return provided_path or os.getcwd()
 
 def _split_remote_branch_name(provided_name):
     return provided_name.split("/")[1]
@@ -38,8 +35,7 @@ def branch_list(path="", remote_branches_only=False, __override__=None):
     
     Optional parameter path: the path to the git repo. Else uses os.getcwd()
     """
-    
-    git_output = None
+
     remote_branches = ""
     if remote_branches_only:
         remote_branches = "-r"
@@ -51,7 +47,7 @@ def branch_list(path="", remote_branches_only=False, __override__=None):
         git_output = __override__
     
     if git_output == None:
-        return ( None, [] ) # should only hit this condition in testing...
+        return None, [] # should only hit this condition in testing...
     
     current_branch = ""
     branches = []
@@ -67,10 +63,10 @@ def branch_list(path="", remote_branches_only=False, __override__=None):
             if match_obj.group(2).strip():
                 branches.append( match_obj.group(2).strip() )
         
-    if found_a_match == False:
-        raise "git branch did not return output expected. Returned %s" % (git_output)
+    if found_a_match is False:
+        raise "git branch did not return output expected. Returned %s" % git_output
     
-    return (current_branch, branches)
+    return current_branch, branches
 
 def branch_checkout(branch_name, path=""):
     """Checkout a git branch.
