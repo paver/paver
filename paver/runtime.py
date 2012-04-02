@@ -6,7 +6,6 @@ warnings.warn("Import from paver.easy instead of paver.runtime",
               DeprecationWarning, 2)
 
 from paver.easy import *
-from paver.tasks import Task
 
 __all__ = ["Bunch", "task", "Task", "needs", "dry", "error",
            "info", "debug", "call_task", "require_keys", "sh", "options",

@@ -1057,7 +1057,7 @@ def fixup_scripts(home_dir):
         bin_suffix = 'Scripts'
     else:
         bin_suffix = 'bin'
-    bin_dir = join(home_dir, bin_suffix)
+
     home_dir, lib_dir, inc_dir, bin_dir = path_locations(home_dir)
     for filename in os.listdir(bin_dir):
         filename = join(bin_dir, filename)
@@ -1114,7 +1114,6 @@ def fixup_pth_and_egg_link(home_dir, sys_path=None):
 
 def fixup_pth_file(filename):
     lines = []
-    prev_lines = []
     f = open(filename)
     prev_lines = f.readlines()
     f.close()
