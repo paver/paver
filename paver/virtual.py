@@ -56,6 +56,13 @@ else:
     dry("Write bootstrap script %s" % fn, write_script)
 
 
+def _boostrap_constraint():
+    try:
+        import virtualenv as venv
+    except ImportError:
+        raise Exception("`virtualenv` is needed to use paver's virtualenv tasks")
+
+
 @task
 def bootstrap():
     """Creates a virtualenv bootstrap script.
@@ -84,7 +91,6 @@ def bootstrap():
     unzip_setuptools
         unzip Setuptools when installing it (defaults to False)
     """
-    import virtualenv as venv
     vopts = options.virtualenv
     _create_bootstrap(vopts.get("script_name", "bootstrap.py"),
                       vopts.get("packages_to_install", []),
@@ -92,7 +98,7 @@ def bootstrap():
                       dest_dir=vopts.get("dest_dir", '.'),
                       no_site_packages=vopts.get("no_site_packages", False),
                       unzip_setuptools=vopts.get("unzip_setuptools", False))
-#bootstrap.paver_require = {'import': ['virtualenv']}
+bootstrap.paver_constraint = _boostrap_constraint
 
 def virtualenv(dir):
     """Run decorated task in specified virtual environment."""
