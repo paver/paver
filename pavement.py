@@ -14,7 +14,8 @@ setup(**setup_meta)
 
 options(
     minilib=Bunch(
-        extra_files=['doctools', 'virtual']
+        extra_files=['doctools', 'virtual'],
+        versioned_name=False,
     ),
     sphinx=Bunch(
         builddir="build",
@@ -177,8 +178,3 @@ def publish_docs(options):
         safe_clone.rmtree()
         docs_repo.rmtree()
         os.remove(git)
-
-
-
-
-
