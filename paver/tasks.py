@@ -7,6 +7,8 @@ import inspect
 import itertools
 import traceback
 
+from os.path import *
+
 VERSION = "1.1.0"
 
 class PavementError(Exception):
@@ -99,6 +101,7 @@ class Environment(object):
     file = property(fset=_set_pavement_file)
 
     def get_task(self, taskname):
+
         task = getattr(self.pavement, taskname, None)
 
         # delegate to task finders next
@@ -273,7 +276,7 @@ class Task(object):
     def __call__(self, *args, **kw):
         if self.use_virtualenv and self.virtualenv_dir:
             #TODO: Environment recovery?
-            activate_this = os.path.join(self.virtualenv_dir, "bin", "activate_this.py")
+            activate_this = join(self.virtualenv_dir, "bin", "activate_this.py")
             execfile(activate_this, dict(__file__=activate_this))
         retval = environment._run_task(self.name, self.needs, self.func)
         self.called = True
@@ -310,10 +313,8 @@ class Task(object):
         if getattr(self, '_parser', None):
             return self._parser
 
-        options = self.user_options
-
         self._parser = parser = optparse.OptionParser(add_help_option=False,
-            usage="%%prog %s [options]" % (self.name))
+            usage="%%prog %s [options]" % self.name)
 
         parser.disable_interspersed_args()
         parser.add_option('-h', '--help', action="store_true",
@@ -395,6 +396,7 @@ class Task(object):
     by another task in the dependency chain.""" % (self, option, task))
                         # add just names; longname now contains --initial-dashes
                         self.option_names.add((task.shortname, longname[2:]))
+
                         if getattr(task, 'no_help', False):
                             if shortname:
                                 parser.options_to_hide_from_help.append(shortname)
@@ -418,7 +420,7 @@ class Task(object):
 
         name = self.name
         print "\n%s" % name
-        print "-" * (len(name))
+        print "-" * len(name)
         parser.print_help()
         print
         print self.__doc__
@@ -441,8 +443,7 @@ class Task(object):
     def parse_args(self, args):
         import paver.options
         environment.debug("Task %s: Parsing args %s" % (self.name, args))
-        optholder = environment.options.setdefault(self.shortname,
-                                                   paver.options.Bunch())
+        environment.options.setdefault(self.shortname, paver.options.Bunch())
         parser = self.parser
         options, args = parser.parse_args(args)
 
@@ -477,10 +478,10 @@ class Task(object):
         rv = []
         while stack:
             top = stack.pop()
-            if (not top in rv):
+            if top not in rv:
                 rv.append(top)
                 needs = []
-                if (environment.get_task(top)):
+                if environment.get_task(top):
                     deptask = environment.get_task(top)
 
                     if not isinstance(deptask, Task):
@@ -760,7 +761,7 @@ def call_pavement(new_pavement, args):
     environment_stack.append(environment)
     environment = Environment()
     cwd = os.getcwd()
-    dirname, basename = os.path.split(new_pavement)
+    dirname, basename = split(new_pavement)
     environment.pavement_file = basename
     try:
         if dirname:
@@ -774,7 +775,7 @@ def _launch_pavement(args):
     mod = types.ModuleType("pavement")
     environment.pavement = mod
 
-    if not os.path.exists(environment.pavement_file):
+    if not exists(environment.pavement_file):
         environment.pavement_file = None
         exec "from paver.easy import *\n" in mod.__dict__
         _process_commands(args)
@@ -793,7 +794,7 @@ def _launch_pavement(args):
             or '--propagate-traceback' in args:
             raise
         print "\n\n*** Problem with pavement:\n%s\n%s\n\n" % (
-                    os.path.abspath(environment.pavement_file), e)
+                    abspath(environment.pavement_file), e)
 
 def main(args=None):
     global environment
