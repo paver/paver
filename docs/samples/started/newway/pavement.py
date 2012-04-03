@@ -36,7 +36,8 @@ options(
 # [[[section minilib]]]
 options(
     minilib = Bunch(
-        extra_files=["doctools"]
+        extra_files=["doctools"],
+        versioned_name=False
     )
 )
 # [[[endsection]]]
