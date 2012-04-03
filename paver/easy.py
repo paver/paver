@@ -2,6 +2,8 @@ import subprocess
 import sys
 
 from paver import tasks
+#needed for paver.easy.* import
+from paver.options import Bunch
 
 def dry(message, func, *args, **kw):
     """Wraps a function that performs a destructive operation, so that
