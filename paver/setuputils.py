@@ -3,7 +3,7 @@
 import re
 import os
 import sys
-import distutils
+from os.path import *
 from fnmatch import fnmatchcase
 from distutils.util import convert_path
 from distutils import log
@@ -14,8 +14,6 @@ except ImportError:
 from distutils.errors import DistutilsModuleError
 _Distribution = dist.Distribution
 
-from distutils import debug
-# debug.DEBUG = True
 
 from paver.options import Bunch
 
@@ -41,6 +39,27 @@ __ALL__ = ['find_package_data']
 standard_exclude = ('*.py', '*.pyc', '*~', '.*', '*.bak', '*.swp*')
 standard_exclude_directories = ('.*', 'CVS', '_darcs', './build',
                                 './dist', 'EGG-INFO', '*.egg-info')
+
+def _dispatch_setuptools_install(distribution, command_name):
+    """
+    setuptools hack:
+    - setuptools check where is `install` command called from:
+    - if it's not called directly (case of paver), use `install` from distutils
+        (no deps handling)
+    - if it's called directly, it handles `install_requires` deps as well
+        (which is what we want, but what we do not get... until this hack)
+    """
+    cmd = distribution.get_command_obj(command_name)
+    if hasattr(cmd, 'do_egg_install'):
+        cmd.do_egg_install()
+    else:
+        print >> sys.stderr, "Setuptools install-dependencies hack failed"
+        distribution.run_command(command_name)
+
+# storage of extra dispatchers for distutils/setuptools commands
+_extra_command_dispatch = {
+    'setuptools.command.install.install': _dispatch_setuptools_install,
+}
 
 def find_package_data(
     where='.', package='',
@@ -82,8 +101,8 @@ def find_package_data(
     while stack:
         where, prefix, package, only_in_packages = stack.pop(0)
         for name in os.listdir(where):
-            fn = os.path.join(where, name)
-            if os.path.isdir(fn):
+            fn = join(where, name)
+            if isdir(fn):
                 bad_name = False
                 for pattern in exclude_directories:
                     if (fnmatchcase(name, pattern)
@@ -96,7 +115,7 @@ def find_package_data(
                         break
                 if bad_name:
                     continue
-                if os.path.isfile(os.path.join(fn, '__init__.py')):
+                if isfile(join(fn, '__init__.py')):
                     if not package:
                         new_package = name
                     else:
@@ -148,7 +167,12 @@ class DistutilsTask(tasks.Task):
         opt_dict = self.distribution.get_option_dict(self.command_name)
         for (name, value) in options.items():
             opt_dict[name.replace('-', '_')] = ("command line", value)
-        self.distribution.run_command(self.command_name)
+
+        # see if we don't have extra dispatcher for command
+        if str(self.command_class) in _extra_command_dispatch:
+            _extra_command_dispatch[str(self.command_class)](self.distribution, self.command_name)
+        else:
+            self.distribution.run_command(self.command_name)
         
     @property
     def description(self):

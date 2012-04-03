@@ -14,6 +14,9 @@ import shutil
 import logging
 import tempfile
 import distutils.sysconfig
+
+from os.path import *
+
 try:
     import subprocess
 except ImportError, e:
@@ -29,7 +32,6 @@ try:
 except NameError:
     from sets import Set as set
 
-join = os.path.join
 py_version = 'python%s.%s' % (sys.version_info[0], sys.version_info[1])
 
 is_jython = sys.platform.startswith('java')
@@ -203,35 +205,35 @@ class Logger(object):
     level_for_integer = classmethod(level_for_integer)
 
 def mkdir(path):
-    if not os.path.exists(path):
+    if not exists(path):
         logger.info('Creating %s', path)
         os.makedirs(path)
     else:
         logger.info('Directory %s already exists', path)
 
 def copyfile(src, dest, symlink=True):
-    if not os.path.exists(src):
+    if not exists(src):
         # Some bad symlink in the src
         logger.warn('Cannot find file %s (bad symlink)', src)
         return
-    if os.path.exists(dest):
+    if exists(dest):
         logger.debug('File %s already exists', dest)
         return
-    if not os.path.exists(os.path.dirname(dest)):
-        logger.info('Creating parent directories for %s' % os.path.dirname(dest))
-        os.makedirs(os.path.dirname(dest))
+    if not exists(dirname(dest)):
+        logger.info('Creating parent directories for %s' % dirname(dest))
+        os.makedirs(dirname(dest))
     if symlink and hasattr(os, 'symlink'):
         logger.info('Symlinking %s', dest)
-        os.symlink(os.path.abspath(src), dest)
+        os.symlink(abspath(src), dest)
     else:
         logger.info('Copying to %s', dest)
-        if os.path.isdir(src):
+        if isdir(src):
             shutil.copytree(src, dest, True)
         else:
             shutil.copy2(src, dest)
 
 def writefile(dest, content, overwrite=True):
-    if not os.path.exists(dest):
+    if not exists(dest):
         logger.info('Writing %s', dest)
         f = open(dest, 'wb')
         f.write(content)
@@ -253,7 +255,7 @@ def writefile(dest, content, overwrite=True):
             logger.info('Content %s already in place', dest)
 
 def rmtree(dir):
-    if os.path.exists(dir):
+    if exists(dir):
         logger.notify('Deleting tree %s', dir)
         shutil.rmtree(dir)
     else:
@@ -268,7 +270,7 @@ def make_exe(fn):
 
 def _find_file(filename, dirs):
     for dir in dirs:
-        if os.path.exists(join(dir, filename)):
+        if exists(join(dir, filename)):
             return join(dir, filename)
     return filename
 
@@ -288,7 +290,7 @@ def _install_req(py_executable, unzip=False, distribute=False):
             # setuptools
             import pkg_resources
             if not hasattr(pkg_resources, '_distribute'):
-                location = os.path.dirname(pkg_resources.__file__)
+                location = dirname(pkg_resources.__file__)
                 logger.notify("A globally installed setuptools was found (in %s)" % location)
                 logger.notify("Use the --no-site-packages option to use distribute in "
                               "the virtualenv.")
@@ -320,17 +322,17 @@ def _install_req(py_executable, unzip=False, distribute=False):
         cmd.append('-v')
 
     old_chdir = os.getcwd()
-    if setup_fn is not None and os.path.exists(setup_fn):
+    if setup_fn is not None and exists(setup_fn):
         logger.info('Using existing %s egg: %s' % (project_name, setup_fn))
         cmd.append(setup_fn)
         if os.environ.get('PYTHONPATH'):
-            env['PYTHONPATH'] = setup_fn + os.path.pathsep + os.environ['PYTHONPATH']
+            env['PYTHONPATH'] = setup_fn + pathsep + os.environ['PYTHONPATH']
         else:
             env['PYTHONPATH'] = setup_fn
     else:
         # the source is found, let's chdir
-        if source is not None and os.path.exists(source):
-            os.chdir(os.path.dirname(source))
+        if source is not None and exists(source):
+            os.chdir(dirname(source))
             # in this case, we want to be sure that PYTHONPATH is unset (not
             # just empty, really unset), else CPython tries to import the
             # site.py that it's in virtualenv_support
@@ -349,10 +351,10 @@ def _install_req(py_executable, unzip=False, distribute=False):
 
     if not os.access(os.getcwd(), os.W_OK):
         cwd = tempfile.mkdtemp()
-        if source is not None and os.path.exists(source):
+        if source is not None and exists(source):
             # the current working dir is hostile, let's copy the
             # tarball to a temp dir
-            target = os.path.join(cwd, os.path.split(source)[-1])
+            target = join(cwd, split(source)[-1])
             shutil.copy(source, target)
     try:
         call_subprocess(cmd, show_stdout=False,
@@ -369,18 +371,17 @@ def _install_req(py_executable, unzip=False, distribute=False):
             os.remove(ez_setup)
 
 def file_search_dirs():
-    here = os.path.dirname(os.path.abspath(__file__))
-    dirs = ['.', here,
-            join(here, 'virtualenv_support')]
-    if os.path.splitext(os.path.dirname(__file__))[0] != 'virtualenv':
+    here = dirname(abspath(__file__))
+    dirs = ['.', here, join(here, 'virtualenv_support')]
+    if splitext(dirname(__file__))[0] != 'virtualenv':
         # Probably some boot script; just in case virtualenv is installed...
         try:
             import virtualenv
         except ImportError:
             pass
         else:
-            dirs.append(os.path.join(os.path.dirname(virtualenv.__file__), 'virtualenv_support'))
-    return [d for d in dirs if os.path.isdir(d)]
+            dirs.append(join(dirname(virtualenv.__file__), 'virtualenv_support'))
+    return [d for d in dirs if isdir(d)]
 
 def install_setuptools(py_executable, unzip=False):
     _install_req(py_executable, unzip)
@@ -394,7 +395,7 @@ def install_pip(py_executable):
     for dir in file_search_dirs():
         filenames.extend([join(dir, fn) for fn in os.listdir(dir)
                           if _pip_re.search(fn)])
-    filenames = [(os.path.basename(filename).lower(), i, filename) for i, filename in enumerate(filenames)]
+    filenames = [(basename(filename).lower(), i, filename) for i, filename in enumerate(filenames)]
     filenames.sort()
     filenames = [filename for basename, i, filename in filenames]
     if not filenames:
@@ -404,11 +405,11 @@ def install_pip(py_executable):
     easy_install_script = 'easy_install'
     if sys.platform == 'win32':
         easy_install_script = 'easy_install-script.py'
-    cmd = [py_executable, join(os.path.dirname(py_executable), easy_install_script), filename]
+    cmd = [py_executable, join(dirname(py_executable), easy_install_script), filename]
     if filename == 'pip':
         logger.info('Installing pip from network...')
     else:
-        logger.info('Installing %s' % os.path.basename(filename))
+        logger.info('Installing %s' % basename(filename))
     logger.indent += 2
     def _filter_setup(line):
         return filter_ez_setup(line, 'pip')
@@ -644,7 +645,7 @@ def create_environment(home_dir, site_packages=True, clear=False,
     """
     home_dir, lib_dir, inc_dir, bin_dir = path_locations(home_dir)
 
-    py_executable = os.path.abspath(install_python(
+    py_executable = abspath(install_python(
         home_dir, lib_dir, inc_dir, bin_dir,
         site_packages=site_packages, clear=clear))
 
@@ -700,8 +701,8 @@ def change_prefix(filename, dst_prefix):
     prefixes = [sys.prefix]
     if hasattr(sys, 'real_prefix'):
         prefixes.append(sys.real_prefix)
-    prefixes = map(os.path.abspath, prefixes)
-    filename = os.path.abspath(filename)
+    prefixes = map(abspath, prefixes)
+    filename = abspath(filename)
     for src_prefix in prefixes:
         if filename.startswith(src_prefix):
             _, relpath = filename.split(src_prefix, 1)
@@ -728,7 +729,7 @@ def copy_required_modules(dst_prefix):
             copyfile(filename, dst_filename)
             if filename.endswith('.pyc'):
                 pyfile = filename[:-1]
-                if os.path.exists(pyfile):
+                if exists(pyfile):
                     copyfile(pyfile, dst_filename[:-1])
 
 
@@ -751,9 +752,9 @@ def install_python(home_dir, lib_dir, inc_dir, bin_dir, site_packages, clear):
         prefix = sys.prefix
     mkdir(lib_dir)
     fix_lib64(lib_dir)
-    stdlib_dirs = [os.path.dirname(os.__file__)]
+    stdlib_dirs = [dirname(os.__file__)]
     if sys.platform == 'win32':
-        stdlib_dirs.append(join(os.path.dirname(stdlib_dirs[0]), 'DLLs'))
+        stdlib_dirs.append(join(dirname(stdlib_dirs[0]), 'DLLs'))
     elif sys.platform == 'darwin':
         stdlib_dirs.append(join(stdlib_dirs[0], 'site-packages'))
     if hasattr(os, 'symlink'):
@@ -764,10 +765,10 @@ def install_python(home_dir, lib_dir, inc_dir, bin_dir, site_packages, clear):
     try:
         # copy required files...
         for stdlib_dir in stdlib_dirs:
-            if not os.path.isdir(stdlib_dir):
+            if not isdir(stdlib_dir):
                 continue
             for fn in os.listdir(stdlib_dir):
-                if fn != 'site-packages' and os.path.splitext(fn)[0] in REQUIRED_FILES:
+                if fn != 'site-packages' and splitext(fn)[0] in REQUIRED_FILES:
                     copyfile(join(stdlib_dir, fn), join(lib_dir, fn))
         # ...and modules
         copy_required_modules(home_dir)
@@ -781,14 +782,14 @@ def install_python(home_dir, lib_dir, inc_dir, bin_dir, site_packages, clear):
     elif site_filename.endswith('$py.class'):
         site_filename = site_filename.replace('$py.class', '.py')
     site_filename_dst = change_prefix(site_filename, home_dir)
-    site_dir = os.path.dirname(site_filename_dst)
+    site_dir = dirname(site_filename_dst)
     writefile(site_filename_dst, SITE_PY)
     writefile(join(site_dir, 'orig-prefix.txt'), prefix)
     site_packages_filename = join(site_dir, 'no-global-site-packages.txt')
     if not site_packages:
         writefile(site_packages_filename, '')
     else:
-        if os.path.exists(site_packages_filename):
+        if exists(site_packages_filename):
             logger.info('Deleting %s' % site_packages_filename)
             os.unlink(site_packages_filename)
 
@@ -796,7 +797,7 @@ def install_python(home_dir, lib_dir, inc_dir, bin_dir, site_packages, clear):
         stdinc_dir = join(prefix, 'include')
     else:
         stdinc_dir = join(prefix, 'include', py_version)
-    if os.path.exists(stdinc_dir):
+    if exists(stdinc_dir):
         copyfile(stdinc_dir, inc_dir)
     else:
         logger.debug('No include dir %s' % stdinc_dir)
@@ -816,29 +817,29 @@ def install_python(home_dir, lib_dir, inc_dir, bin_dir, site_packages, clear):
         # jython.jar
         for name in 'jython-dev.jar', 'javalib', 'jython.jar':
             src = join(prefix, name)
-            if os.path.exists(src):
+            if exists(src):
                 copyfile(src, join(home_dir, name))
         # XXX: registry should always exist after Jython 2.5rc1
         src = join(prefix, 'registry')
-        if os.path.exists(src):
+        if exists(src):
             copyfile(src, join(home_dir, 'registry'), symlink=False)
         copyfile(join(prefix, 'cachedir'), join(home_dir, 'cachedir'),
                  symlink=False)
 
     mkdir(bin_dir)
-    py_executable = join(bin_dir, os.path.basename(sys.executable))
+    py_executable = join(bin_dir, basename(sys.executable))
     if 'Python.framework' in prefix:
         if re.search(r'/Python(?:-32|-64)*$', py_executable):
             # The name of the python executable is not quite what
             # we want, rename it.
-            py_executable = os.path.join(
-                    os.path.dirname(py_executable), 'python')
+            py_executable = join(
+                    dirname(py_executable), 'python')
 
     logger.notify('New %s executable in %s', expected_exe, py_executable)
     if sys.executable != py_executable:
         ## FIXME: could I just hard link?
         executable = sys.executable
-        if sys.platform == 'cygwin' and os.path.exists(executable + '.exe'):
+        if sys.platform == 'cygwin' and exists(executable + '.exe'):
             # Cygwin misreports sys.executable sometimes
             executable += '.exe'
             py_executable += '.exe'
@@ -846,24 +847,24 @@ def install_python(home_dir, lib_dir, inc_dir, bin_dir, site_packages, clear):
         shutil.copyfile(executable, py_executable)
         make_exe(py_executable)
         if sys.platform == 'win32' or sys.platform == 'cygwin':
-            pythonw = os.path.join(os.path.dirname(sys.executable), 'pythonw.exe')
-            if os.path.exists(pythonw):
+            pythonw = join(dirname(sys.executable), 'pythonw.exe')
+            if exists(pythonw):
                 logger.info('Also created pythonw.exe')
-                shutil.copyfile(pythonw, os.path.join(os.path.dirname(py_executable), 'pythonw.exe'))
+                shutil.copyfile(pythonw, join(dirname(py_executable), 'pythonw.exe'))
         if is_pypy:
             # make a symlink python --> pypy-c
-            python_executable = os.path.join(os.path.dirname(py_executable), 'python')
+            python_executable = join(dirname(py_executable), 'python')
             logger.info('Also created executable %s' % python_executable)
             copyfile(py_executable, python_executable)
 
-    if os.path.splitext(os.path.basename(py_executable))[0] != expected_exe:
-        secondary_exe = os.path.join(os.path.dirname(py_executable),
+    if splitext(basename(py_executable))[0] != expected_exe:
+        secondary_exe = join(dirname(py_executable),
                                      expected_exe)
-        py_executable_ext = os.path.splitext(py_executable)[1]
+        py_executable_ext = splitext(py_executable)[1]
         if py_executable_ext == '.exe':
             # python2.4 gives an extension of '.4' :P
             secondary_exe += py_executable_ext
-        if os.path.exists(secondary_exe):
+        if exists(secondary_exe):
             logger.warn('Not overwriting existing %s script %s (you must use %s)'
                         % (expected_exe, secondary_exe, py_executable))
         else:
@@ -879,25 +880,25 @@ def install_python(home_dir, lib_dir, inc_dir, bin_dir, site_packages, clear):
         # the stub executable in ${sys.prefix}/bin
         # See http://groups.google.com/group/python-virtualenv/
         #                              browse_thread/thread/17cab2f85da75951
-        original_python = os.path.join(
+        original_python = join(
             prefix, 'Resources/Python.app/Contents/MacOS/Python')
         shutil.copy(original_python, py_executable)
 
         # Copy the framework's dylib into the virtual
         # environment
-        virtual_lib = os.path.join(home_dir, '.Python')
+        virtual_lib = join(home_dir, '.Python')
 
-        if os.path.exists(virtual_lib):
+        if exists(virtual_lib):
             os.unlink(virtual_lib)
         copyfile(
-            os.path.join(prefix, 'Python'),
+            join(prefix, 'Python'),
             virtual_lib)
 
         # And then change the install_name of the copied python executable
         try:
             call_subprocess(
                 ["install_name_tool", "-change",
-                 os.path.join(prefix, 'Python'),
+                 join(prefix, 'Python'),
                  '@executable_path/../.Python',
                  py_executable])
         except:
@@ -912,15 +913,15 @@ def install_python(home_dir, lib_dir, inc_dir, bin_dir, site_packages, clear):
             # symlinking pythonX.Y > python
             pth = py_executable + '%s.%s' % (
                     sys.version_info[0], sys.version_info[1])
-            if os.path.exists(pth):
+            if exists(pth):
                 os.unlink(pth)
             os.symlink('python', pth)
         else:
             # reverse symlinking python -> pythonX.Y (with --python)
             pth = join(bin_dir, 'python')
-            if os.path.exists(pth):
+            if exists(pth):
                 os.unlink(pth)
-            os.symlink(os.path.basename(py_executable), pth)
+            os.symlink(basename(py_executable), pth)
 
     if sys.platform == 'win32' and ' ' in py_executable:
         # There's a bug with subprocess on Windows when using a first
@@ -932,13 +933,13 @@ def install_python(home_dir, lib_dir, inc_dir, bin_dir, site_packages, clear):
     proc = subprocess.Popen(cmd,
                             stdout=subprocess.PIPE)
     proc_stdout, proc_stderr = proc.communicate()
-    proc_stdout = os.path.normcase(os.path.abspath(proc_stdout.strip()))
-    if proc_stdout != os.path.normcase(os.path.abspath(home_dir)):
+    proc_stdout = normcase(abspath(proc_stdout.strip()))
+    if proc_stdout != normcase(abspath(home_dir)):
         logger.fatal(
             'ERROR: The executable %s is not functioning' % py_executable)
         logger.fatal(
             'ERROR: It thinks sys.prefix is %r (should be %r)'
-            % (proc_stdout, os.path.normcase(os.path.abspath(home_dir))))
+            % (proc_stdout, normcase(abspath(home_dir))))
         logger.fatal(
             'ERROR: virtualenv is not compatible with this system or executable')
         if sys.platform == 'win32':
@@ -948,8 +949,8 @@ def install_python(home_dir, lib_dir, inc_dir, bin_dir, site_packages, clear):
     else:
         logger.info('Got sys.prefix result: %r' % proc_stdout)
 
-    pydistutils = os.path.expanduser('~/.pydistutils.cfg')
-    if os.path.exists(pydistutils):
+    pydistutils = expanduser('~/.pydistutils.cfg')
+    if exists(pydistutils):
         logger.notify('Please make sure you remove any previous custom paths from '
                       'your %s file.' % pydistutils)
     ## FIXME: really this should be calculated earlier
@@ -974,25 +975,25 @@ def install_activate(home_dir, bin_dir, prompt=None):
 
 
     files['activate_this.py'] = ACTIVATE_THIS
-    vname = os.path.basename(os.path.abspath(home_dir))
+    vname = basename(abspath(home_dir))
     for name, content in files.items():
         content = content.replace('__VIRTUAL_PROMPT__', prompt or '')
         content = content.replace('__VIRTUAL_WINPROMPT__', prompt or '(%s)' % vname)
-        content = content.replace('__VIRTUAL_ENV__', os.path.abspath(home_dir))
+        content = content.replace('__VIRTUAL_ENV__', abspath(home_dir))
         content = content.replace('__VIRTUAL_NAME__', vname)
-        content = content.replace('__BIN_NAME__', os.path.basename(bin_dir))
-        writefile(os.path.join(bin_dir, name), content)
+        content = content.replace('__BIN_NAME__', basename(bin_dir))
+        writefile(join(bin_dir, name), content)
 
 def install_distutils(home_dir):
     distutils_path = change_prefix(distutils.__path__[0], home_dir)
     mkdir(distutils_path)
     ## FIXME: maybe this prefix setting should only be put in place if
     ## there's a local distutils.cfg with a prefix setting?
-    home_dir = os.path.abspath(home_dir)
+    home_dir = abspath(home_dir)
     ## FIXME: this is breaking things, removing for now:
     #distutils_cfg = DISTUTILS_CFG + "\n[install]\nprefix=%s\n" % home_dir
-    writefile(os.path.join(distutils_path, '__init__.py'), DISTUTILS_INIT)
-    writefile(os.path.join(distutils_path, 'distutils.cfg'), DISTUTILS_CFG, overwrite=False)
+    writefile(join(distutils_path, '__init__.py'), DISTUTILS_INIT)
+    writefile(join(distutils_path, 'distutils.cfg'), DISTUTILS_CFG, overwrite=False)
 
 def fix_lib64(lib_dir):
     """
@@ -1003,24 +1004,24 @@ def fix_lib64(lib_dir):
     if [p for p in distutils.sysconfig.get_config_vars().values()
         if isinstance(p, basestring) and 'lib64' in p]:
         logger.debug('This system uses lib64; symlinking lib64 to lib')
-        assert os.path.basename(lib_dir) == 'python%s' % sys.version[:3], (
+        assert basename(lib_dir) == 'python%s' % sys.version[:3], (
             "Unexpected python lib dir: %r" % lib_dir)
-        lib_parent = os.path.dirname(lib_dir)
-        assert os.path.basename(lib_parent) == 'lib', (
+        lib_parent = dirname(lib_dir)
+        assert basename(lib_parent) == 'lib', (
             "Unexpected parent dir: %r" % lib_parent)
-        copyfile(lib_parent, os.path.join(os.path.dirname(lib_parent), 'lib64'))
+        copyfile(lib_parent, join(dirname(lib_parent), 'lib64'))
 
 def resolve_interpreter(exe):
     """
     If the executable given isn't an absolute path, search $PATH for the interpreter
     """
-    if os.path.abspath(exe) != exe:
+    if abspath(exe) != exe:
         paths = os.environ.get('PATH', '').split(os.pathsep)
         for path in paths:
-            if os.path.exists(os.path.join(path, exe)):
-                exe = os.path.join(path, exe)
+            if exists(join(path, exe)):
+                exe = join(path, exe)
                 break
-    if not os.path.exists(exe):
+    if not exists(exe):
         logger.fatal('The executable %s (from --python=%s) does not exist' % (exe, exe))
         sys.exit(3)
     return exe
@@ -1034,8 +1035,8 @@ def make_environment_relocatable(home_dir):
     the #!-based environment selection in scripts.
     """
     home_dir, lib_dir, inc_dir, bin_dir = path_locations(home_dir)
-    activate_this = os.path.join(bin_dir, 'activate_this.py')
-    if not os.path.exists(activate_this):
+    activate_this = join(bin_dir, 'activate_this.py')
+    if not exists(activate_this):
         logger.fatal(
             'The environment doesn\'t have a file %s -- please re-run virtualenv '
             'on this environment to update it' % activate_this)
@@ -1048,19 +1049,19 @@ OK_ABS_SCRIPTS = ['python', 'python%s' % sys.version[:3],
 
 def fixup_scripts(home_dir):
     # This is what we expect at the top of scripts:
-    shebang = '#!%s/bin/python' % os.path.normcase(os.path.abspath(home_dir))
+    shebang = '#!%s/bin/python' % normcase(abspath(home_dir))
     # This is what we'll put:
     new_shebang = '#!/usr/bin/env python%s' % sys.version[:3]
-    activate = "import os; activate_this=os.path.join(os.path.dirname(__file__), 'activate_this.py'); execfile(activate_this, dict(__file__=activate_this)); del os, activate_this"
+    activate = "import os; activate_this=join(dirname(__file__), 'activate_this.py'); execfile(activate_this, dict(__file__=activate_this)); del os, activate_this"
     if sys.platform == 'win32':
         bin_suffix = 'Scripts'
     else:
         bin_suffix = 'bin'
-    bin_dir = os.path.join(home_dir, bin_suffix)
+
     home_dir, lib_dir, inc_dir, bin_dir = path_locations(home_dir)
     for filename in os.listdir(bin_dir):
-        filename = os.path.join(bin_dir, filename)
-        if not os.path.isfile(filename):
+        filename = join(bin_dir, filename)
+        if not isfile(filename):
             # ignore subdirs, e.g. .svn ones.
             continue
         f = open(filename, 'rb')
@@ -1070,7 +1071,7 @@ def fixup_scripts(home_dir):
             logger.warn('Script %s is an empty file' % filename)
             continue
         if not lines[0].strip().startswith(shebang):
-            if os.path.basename(filename) in OK_ABS_SCRIPTS:
+            if basename(filename) in OK_ABS_SCRIPTS:
                 logger.debug('Cannot make script %s relative' % filename)
             elif lines[0].strip() == new_shebang:
                 logger.info('Script %s has already been made relative' % filename)
@@ -1086,20 +1087,20 @@ def fixup_scripts(home_dir):
 
 def fixup_pth_and_egg_link(home_dir, sys_path=None):
     """Makes .pth and .egg-link files use relative paths"""
-    home_dir = os.path.normcase(os.path.abspath(home_dir))
+    home_dir = normcase(abspath(home_dir))
     if sys_path is None:
         sys_path = sys.path
     for path in sys_path:
         if not path:
             path = '.'
-        if not os.path.isdir(path):
+        if not isdir(path):
             continue
-        path = os.path.normcase(os.path.abspath(path))
+        path = normcase(abspath(path))
         if not path.startswith(home_dir):
             logger.debug('Skipping system (non-environment) directory %s' % path)
             continue
         for filename in os.listdir(path):
-            filename = os.path.join(path, filename)
+            filename = join(path, filename)
             if filename.endswith('.pth'):
                 if not os.access(filename, os.W_OK):
                     logger.warn('Cannot write .pth file %s, skipping' % filename)
@@ -1113,14 +1114,13 @@ def fixup_pth_and_egg_link(home_dir, sys_path=None):
 
 def fixup_pth_file(filename):
     lines = []
-    prev_lines = []
     f = open(filename)
     prev_lines = f.readlines()
     f.close()
     for line in prev_lines:
         line = line.strip()
         if (not line or line.startswith('#') or line.startswith('import ')
-            or os.path.abspath(line) != line):
+            or abspath(line) != line):
             lines.append(line)
         else:
             new_value = make_relative_path(filename, line)
@@ -1139,7 +1139,7 @@ def fixup_egg_link(filename):
     f = open(filename)
     link = f.read().strip()
     f.close()
-    if os.path.abspath(link) != link:
+    if abspath(link) != link:
         logger.debug('Link in %s already relative' % filename)
         return
     new_link = make_relative_path(filename, link)
@@ -1162,14 +1162,14 @@ def make_relative_path(source, dest, dest_is_directory=True):
         >>> make_relative_path('/usr/share/a-file.pth', '/usr/share/')
         './'
     """
-    source = os.path.dirname(source)
+    source = dirname(source)
     if not dest_is_directory:
-        dest_filename = os.path.basename(dest)
-        dest = os.path.dirname(dest)
-    dest = os.path.normpath(os.path.abspath(dest))
-    source = os.path.normpath(os.path.abspath(source))
-    dest_parts = dest.strip(os.path.sep).split(os.path.sep)
-    source_parts = source.strip(os.path.sep).split(os.path.sep)
+        dest_filename = basename(dest)
+        dest = dirname(dest)
+    dest = normpath(abspath(dest))
+    source = normpath(abspath(source))
+    dest_parts = dest.strip(sep).split(sep)
+    source_parts = source.strip(sep).split(sep)
     while dest_parts and source_parts and dest_parts[0] == source_parts[0]:
         dest_parts.pop(0)
         source_parts.pop(0)
@@ -1179,7 +1179,7 @@ def make_relative_path(source, dest, dest_is_directory=True):
     if not full_parts:
         # Special case for the current directory (otherwise it'd be '')
         return './'
-    return os.path.sep.join(full_parts)
+    return sep.join(full_parts)
 
 
 

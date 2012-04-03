@@ -2,8 +2,8 @@ import subprocess
 import sys
 
 from paver import tasks
+#needed for paver.easy.* import
 from paver.options import Bunch
-from optparse import make_option as opt
 
 def dry(message, func, *args, **kw):
     """Wraps a function that performs a destructive operation, so that

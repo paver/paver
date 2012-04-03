@@ -19,8 +19,8 @@ with ``@virtualenv`` decorator::
 
     @task
     @virtualenv(dir="virtualenv")
-        def t1():
-            import some_module_existing_only_in_virtualenv
+    def t1():
+        import some_module_existing_only_in_virtualenv
 
 
 paver.virtual Tasks
