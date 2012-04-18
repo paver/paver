@@ -12,20 +12,20 @@ if os.path.exists(_docsdir):
     def paverdocs():
         """Open your web browser and display Paver's documentation."""
         import webbrowser
-        webbrowser.open("file://" 
+        webbrowser.open("file://"
             + (os.path.join(os.path.abspath(_docsdir), 'index.html')))
-        
+
 @task
 def minilib(options):
     """Create a Paver mini library that contains enough for a simple
     pavement.py to be installed using a generated setup.py. This
     is a good temporary measure until more people have deployed paver.
     The output file is 'paver-minilib.zip' in the current directory.
-    
+
     Options:
-    
+
     extra_files
-        list of other paver modules to include (don't include the .py 
+        list of other paver modules to include (don't include the .py
         extension). By default, the following modules are included:
         defaults, path, release, setuputils, misctasks, options,
         tasks, easy
@@ -50,10 +50,10 @@ def minilib(options):
         f.write(buf.getvalue())
         f.close()
     dry("Generate %s" % output_file, generate_zip)
-    
+
 @task
 def generate_setup():
-    """Generates a setup.py file that uses paver behind the scenes. This 
+    """Generates a setup.py file that uses paver behind the scenes. This
     setup.py file will look in the directory that the user is running it
     in for a paver-minilib.zip and will add that to sys.path if available.
     Otherwise, it will just assume that paver is available."""
@@ -72,6 +72,6 @@ except ImportError:
 paver.tasks.main()
 """)
         setup.close()
-        
+
     dry("Write setup.py", write_setup)
-    
+
