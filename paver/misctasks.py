@@ -46,7 +46,7 @@ def minilib(options):
         destfile.close()
 
         # Write the buffer to disk.
-        f = open(output_file, "w")
+        f = open(output_file, "wb")
         f.write(buf.getvalue())
         f.close()
     dry("Generate %s" % output_file, generate_zip)
