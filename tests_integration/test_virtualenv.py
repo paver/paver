@@ -1,7 +1,7 @@
 from unittest2 import TestCase
 
-from os import chdir, getcwd, pardir
-from os.path import join, dirname
+from os import chdir, getcwd, pardir, environ
+from os.path import join, dirname, exists
 from shutil import rmtree, copyfile
 from subprocess import check_call, PIPE
 import sys
@@ -52,7 +52,12 @@ def t1():
             chdir(pavement_dir)
 
             paver_bin = join(dirname(__file__), pardir, 'distutils_scripts', 'paver')
-            check_call(['python', paver_bin, "t1"], env={'PYTHONPATH' : join(dirname(__file__), pardir)})
+            # FIXME: Will this work on windows?
+            if 'VIRTUAL_ENV' in environ and exists(join(environ['VIRTUAL_ENV'], "bin", "python")):
+                python_bin = join(environ['VIRTUAL_ENV'], "bin", "python")
+            else:
+                python_bin = "python"
+            check_call([python_bin, paver_bin, "t1"], env={'PYTHONPATH' : join(dirname(__file__), pardir)})
 
         finally:
             rmtree(pavement_dir)
