@@ -26,6 +26,8 @@ things), all with the convenience of Python’s syntax and massive library of co
 Documentation
 =============
 
+Current build status: .. image:: https://secure.travis-ci.org/paver/paver.png?branch=master
+
 `Docs`_  are hosted on Github.
 
 .. _`Docs`: http://paver.github.com/paver/
