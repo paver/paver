@@ -16,7 +16,7 @@ Paver Changelog
 * fix creating virtualenv (github issue `#44 <https://github.com/paver/paver/issues/44>`_)
 * fix virtualenv example in docs (github issue `#48 <https://github.com/paver/paver/issues/48>`_)
 * path.rename() do not call rename twice (github issue `#47 <https://github.com/paver/paver/issues/47>`_)
-* upated path.py to resolve isssues with bounding os functions with CPython 2.7.3 (github issue `#59 <https://github.com/paver/paver/issues/59>`_, thanks to Pedro Romano)
+* updated path.py to resolve issues with bounding os functions with CPython 2.7.3 (github issue `#59 <https://github.com/paver/paver/issues/59>`_, thanks to Pedro Romano)
 
 1.0.5 (October 21, 2011)
 ------------------------
