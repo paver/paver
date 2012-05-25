@@ -277,6 +277,8 @@ def _runcog(options, uncog=False):
         c.options.defines['include'] = include
         c.options.defines['sh'] = _cogsh(c)
     
+    c.options.defines.update(options.get("defines", {}))
+
     c.sBeginSpec = options.get('beginspec', '[[[cog')
     c.sEndSpec = options.get('endspec', ']]]')
     c.sEndOutput = options.get('endoutput', '[[[end]]]')
@@ -333,6 +335,9 @@ def cog(options):
         an example usage::
             [[[cog include('filename_under_includedir.py', 'mysection')]]]
             [[[end]]]
+    defines
+        Dictionary of objects added to your Cog namespace.
+        (can supersede 'include' and 'sh' defined by includedir.)
     beginspec
         String used at the beginning of the code generation block.
         Default: [[[cog
