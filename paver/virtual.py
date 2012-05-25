@@ -9,7 +9,6 @@ except ImportError:
 else:
     has_virtualenv = True
 
-
 _easy_install_tmpl = "    subprocess.call([join(%s, 'easy_install'), '%s'])\n"
 def _create_bootstrap(script_name, packages_to_install, paver_command_line,
                       install_paver=True, more_text="", dest_dir='.',
@@ -31,13 +30,13 @@ def _create_bootstrap(script_name, packages_to_install, paver_command_line,
         options += "\n"
 
     extra_text = """def adjust_options(options, args):
-args[:] = ['%s']
+    args[:] = ['%s']
 %s
 def after_install(options, home_dir):
-if sys.platform == 'win32':
-    bin_dir = join(home_dir, 'Scripts')
-else:
-    bin_dir = join(home_dir, 'bin')
+    if sys.platform == 'win32':
+        bin_dir = join(home_dir, 'Scripts')
+    else:
+        bin_dir = join(home_dir, 'bin')
 %s""" % (dest_dir, options, paver_install)
     for package in packages_to_install:
         extra_text += _easy_install_tmpl % ('bin_dir', package)
