@@ -14,23 +14,10 @@ import shutil
 import logging
 import tempfile
 import distutils.sysconfig
+import subprocess
 
 from os.path import *
 
-try:
-    import subprocess
-except ImportError, e:
-    if sys.version_info <= (2, 3):
-        print 'ERROR: %s' % e
-        print 'ERROR: this script requires Python 2.4 or greater; or at least the subprocess module.'
-        print 'If you copy subprocess.py from a newer version of Python this script will probably work'
-        sys.exit(101)
-    else:
-        raise
-try:
-    set
-except NameError:
-    from sets import Set as set
 
 py_version = 'python%s.%s' % (sys.version_info[0], sys.version_info[1])
 
@@ -57,8 +44,7 @@ if sys.version_info[:2] >= (2, 6):
     REQUIRED_MODULES.extend(['warnings', 'linecache', '_abcoll', 'abc'])
 if sys.version_info[:2] >= (2, 7):
     REQUIRED_MODULES.extend(['_weakrefset'])
-if sys.version_info[:2] <= (2, 3):
-    REQUIRED_MODULES.extend(['sets', '__future__'])
+
 if is_pypy:
     # these are needed to correctly display the exceptions that may happen
     # during the bootstrap
