@@ -41,8 +41,7 @@ def after_install(options, home_dir):
     for package in packages_to_install:
         extra_text += _easy_install_tmpl % ('bin_dir', package)
     if paver_command_line:
-        command_list = []
-        command_list.extend(paver_command_line.split(" "))
+        command_list = list(paver_command_line.split())
         extra_text += "    subprocess.call([join(bin_dir, 'paver'),%s)" % repr(command_list)[1:]
 
     extra_text += more_text
