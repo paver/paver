@@ -40,3 +40,7 @@ def require_keys(keys):
     
     """
     raise PavementError("require_keys is no longer available.")
+
+
+class PaverImportError(ImportError):
+    pass

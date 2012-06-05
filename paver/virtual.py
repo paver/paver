@@ -58,7 +58,8 @@ def _boostrap_constraint():
     try:
         import virtualenv as venv
     except ImportError:
-        raise Exception("`virtualenv` is needed to use paver's virtualenv tasks")
+        from paver.runtime import PaverImportError
+        raise PaverImportError("`virtualenv` is needed to use paver's virtualenv tasks")
 
 
 @task
