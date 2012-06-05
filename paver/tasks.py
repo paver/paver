@@ -786,6 +786,15 @@ def _launch_pavement(args):
         execfile(environment.pavement_file, mod.__dict__)
         auto_task = getattr(mod, 'auto', None)
         auto_pending = isinstance(auto_task, Task)
+
+        from paver.misctasks import generate_setup, minilib
+        resident_tasks = {
+            'help': help,
+            'generate_setup': generate_setup,
+            'minilib': minilib,
+            }
+        mod.__dict__.update(resident_tasks)
+
         _process_commands(args, auto_pending=auto_pending)
     except PavementError, e:
         # this is hacky, but it is needed if problem would occur within
@@ -799,10 +808,7 @@ def _launch_pavement(args):
 def main(args=None):
     global environment
     if args is None:
-        if len(sys.argv) > 1:
-            args = sys.argv[1:]
-        else:
-            args = []
+        args = sys.argv[1:]
     environment = Environment()
 
     # need to parse args to recover pavement-file to read before executing
