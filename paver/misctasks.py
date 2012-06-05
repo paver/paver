@@ -41,7 +41,10 @@ def minilib(options):
                 'setuputils', "misctasks", "options", "tasks", "easy"]
     filelist.extend(options.get('extra_files', []))
 
-    output_version = "-%s" % VERSION if options.versioned_name else ""
+    output_version = ""
+    if 'versioned_name' in options:
+        output_version = "-%s" % VERSION
+
     output_file = 'paver-minilib%s.zip' % output_version
 
     def generate_zip():
