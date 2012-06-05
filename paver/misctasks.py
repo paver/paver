@@ -69,8 +69,8 @@ def generate_setup(options):
     setup.py file will look in the directory that the user is running it
     in for a paver-minilib.zip and will add that to sys.path if available.
     Otherwise, it will just assume that paver is available."""
-    if options.versioned_name:
-        minilib_name = "paver-minilib%s.zip" % ("-" + VERSION)
+    if 'versioned_name' in options:
+        minilib_name = "paver-minilib-%s.zip" % VERSION
         is_versioned_msg = ', referring versioned minilib: %s' % minilib_name
     else:
         is_versioned_msg = ""
