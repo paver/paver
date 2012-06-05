@@ -18,7 +18,7 @@ Paver Changelog
 * path.rename() do not call rename twice (github issue `#47 <https://github.com/paver/paver/issues/47>`_)
 * updated path.py to resolve issues with bounding os functions with CPython 2.7.3 (github issue `#59 <https://github.com/paver/paver/issues/59>`_, thanks to Pedro Romano)
 * minimal version of python raised to Python 2.5 (github issue `#52 <https://github.com/paver/paver/issues/52>`_)
-
+* always import + do not allow to overwrite basic tasks (eg. help) (github issue `#58 <https://github.com/paver/paver/issues/58>`_)
 
 1.0.5 (October 21, 2011)
 ------------------------
