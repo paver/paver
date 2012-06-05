@@ -305,7 +305,7 @@ class Task(object):
             opts.append('--' + longname)
 
         return optparse.make_option(*opts,
-          action=action, dest=destination, help=option[2])
+            **dict(action=action, dest=destination, help=option[2]))
 
     @property
     def parser(self):
