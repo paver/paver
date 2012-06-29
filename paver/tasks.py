@@ -356,22 +356,21 @@ class Task(object):
 
                     # XXX: this probably needs refactored to handle commands with multiple
                     # long or short options
-                    task_shares = [environment.get_task(t).name for t in (getattr(task, "share_options_with", []) or []) if environment.get_task(t)]
+                    task_share_options_with = task.share_options_with or []
+                    task_shares = [environment.get_task(t).name for t in task_share_options_with if environment.get_task(t)]
 
-                    if getattr(self, "share_options_with", None) or task_shares:
+                    if self.share_options_with or task_shares:
                         options = (shortname, longname)
 
                         # either I am sharing with dependent task
                         # ...or it can share with me
                         if (
-                            options in shared_tasks and len(
-                                    shared_tasks[options] & set(self.share_options_with)
-                                ) > 0
+                                options in shared_tasks and (shared_tasks[options] or self.share_options_with)
                             ) \
                             or \
                             (
-                            self.name in [environment.get_task(t).name for t in (getattr(task, "share_options_with", []) or []) if environment.get_task(t)]
-                        ):
+                                self.name in [environment.get_task(t).name for t in task_share_options_with if environment.get_task(t)]
+                            ):
                             environment.debug("Task %s: NOT adding option %s," \
                                 "already present; setting up mirror" %
                                              (self.name, option))
@@ -384,8 +383,8 @@ class Task(object):
                         if options not in shared_tasks:
                             shared_tasks[options] = set()
 
-                        if getattr(task, "share_options_with", None):
-                            shared_tasks[options] |= set(task.share_options_with)
+                        if task_share_options_with:
+                            shared_tasks[options] |= set(task_share_options_with)
 
                     if add_options:
                         try:

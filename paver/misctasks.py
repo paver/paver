@@ -15,7 +15,8 @@ if exists(_docsdir):
         webbrowser.open("file://%s"  % join(abspath(_docsdir), 'index.html') )
         
 @task
-@cmdopts([('versioned_name', 'v', 'Determine if minilib uses version in its name')])
+@cmdopts([('versioned_name', 'v', 'Determine if minilib uses version in its name')],
+            share_with=['generate_setup'])
 def minilib(options):
     """Create a Paver mini library that contains enough for a simple
     pavement.py to be installed using a generated setup.py. This
@@ -63,7 +64,8 @@ def minilib(options):
     dry("Generate %s" % output_file, generate_zip)
 
 @task
-@cmdopts([('versioned_name', 'v', 'Determine if setup refer to minilib with version in its name')])
+@cmdopts([('versioned_name', 'v', 'Determine if setup refers to minilib with version in its name')],
+            share_with=['minilib'])
 def generate_setup(options):
     """Generates a setup.py file that uses paver behind the scenes. This 
     setup.py file will look in the directory that the user is running it
