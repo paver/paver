@@ -72,19 +72,9 @@ counterparts in os.path.</p>
 <dd>Last access time of the file.</dd></dl>
 
 <dl class="method">
-<dt id="paver.path25.path.basename">
-<tt class="descname">basename</tt><big>(</big><em>p</em><big>)</big><a class="headerlink" href="#paver.path25.path.basename" title="Permalink to this definition">¶</a></dt>
-<dd>Returns the final component of a pathname</dd></dl>
-
-<dl class="method">
 <dt id="paver.path25.path.bytes">
 <tt class="descname">bytes</tt><big>(</big><big>)</big><a class="headerlink" href="#paver.path25.path.bytes" title="Permalink to this definition">¶</a></dt>
 <dd>Open this file, read all bytes, return them as a string.</dd></dl>
-
-<dl class="method">
-<dt id="paver.path25.path.chdir">
-<tt class="descname">chdir</tt><big>(</big><big>)</big><a class="headerlink" href="#paver.path25.path.chdir" title="Permalink to this definition">¶</a></dt>
-<dd>Change current directory.</dd></dl>
 
 <dl class="attribute">
 <dt id="paver.path25.path.ctime">
@@ -111,11 +101,6 @@ example:</p>
 <tt class="descname">drive</tt><a class="headerlink" href="#paver.path25.path.drive" title="Permalink to this definition">¶</a></dt>
 <dd>The drive specifier, for example &#8216;C:&#8217;.
 This is always empty on systems that don&#8217;t use drive specifiers.</dd></dl>
-
-<dl class="method">
-<dt id="paver.path25.path.exists">
-<tt class="descname">exists</tt><big>(</big><em>path</em><big>)</big><a class="headerlink" href="#paver.path25.path.exists" title="Permalink to this definition">¶</a></dt>
-<dd>Test whether a path exists.  Returns False for broken symbolic links</dd></dl>
 
 <dl class="method">
 <dt id="paver.path25.path.expand">
@@ -163,30 +148,10 @@ whose names match the given pattern.  For example:</p>
 On Windows, a group can own a file or directory.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="paver.path25.path.getatime">
-<tt class="descname">getatime</tt><big>(</big><em>filename</em><big>)</big><a class="headerlink" href="#paver.path25.path.getatime" title="Permalink to this definition">¶</a></dt>
-<dd>Return the last access time of a file, reported by os.stat().</dd></dl>
-
-<dl class="method">
-<dt id="paver.path25.path.getctime">
-<tt class="descname">getctime</tt><big>(</big><em>filename</em><big>)</big><a class="headerlink" href="#paver.path25.path.getctime" title="Permalink to this definition">¶</a></dt>
-<dd>Return the metadata change time of a file, reported by os.stat().</dd></dl>
-
 <dl class="classmethod">
 <dt id="paver.path25.path.getcwd">
 <em class="property">classmethod </em><tt class="descname">getcwd</tt><big>(</big><big>)</big><a class="headerlink" href="#paver.path25.path.getcwd" title="Permalink to this definition">¶</a></dt>
 <dd>Return the current working directory as a path object.</dd></dl>
-
-<dl class="method">
-<dt id="paver.path25.path.getmtime">
-<tt class="descname">getmtime</tt><big>(</big><em>filename</em><big>)</big><a class="headerlink" href="#paver.path25.path.getmtime" title="Permalink to this definition">¶</a></dt>
-<dd>Return the last modification time of a file, reported by os.stat().</dd></dl>
-
-<dl class="method">
-<dt id="paver.path25.path.getsize">
-<tt class="descname">getsize</tt><big>(</big><em>filename</em><big>)</big><a class="headerlink" href="#paver.path25.path.getsize" title="Permalink to this definition">¶</a></dt>
-<dd>Return the size of a file, reported by os.stat().</dd></dl>
 
 <dl class="method">
 <dt id="paver.path25.path.glob">
@@ -196,31 +161,6 @@ On Windows, a group can own a file or directory.</p>
 <p>For example, path(&#8216;/users&#8217;).glob(&#8216;<em>/bin/</em>&#8216;) returns a list
 of all the files users have in their bin directories.</p>
 </dd></dl>
-
-<dl class="method">
-<dt id="paver.path25.path.isabs">
-<tt class="descname">isabs</tt><big>(</big><em>s</em><big>)</big><a class="headerlink" href="#paver.path25.path.isabs" title="Permalink to this definition">¶</a></dt>
-<dd>Test whether a path is absolute</dd></dl>
-
-<dl class="method">
-<dt id="paver.path25.path.isdir">
-<tt class="descname">isdir</tt><big>(</big><em>s</em><big>)</big><a class="headerlink" href="#paver.path25.path.isdir" title="Permalink to this definition">¶</a></dt>
-<dd>Return true if the pathname refers to an existing directory.</dd></dl>
-
-<dl class="method">
-<dt id="paver.path25.path.isfile">
-<tt class="descname">isfile</tt><big>(</big><em>path</em><big>)</big><a class="headerlink" href="#paver.path25.path.isfile" title="Permalink to this definition">¶</a></dt>
-<dd>Test whether a path is a regular file</dd></dl>
-
-<dl class="method">
-<dt id="paver.path25.path.islink">
-<tt class="descname">islink</tt><big>(</big><em>path</em><big>)</big><a class="headerlink" href="#paver.path25.path.islink" title="Permalink to this definition">¶</a></dt>
-<dd>Test whether a path is a symbolic link</dd></dl>
-
-<dl class="method">
-<dt id="paver.path25.path.ismount">
-<tt class="descname">ismount</tt><big>(</big><em>path</em><big>)</big><a class="headerlink" href="#paver.path25.path.ismount" title="Permalink to this definition">¶</a></dt>
-<dd>Test whether a path is a mount point</dd></dl>
 
 <dl class="method">
 <dt id="paver.path25.path.joinpath">
@@ -361,11 +301,6 @@ based from the current working directory.</dd></dl>
 they reside on different drives in Windows, then this returns
 dest.abspath().</p>
 </dd></dl>
-
-<dl class="method">
-<dt id="paver.path25.path.samefile">
-<tt class="descname">samefile</tt><big>(</big><em>f1</em>, <em>f2</em><big>)</big><a class="headerlink" href="#paver.path25.path.samefile" title="Permalink to this definition">¶</a></dt>
-<dd>Test whether two pathnames reference the same actual file</dd></dl>
 
 <dl class="attribute">
 <dt id="paver.path25.path.size">
@@ -577,7 +512,7 @@ write_text() to preserve the newlines as-is, use &#8216;linesep=None&#8217;.</p>
 there are three additional standard Unicode end-of-line sequences:
 u&#8217;x85&#8217;, u&#8217;rx85&#8217;, and u&#8217;u2028&#8217;.</p>
 <p>(This is slightly different from when you open a file for
-writing with fopen(filename, &#8220;w&#8221;) in C or file(filename, &#8216;w&#8217;)
+writing with fopen(filename, &#8220;w&#8221;) in C or open(filename, &#8216;w&#8217;)
 in Python.)</p>
 <p>&#8212; Unicode</p>
 <p>If &#8216;text&#8217; isn&#8217;t Unicode, then apart from newline handling, the
@@ -667,7 +602,7 @@ The original directory is returned. Usage is like this:</p>
     </div>
     <div class="footer">
       &copy; Copyright 2008, SitePen, Inc..
-      Last updated on Apr 20, 2012.
+      Last updated on Jul 01, 2012.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.6.
     </div>
   </body>
