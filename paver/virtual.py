@@ -19,9 +19,13 @@ def _create_bootstrap(script_name, packages_to_install, paver_command_line,
     else:
         paver_install = ""
 
-    options = ""
-    if no_site_packages:
-        options = "    options.no_site_packages = True"
+    options = """
+
+    options.no_site_packages = %s
+    if hasattr(options,"system_site_packages"):
+        options.system_site_packages = %s
+        """%(bool(no_site_packages),not bool(no_site_packages))
+
     if unzip_setuptools:
         if options:
             options += "\n"
