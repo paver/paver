@@ -19,6 +19,8 @@ Paver Changelog
 * updated path.py to resolve issues with bounding os functions with CPython 2.7.3 (github issue `#59 <https://github.com/paver/paver/issues/59>`_, thanks to Pedro Romano)
 * minimal version of python raised to Python 2.5 (github issue `#52 <https://github.com/paver/paver/issues/52>`_)
 * always import + do not allow to overwrite basic tasks (eg. help) (github issue `#58 <https://github.com/paver/paver/issues/58>`_)
+* new :func:`tasks.consume_nargs` decorator, similar to :func:`tasks.consume_args` but accepting an argument: the number of arguments that the decorated function will consume. If no argument is passed to ``consume_nargs`` decorator, all comand-line arguments will be consumed.
+
 
 1.0.5 (October 21, 2011)
 ------------------------
