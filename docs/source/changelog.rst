@@ -6,6 +6,7 @@ Paver Changelog
 1.1.2 (TBA)
 ------------------------
 * ``virtual.bootstrap`` enhancements: support for ``find-links``, ``index-url``, ``system-site-packages`` and ``distribute`` options (github `issue #79 <https://github.com/paver/paver/issues/79>`_, thanks to pmcnr)
+* new :func:`tasks.consume_nargs` decorator, similar to :func:`tasks.consume_args` but accepting an argument: the number of arguments that the decorated function will consume. If no argument is passed to ``consume_nargs`` decorator, all comand-line arguments will be consumed.
 
 
 1.1.1 (August 25, 2012)

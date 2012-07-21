@@ -96,6 +96,7 @@ needs = tasks.needs
 might_call = tasks.might_call
 cmdopts = tasks.cmdopts
 consume_args = tasks.consume_args
+consume_nargs = tasks.consume_nargs
 no_auto = tasks.no_auto
 no_help = tasks.no_help
 BuildFailure = tasks.BuildFailure
