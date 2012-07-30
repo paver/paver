@@ -137,14 +137,10 @@ class Environment(object):
             for option in options:
                 task._set_value_to_task(task_name, option, None, options[option])
 
-        if args and task.consume_args:
-            try:
-                environment.options.args = args
-            except AttributeError:
-                pass
-            environment.args = args
-        elif args and not task.consume_args:
-            raise BuildFailure("Task %s is not decorated with @consume_args,"
+        if args and task.consume_args > 0:
+            args = _consume_nargs(task, args)
+        elif args and (task.consume_args == 0):
+            raise BuildFailure("Task %s is not decorated with @consume_(n)args,"
                                 "but has been called with them")
         task()
 
@@ -228,6 +224,44 @@ Captured Task Output:
 environment_stack = []
 environment = Environment()
 
+def _consume_nargs(task, args):
+    """Set up args in environment function of number of args task consumes.
+
+    :param task:        decorated task with ``@consume_nargs``
+    :type task:         ``Task``
+    :param args:        environment arguments
+    :type args:         ``list`` of ``str``
+    :return:            remaining args, without those consumed
+    :rtype:             ``list`` of ``str``
+
+    """
+    if task.consume_args > 0:
+        if (args is None) or (task.consume_args != float('inf') and \
+                              (len(args) < task.consume_args)):
+            args_consumed = ""
+            if task.consume_args == float('inf'):
+                args_consumed = "all arguments"
+            else:
+                args_consumed = "exactly %i argument" % task.consume_args
+                args_consumed += "s" if (task.consume_args > 1) else ""
+
+            args_passed = "none" if args is None \
+                                 else "got only %i" % len(args)
+
+            raise BuildFailure("%s consumes %s, %s" %  \
+                                (task.name, args_consumed, args_passed))
+
+        _args = args if task.consume_args == float('inf') \
+                     else args[:task.consume_args]
+        try:
+            environment.options.args = _args
+        except AttributeError:
+            pass
+        environment.args = _args
+
+        return [] if task.consume_args == float('inf') \
+                  else args[task.consume_args:]
+
 def _import_task(taskname):
     """Looks up a dotted task name and imports the module as necessary
     to get at the task."""
@@ -245,7 +279,7 @@ def _import_task(taskname):
 
 class Task(object):
     called = False
-    consume_args = False
+    consume_args = 0
     no_auto = False
 
     __doc__ = ""
@@ -572,12 +606,27 @@ def might_call(*args):
     return entangle
 
 
+def consume_nargs(nb_args=None):
+    """All specified command line arguments that appear after this task on the
+    command line will be placed in options.args.
+    By default, if :data:`nb_args` is not specified, all arguments will
+    be consumed.
+
+    :param nb_args:     number of arguments the decorated function consumes
+    :type nb_args:      ``int``
+
+    """
+    def consume_args_wrapper(func):
+        func = task(func)
+        func.consume_args = nb_args if nb_args is not None else float('inf')
+        return func
+
+    return consume_args_wrapper
+
 def consume_args(func):
     """Any command line arguments that appear after this task on the
     command line will be placed in options.args."""
-    func = task(func)
-    func.consume_args = True
-    return func
+    return consume_nargs()(func)
 
 def no_auto(func):
     """Specify that this task does not depend on the auto task,
@@ -668,13 +717,8 @@ def _parse_command_line(args):
     if not isinstance(task, Task):
         raise BuildFailure("%s is not a Task" % taskname)
 
-    if task.consume_args:
-        try:
-            environment.options.args = args
-        except AttributeError:
-            pass
-        environment.args = args
-        args = []
+    if task.consume_args > 0:
+        args = _consume_nargs(task, args)
     else:
         args = task.parse_args(args)
 
