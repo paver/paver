@@ -3,7 +3,7 @@
 Paver Changelog
 ===============
 
-1.1.0 (TBA)
+1.1.0 (July 30, 2012)
 ------------------------
 * Minilib is now imported only if full paver is not available (github `issue #13 <https://github.com/paver/paver/issues/13>`_)
 * Option instances may now be passed to @cmdopts (github issues `#41 <https://github.com/paver/paver/issues/41>`_ and `#42 <https://github.com/paver/paver/issues/42>`_, thanks to David Cramer)
@@ -19,6 +19,7 @@ Paver Changelog
 * updated path.py to resolve issues with bounding os functions with CPython 2.7.3 (github issue `#59 <https://github.com/paver/paver/issues/59>`_, thanks to Pedro Romano)
 * minimal version of python raised to Python 2.5 (github issue `#52 <https://github.com/paver/paver/issues/52>`_)
 * always import + do not allow to overwrite basic tasks (eg. help) (github issue `#58 <https://github.com/paver/paver/issues/58>`_)
+* if virtualenv is not available, PaverImportError is raised instead of generic Exception (github issue `#30 <https://github.com/paver/paver/issues/30>`_)
 
 1.0.5 (October 21, 2011)
 ------------------------
