@@ -116,21 +116,35 @@ from tasks.environment sent into your function. For example::
 Command Line Arguments
 ----------------------
 
-Tasks can specify that they accept command line arguments, via two 
-other decorators. The ``@consume_args`` decorator tells Paver that *all* 
-command line arguments following this task's name should be passed to the 
-task. You can either look up the arguments in ``options.args``, or just 
-specify args as a parameter to your function. For example, Paver's "help" 
+Tasks can specify that they accept command line arguments, via three
+other decorators. The ``@consume_args`` decorator tells Paver that *all*
+command line arguments following this task's name should be passed to the
+task. If you'd like specifying a number of consumed arguments, let use
+``@consume_nargs``. This later is similar by default to the previous,
+but also accepts as an ``int`` argument the number of command line arguments
+the decorated task will consume.
+You can either look up the arguments in ``options.args``, or just
+specify args as a parameter to your function. For example, Paver's "help"
 task is declared like this::
 
     @task
     @consume_args
     def help(args, help_function):
         pass
-        
+
+    @task
+    @consume_nargs(3)
+    def mytask(args):
+        pass
+
 The "args" parameter is just an attribute on tasks.environment (as is
 help_function), so it is passed in using the same rules described in the
 previous section.
+
+.. versionadded:: 1.x.y
+    ``@consume_nargs`` decorator superseeds ``@consume_args``,
+    and optionally accepts an ``int`` as argument: the number of command line
+    argument the decorated task will consume.
 
 More generally, you're not trying to consume all of the remainder of the
 command line but to just accept certain specific arguments. That's what
@@ -142,7 +156,7 @@ the cmdopts decorator is for::
     ])
     def deploy(options):
         pass
-        
+
 @cmdopts takes a list of tuples, each with long option name, short option name
 and help text. If there's an "=" after the long option name, that means
 that the option takes a parameter. Otherwise, the option is assumed to be

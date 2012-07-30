@@ -361,17 +361,17 @@ def test_dry_run():
     environment = _set_environment()
     tasks._process_commands(['-n'])
     assert environment.dry_run
-    
+
 def test_consume_args():
     @tasks.task
     @tasks.consume_args
     def t1(options):
         assert options.args == ["1", "t2", "3"]
-    
+
     @tasks.task
     def t2(options):
         assert False, "Should not have run t2 because of consume_args"
-        
+
     env = _set_environment(t1=t1, t2=t2)
     tasks._process_commands("t1 1 t2 3".split())
     assert t1.called
@@ -385,6 +385,73 @@ def test_consume_args():
     env = _set_environment(t3=t3)
     tasks._process_commands("t3 -v 1".split())
     assert t3.called
+
+def test_consume_nargs():
+    # consume all args on first task
+    @tasks.task
+    @tasks.consume_nargs()
+    def t11(options):
+        assert options.args == ["1", "t12", "3"]
+
+    @tasks.task
+    def t12(options):
+        assert False, ("Should not have run t12 because of previous "
+                       "consume_nargs()")
+
+    env = _set_environment(t11=t11, t12=t12)
+    tasks._process_commands("t11 1 t12 3".split())
+    assert t11.called
+
+    # consume some args (specified numbers) on first and second task
+    @tasks.task
+    @tasks.consume_nargs(2)
+    def t21(options):
+        assert options.args == ["1", "2"]
+
+    @tasks.task
+    @tasks.consume_nargs(3)
+    def t22(options):
+        assert options.args == ["3", "4", "5"]
+
+    env = _set_environment(t21=t21, t22=t22)
+    tasks._process_commands("t21 1 2 t22 3 4 5".split())
+    assert t21.called
+    assert t22.called
+
+    # not enougth args consumable on called task, and other task not called
+    env = _set_environment(t21=t21, t12=t12)
+    try:
+        tr, args = tasks._parse_command_line("t21 t12".split())
+        print tr
+        assert False, "Expected BuildFailure exception for not enougth args"
+    except tasks.BuildFailure:
+        pass
+
+    # too much args passed, and unconsumed args are not tasks
+    tr, args = tasks._parse_command_line("t21 1 2 3 4 5".split())
+    assert args == ["3", "4", "5"]
+
+    # consume some args (specified numbers) on first and all other on second task
+    @tasks.task
+    @tasks.consume_nargs(2)
+    def t31(options):
+        assert options.args == ["1", "2"]
+
+    @tasks.task
+    @tasks.consume_nargs()
+    def t32(options):
+        assert options.args == ["3", "4", "t33", "5"]
+
+    @tasks.task
+    @tasks.consume_nargs()
+    def t33(options):
+        assert False, ("Should not have run t33 because of previous "
+                       "consume_nargs()")
+
+    env = _set_environment(t31=t31, t32=t32, t33=t33)
+    tasks._process_commands("t31 1 2 t32 3 4 t33 5".split())
+    assert t31.called
+    assert t32.called
 
 def test_optional_args_in_tasks():
     @tasks.task
