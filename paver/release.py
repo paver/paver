@@ -28,5 +28,5 @@ requirements is also easy.""",
         "Environment :: Console",
         "Topic :: Documentation",
         "Topic :: Utilities",
-        "Topic :: Software Development :: Build Tool",
+        "Topic :: Software Development :: Build Tools",
     ])
