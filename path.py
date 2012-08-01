@@ -40,6 +40,7 @@ This module requires Python 2.3 or later.
 
 from __future__ import generators
 
+import __builtin__
 import sys, warnings, os, fnmatch, glob, shutil, codecs, hashlib, errno
 
 __version__ = '2.2.2.990'
