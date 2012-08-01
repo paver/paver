@@ -75,7 +75,7 @@ except NameError:
 
 # Universal newline support
 _textmode = 'U'
-if hasattr(__builtins__, 'file') and not hasattr(file, 'newlines'):
+if hasattr(__builtin__, 'file') and not hasattr(file, 'newlines'):
     _textmode = 'r'
 
 class TreeWalkWarning(Warning):
