@@ -54,6 +54,7 @@ This has been modified from the original to avoid dry run issues.
 
 from __future__ import generators
 
+import __builtin__
 import sys, warnings, os, fnmatch, glob, shutil, codecs, hashlib, errno
 from paver.easy import dry
 
