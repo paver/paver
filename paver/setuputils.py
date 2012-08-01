@@ -50,10 +50,11 @@ def _dispatch_setuptools_install(distribution, command_name):
         (which is what we want, but what we do not get... until this hack)
     """
     cmd = distribution.get_command_obj(command_name)
-    if hasattr(cmd, 'do_egg_install'):
+    try:
         cmd.do_egg_install()
-    else:
+    except Exception:
         print >> sys.stderr, "Setuptools install-dependencies hack failed"
+        #fallback to standard run_command ( ignores install_requires .( )
         distribution.run_command(command_name)
 
 # storage of extra dispatchers for distutils/setuptools commands
