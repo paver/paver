@@ -3,6 +3,10 @@
 Paver Changelog
 ===============
 
+1.1.1 (TBA)
+------------------------
+* path.py fix for Jython compatibility (github `issue #70 <https://github.com/paver/paver/issues/70>`_, thanks to Arfrever)
+
 1.1.0 (July 30, 2012)
 ------------------------
 * Minilib is now imported only if full paver is not available (github `issue #13 <https://github.com/paver/paver/issues/13>`_)
