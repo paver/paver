@@ -43,19 +43,18 @@ standard_exclude_directories = ('.*', 'CVS', '_darcs', './build',
 def _dispatch_setuptools_install(distribution, command_name):
     """
     setuptools hack:
-    - setuptools check where is `install` command called from:
-    - if it's not called directly (case of paver), use `install` from distutils
-        (no deps handling)
-    - if it's called directly, it handles `install_requires` deps as well
-        (which is what we want, but what we do not get... until this hack)
+    - handle dependencies in `install_requires` by calling fetch_build_eggs()
     """
-    cmd = distribution.get_command_obj(command_name)
-    try:
-        cmd.do_egg_install()
-    except Exception:
-        print >> sys.stderr, "Setuptools install-dependencies hack failed"
-        #fallback to standard run_command ( ignores install_requires .( )
-        distribution.run_command(command_name)
+
+    #check if it has some requirements and try to install them
+    if distribution.install_requires:
+        try:
+            distribution.fetch_build_eggs(distribution.install_requires)
+        except Exception:
+            pass
+
+    #run command
+    distribution.run_command(command_name)
 
 # storage of extra dispatchers for distutils/setuptools commands
 _extra_command_dispatch = {
@@ -170,8 +169,9 @@ class DistutilsTask(tasks.Task):
             opt_dict[name.replace('-', '_')] = ("command line", value)
 
         # see if we don't have extra dispatcher for command
-        if str(self.command_class) in _extra_command_dispatch:
-            _extra_command_dispatch[str(self.command_class)](self.distribution, self.command_name)
+        cmd_class = str(self.command_class)
+        if cmd_class in _extra_command_dispatch:
+            _extra_command_dispatch[cmd_class](self.distribution, self.command_name)
         else:
             self.distribution.run_command(self.command_name)
         
