@@ -3,9 +3,10 @@
 Paver Changelog
 ===============
 
-1.1.1 (TBA)
+1.1.1 (June 7, 2012)
 ------------------------
 * path.py fix for Jython compatibility (github `issue #70 <https://github.com/paver/paver/issues/70>`_, thanks to Arfrever)
+* fixes regression for  (github `issue #71 <https://github.com/paver/paver/issues/71>`_, thanks to Afrever for the report and yedpodtrzitko for the fix)
 
 1.1.0 (July 30, 2012)
 ------------------------
