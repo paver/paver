@@ -1,26 +1,23 @@
 """ Cog code generation tool.
     http://nedbatchelder.com/code/cog
     
-    Copyright 2004-2005, Ned Batchelder.
+    Copyright 2004-2009, Ned Batchelder.
 """
 
-# $Id: cogapp.py 121 2005-10-07 02:52:01Z ned $
-
-import os, re, string, sys, traceback, types
-import imp, compiler
-import copy, getopt, shlex
+import copy, getopt, imp, os, re, shlex, string, sys, traceback
 from cStringIO import StringIO
 
+# The recommended way to compute md5's changed in Python 2.5
 try:
     import hashlib
-    md5_new = hashlib.md5
+    hash_factory = hashlib.md5
 except ImportError:
     import md5
-    md5_new = md5.new
+    hash_factory = md5.new
 
 __all__ = ['Cog', 'CogUsageError']
 
-__version__ = '2.0.20051006'       # History at the end of the file.
+__version__ = '2.2'       # History at the end of the file.
 
 usage = """\
 cog - generate code with inlined Python code.
@@ -40,6 +37,7 @@ OPTIONS:
     -o OUTNAME  Write the output to OUTNAME.
     -r          Replace the input file with the output.
     -s STRING   Suffix all generated output lines with STRING.
+    -U          Write the output with Unix newlines (only LF line-endings).
     -w CMD      Use CMD if the output file needs to be made writable.
                     A %s in the CMD will be filled with the filename.
     -x          Excise all the generated output without running the generators.
@@ -48,11 +46,8 @@ OPTIONS:
     -h          Print this help.
 """
 
-# Get True and False right even if they aren't already defined.
-True, False = 0==0, 0==1
-
 # Other package modules
-from paver.cog.whiteutils import *
+from whiteutils import *
 
 class CogError(Exception):
     """ Any exception raised by Cog.
@@ -130,7 +125,7 @@ class CogGenerator(Redirectable):
         
         # In Python 2.2, the last line has to end in a newline.
         intext = "import cog\n" + intext + "\n"
-        code = compiler.compile(intext, filename=str(fname), mode='exec')
+        code = compile(intext, str(fname), 'exec')
 
         # Make sure the "cog" module has our state.
         cog.cogmodule.msg = self.msg
@@ -216,6 +211,7 @@ class CogOptions:
         self.bDeleteCode = False
         self.bEofCanBeEnd = False
         self.sSuffix = None
+        self.bNewlines = False
     
     def __cmp__(self, other):
         """ Comparison operator for tests to use.
@@ -236,7 +232,7 @@ class CogOptions:
     def parseArgs(self, argv):
         # Parse the command line arguments.
         try:
-            opts, self.args = getopt.getopt(argv, 'cdD:eI:o:rs:w:vxz')
+            opts, self.args = getopt.getopt(argv, 'cdD:eI:o:rs:Uvw:xz')
         except getopt.error, msg:
             raise CogUsageError(msg)
 
@@ -261,10 +257,12 @@ class CogOptions:
                 self.bReplace = True
             elif o == '-s':
                 self.sSuffix = a
-            elif o == '-w':
-                self.sMakeWritableCmd = a
+            elif o == '-U':
+                self.bNewlines = True
             elif o == '-v':
                 self.bShowVersion = True
+            elif o == '-w':
+                self.sMakeWritableCmd = a
             elif o == '-x':
                 self.bNoGenerate = True
             elif o == '-z':
@@ -279,9 +277,6 @@ class CogOptions:
         """
         if self.bReplace and self.bDeleteCode:
             raise CogUsageError("Can't use -d with -r (or you would delete all your source!)")
-
-        if self.sOutputName is None and self.bDeleteCode:
-            raise CogUsageError("Can't use -d without -o (or you would delete all your source!)")
 
         if self.bReplace and self.sOutputName:
             raise CogUsageError("Can't use -o with -r (they are opposites)")
@@ -299,6 +294,7 @@ class Cog(Redirectable):
         self.sEndFormat = '[[[end]]] (checksum: %s)'
 
         self.options = CogOptions()
+        self.sOutputMode = 'w'
         
         self.installCogModule()
 
@@ -330,152 +326,159 @@ class Cog(Redirectable):
 
         sFileIn = fname or ''
         sFileOut = fname or ''
+        fInToClose = fOutToClose = None
         # Convert filenames to files.
-        if isinstance(fIn, types.StringTypes):
+        if isinstance(fIn, basestring):
             # Open the input file.
             sFileIn = fIn
-            fIn = open(fIn, 'r')
-        if isinstance(fOut, types.StringTypes):
+            fIn = fInToClose = open(fIn, 'r')
+        if isinstance(fOut, basestring):
             # Open the output file.
             sFileOut = fOut
-            fOut = open(fOut, 'w')
+            fOut = fOutToClose = open(fOut, self.sOutputMode)
 
-        fIn = NumberedFileReader(fIn)
-        
-        bSawCog = False
-        
-        self.cogmodule.inFile = sFileIn
-        self.cogmodule.outFile = sFileOut
-
-        # The globals dict we'll use for this file.
-        if globals is None:
-            globals = {}
-
-        # If there are any global defines, put them in the globals.
-        globals.update(self.options.defines)
-
-        # loop over generator chunks
-        l = fIn.readline()
-        while l:
-            # Find the next spec begin
-            while l and not self.isBeginSpecLine(l):
-                if self.isEndSpecLine(l):
-                    raise CogError("Unexpected '%s'" % self.sEndSpec,
-                        file=sFileIn, line=fIn.linenumber())
-                if self.isEndOutputLine(l):
-                    raise CogError("Unexpected '%s'" % self.sEndOutput,
-                        file=sFileIn, line=fIn.linenumber())
-                fOut.write(l)
-                l = fIn.readline()
-            if not l:
-                break
-            if not self.options.bDeleteCode:
-                fOut.write(l)
-
-            # l is the begin spec
-            gen = CogGenerator()
-            self.gen = gen
-            gen.setOutput(stdout=self.stdout)
-            gen.parseMarker(l)
-            firstLineNum = fIn.linenumber()
-            self.cogmodule.firstLineNum = firstLineNum
-
-            # If the spec begin is also a spec end, then process the single
-            # line of code inside.
-            if self.isEndSpecLine(l):
-                beg = string.find(l, self.sBeginSpec)
-                end = string.find(l, self.sEndSpec)
-                if beg > end:
-                    raise CogError("Cog code markers inverted",
-                        file=sFileIn, line=firstLineNum)
-                else:
-                    sCode = l[beg+len(self.sBeginSpec):end].strip()
-                    gen.parseLine(sCode)
-            else:
-                # Deal with an ordinary code block.
-                l = fIn.readline()
+        try:
+            fIn = NumberedFileReader(fIn)
+            
+            bSawCog = False
+            
+            self.cogmodule.inFile = sFileIn
+            self.cogmodule.outFile = sFileOut
     
-                # Get all the lines in the spec
-                while l and not self.isEndSpecLine(l):
-                    if self.isBeginSpecLine(l):
-                        raise CogError("Unexpected '%s'" % self.sBeginSpec,
+            # The globals dict we'll use for this file.
+            if globals is None:
+                globals = {}
+    
+            # If there are any global defines, put them in the globals.
+            globals.update(self.options.defines)
+    
+            # loop over generator chunks
+            l = fIn.readline()
+            while l:
+                # Find the next spec begin
+                while l and not self.isBeginSpecLine(l):
+                    if self.isEndSpecLine(l):
+                        raise CogError("Unexpected '%s'" % self.sEndSpec,
                             file=sFileIn, line=fIn.linenumber())
                     if self.isEndOutputLine(l):
                         raise CogError("Unexpected '%s'" % self.sEndOutput,
                             file=sFileIn, line=fIn.linenumber())
-                    if not self.options.bDeleteCode:
-                        fOut.write(l)
-                    gen.parseLine(l)
+                    fOut.write(l)
                     l = fIn.readline()
                 if not l:
-                    raise CogError(
-                        "Cog block begun but never ended.",
-                        file=sFileIn, line=firstLineNum)
-
+                    break
                 if not self.options.bDeleteCode:
                     fOut.write(l)
+    
+                # l is the begin spec
+                gen = CogGenerator()
+                gen.setOutput(stdout=self.stdout)
                 gen.parseMarker(l)
-            
-            l = fIn.readline()
-            
-            # Eat all the lines in the output section.  While reading past
-            # them, compute the md5 hash of the old output.
-            hasher = md5_new()
-            while l and not self.isEndOutputLine(l):
-                if self.isBeginSpecLine(l):
-                    raise CogError("Unexpected '%s'" % self.sBeginSpec,
-                        file=sFileIn, line=fIn.linenumber())
+                firstLineNum = fIn.linenumber()
+                self.cogmodule.firstLineNum = firstLineNum
+    
+                # If the spec begin is also a spec end, then process the single
+                # line of code inside.
                 if self.isEndSpecLine(l):
-                    raise CogError("Unexpected '%s'" % self.sEndSpec,
-                        file=sFileIn, line=fIn.linenumber())
-                hasher.update(l)
-                l = fIn.readline()
-            curHash = hasher.hexdigest()
-
-            if not l and not self.options.bEofCanBeEnd:
-                # We reached end of file before we found the end output line.
-                raise CogError("Missing '%s' before end of file." % self.sEndOutput,
-                    file=sFileIn, line=fIn.linenumber())
-
-            # Write the output of the spec to be the new output if we're 
-            # supposed to generate code.
-            hasher = md5_new()
-            if not self.options.bNoGenerate:
-                sFile = "%s+%d" % (sFileIn, firstLineNum)
-                sGen = gen.evaluate(cog=self, globals=globals, fname=sFile)
-                sGen = self.suffixLines(sGen)
-                hasher.update(sGen)
-                fOut.write(sGen)
-            newHash = hasher.hexdigest()
-            
-            bSawCog = True
-            
-            # Write the ending output line
-            hashMatch = self.reEndOutput.search(l)
-            if self.options.bHashOutput:
-                if hashMatch:
-                    oldHash = hashMatch.groupdict()['hash']
-                    if oldHash != curHash:
-                        raise CogError("Output has been edited! Delete old checksum to unprotect.",
-                            file=sFileIn, line=fIn.linenumber())
-                    # Create a new end line with the correct hash.
-                    endpieces = l.split(hashMatch.group(0), 1)
+                    beg = string.find(l, self.sBeginSpec)
+                    end = string.find(l, self.sEndSpec)
+                    if beg > end:
+                        raise CogError("Cog code markers inverted",
+                            file=sFileIn, line=firstLineNum)
+                    else:
+                        sCode = l[beg+len(self.sBeginSpec):end].strip()
+                        gen.parseLine(sCode)
                 else:
-                    # There was no old hash, but we want a new hash.
-                    endpieces = l.split(self.sEndOutput, 1)
-                l = (self.sEndFormat % newHash).join(endpieces)
-            else:
-                # We don't want hashes output, so if there was one, get rid of
-                # it.
-                if hashMatch:
-                    l = l.replace(hashMatch.groupdict()['hashsect'], '', 1)
-                    
-            if not self.options.bDeleteCode:
-                fOut.write(l)
-            l = fIn.readline()
+                    # Deal with an ordinary code block.
+                    l = fIn.readline()
+        
+                    # Get all the lines in the spec
+                    while l and not self.isEndSpecLine(l):
+                        if self.isBeginSpecLine(l):
+                            raise CogError("Unexpected '%s'" % self.sBeginSpec,
+                                file=sFileIn, line=fIn.linenumber())
+                        if self.isEndOutputLine(l):
+                            raise CogError("Unexpected '%s'" % self.sEndOutput,
+                                file=sFileIn, line=fIn.linenumber())
+                        if not self.options.bDeleteCode:
+                            fOut.write(l)
+                        gen.parseLine(l)
+                        l = fIn.readline()
+                    if not l:
+                        raise CogError(
+                            "Cog block begun but never ended.",
+                            file=sFileIn, line=firstLineNum)
+    
+                    if not self.options.bDeleteCode:
+                        fOut.write(l)
+                    gen.parseMarker(l)
+                
+                l = fIn.readline()
+                
+                # Eat all the lines in the output section.  While reading past
+                # them, compute the md5 hash of the old output.
+                hasher = hash_factory()
+                while l and not self.isEndOutputLine(l):
+                    if self.isBeginSpecLine(l):
+                        raise CogError("Unexpected '%s'" % self.sBeginSpec,
+                            file=sFileIn, line=fIn.linenumber())
+                    if self.isEndSpecLine(l):
+                        raise CogError("Unexpected '%s'" % self.sEndSpec,
+                            file=sFileIn, line=fIn.linenumber())
+                    hasher.update(l)
+                    l = fIn.readline()
+                curHash = hasher.hexdigest()
+    
+                if not l and not self.options.bEofCanBeEnd:
+                    # We reached end of file before we found the end output line.
+                    raise CogError("Missing '%s' before end of file." % self.sEndOutput,
+                        file=sFileIn, line=fIn.linenumber())
+    
+                # Write the output of the spec to be the new output if we're 
+                # supposed to generate code.
+                hasher = hash_factory()
+                if not self.options.bNoGenerate:
+                    sFile = "%s+%d" % (sFileIn, firstLineNum)
+                    sGen = gen.evaluate(cog=self, globals=globals, fname=sFile)
+                    sGen = self.suffixLines(sGen)
+                    hasher.update(sGen)
+                    fOut.write(sGen)
+                newHash = hasher.hexdigest()
+                
+                bSawCog = True
+                
+                # Write the ending output line
+                hashMatch = self.reEndOutput.search(l)
+                if self.options.bHashOutput:
+                    if hashMatch:
+                        oldHash = hashMatch.groupdict()['hash']
+                        if oldHash != curHash:
+                            raise CogError("Output has been edited! Delete old checksum to unprotect.",
+                                file=sFileIn, line=fIn.linenumber())
+                        # Create a new end line with the correct hash.
+                        endpieces = l.split(hashMatch.group(0), 1)
+                    else:
+                        # There was no old hash, but we want a new hash.
+                        endpieces = l.split(self.sEndOutput, 1)
+                    l = (self.sEndFormat % newHash).join(endpieces)
+                else:
+                    # We don't want hashes output, so if there was one, get rid of
+                    # it.
+                    if hashMatch:
+                        l = l.replace(hashMatch.groupdict()['hashsect'], '', 1)
+                        
+                if not self.options.bDeleteCode:
+                    fOut.write(l)
+                l = fIn.readline()
+    
+            if not bSawCog and self.options.bWarnEmpty:
+                self.showWarning("no cog code found in %s" % sFileIn)
+        finally:
+            if fInToClose:
+                fInToClose.close()
+            if fOutToClose:
+                fOutToClose.close()
 
-        if not bSawCog and self.options.bWarnEmpty:
-            self.showWarning("no cog code found in %s" % sFileIn)
 
     # A regex for non-empty lines, used by suffixLines.
     reNonEmptyLines = re.compile("^\s*\S+.*$", re.MULTILINE)
@@ -513,7 +516,7 @@ class Cog(Redirectable):
             else:
                 # Can't write!
                 raise CogError("Can't overwrite %s" % sOldPath)
-        f = open(sOldPath, "w")
+        f = open(sOldPath, self.sOutputMode)
         f.write(sNewText)
         f.close()
 
@@ -542,6 +545,13 @@ class Cog(Redirectable):
             # push its directory onto the include path.
             self.addToIncludePath([os.path.dirname(sFile)])
 
+            # Set the file output mode based on whether we want \n or native
+            # line endings.
+            self.sOutputMode = 'w'
+            if self.options.bNewlines:
+                self.sOutputMode = 'wb'
+                
+            # How we process the file depends on where the output is going.
             if self.options.sOutputName:
                 self.processFile(sFile, self.options.sOutputName, sFile)
             elif self.options.bReplace:
@@ -574,7 +584,10 @@ class Cog(Redirectable):
     def processFileList(self, sFileList):
         """ Process the files in a file list.
         """
-        for l in open(sFileList).readlines():
+        flist = open(sFileList)
+        lines = flist.readlines()
+        flist.close()
+        for l in lines:
             # Use shlex to parse the line like a shell.
             lex = shlex.shlex(l, posix=True)
             lex.whitespace_split = True
@@ -592,7 +605,8 @@ class Cog(Redirectable):
         self.options = self.options.clone()
 
         self.options.parseArgs(args[1:])
-
+        self.options.validate()
+        
         if args[0][0] == '@':
             if self.options.sOutputName:
                 raise CogUsageError("Can't use -o with @file")
@@ -686,3 +700,10 @@ class Cog(Redirectable):
 # 20050817: Now @files can have arguments on each line to change the cog's
 #               behavior for that line.
 # 20051006: Version 2.0
+# 20080521: -U options lets you create Unix newlines on Windows.  Thanks,
+#               Alexander Belchenko.
+# 20080522: It's now ok to have -d with output to stdout, and now we validate
+#               the args after each line of an @file.
+# 20090520: Use hashlib where it's available, to avoid a warning.
+#           Use the builtin compile() instead of compiler, for Jython.
+#           Explicitly close files we opened, Jython likes this.
