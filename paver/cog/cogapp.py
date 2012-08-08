@@ -376,6 +376,9 @@ class Cog(Redirectable):
                 gen.parseMarker(l)
                 firstLineNum = fIn.linenumber()
                 self.cogmodule.firstLineNum = firstLineNum
+
+                # paver-specific, backward-compatible hack
+                self.gen = gen
     
                 # If the spec begin is also a spec end, then process the single
                 # line of code inside.
