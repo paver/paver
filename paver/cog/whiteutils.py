@@ -1,28 +1,25 @@
 """ Indentation utilities for Cog.
     http://nedbatchelder.com/code/cog
     
-    Copyright 2004-2012, Ned Batchelder.
+    Copyright 2004-2005, Ned Batchelder.
 """
 
-from __future__ import absolute_import
-import re
-from .backward import string_types, bytes_types, to_bytes, text_types, b
+# $Id: whiteutils.py 110 2005-08-27 22:35:20Z ned $
+
+import re, types
 
 def whitePrefix(strings):
     """ Determine the whitespace prefix common to all non-blank lines
         in the argument list.
     """
     # Remove all blank lines from the list
-    strings = [s for s in strings if s.strip() != '']
-
+    strings = filter(lambda s: s.strip() != '', strings)
+    
     if not strings: return ''
 
     # Find initial whitespace chunk in the first line.
     # This is the best prefix we can hope for.
-    pat = r'\s*'
-    if isinstance(strings[0], bytes_types):
-        pat = to_bytes(pat)
-    prefix = re.match(pat, strings[0]).group(0)
+    prefix = re.match(r'\s*', strings[0]).group(0)
     
     # Loop over the other strings, keeping only as much of
     # the prefix as matches each string.
@@ -38,20 +35,17 @@ def reindentBlock(lines, newIndent=''):
         Remove any common whitespace indentation.
         Re-indent using newIndent, and return it as a single string.
     """
-    sep, nothing = '\n', ''
-    if isinstance(lines, bytes_types):
-        sep, nothing = b('\n'), b('')
-    if isinstance(lines, string_types):
-        lines = lines.split(sep)
+    if isinstance(lines, types.StringTypes):
+        lines = lines.split('\n')
     oldIndent = whitePrefix(lines)
     outLines = []
     for l in lines:
         if oldIndent:
-            l = l.replace(oldIndent, nothing, 1)
+            l = l.replace(oldIndent, '', 1)
         if l and newIndent:
             l = newIndent + l
         outLines.append(l)
-    return sep.join(outLines)
+    return '\n'.join(outLines)
 
 def commonPrefix(strings):
     """ Find the longest string that is a prefix of all the strings.
