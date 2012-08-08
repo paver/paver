@@ -13,3 +13,5 @@ pip-log.txt
 /bin
 /virtualenv
 .tox
+*\$py\.class*
+
