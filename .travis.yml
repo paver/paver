@@ -7,7 +7,7 @@ python:
 
 # jython hacks
 before_install:
-  - export JYTHON_URL='http://downloads.sourceforge.net/project/jython/jython-dev/2.7.0a2/jython_installer-2.7a2.jar?r=&ts=1344463879&use_mirror=garr'
+  - export JYTHON_URL='http://downloads.sourceforge.net/project/jython/jython/2.5.2/jython_installer-2.5.2.jar?r=&ts=1344463879&use_mirror=garr'
   - if [ "$TRAVIS_PYTHON_VERSION" == "jython" ]; then wget $JYTHON_URL -O jython_installer.jar; java -jar jython_installer.jar -s -d $HOME/jython; fi
   - if [ "$TRAVIS_PYTHON_VERSION" == "jython" ]; then wget -nd "http://peak.telecommunity.com/dist/ez_setup.py"; $HOME/jython/bin/jython ez_setup.py; $HOME/jython/bin/easy_install pip; $HOME/jython/bin/pip install virtualenv; fi
   - if [ "$TRAVIS_PYTHON_VERSION" == "jython" ]; then $HOME/jython/bin/virtualenv -p $HOME/jython/bin/jython $HOME/virtualenv/jython; fi
