@@ -30,9 +30,9 @@ Current build status:
 
 .. image:: https://secure.travis-ci.org/paver/paver.png?branch=master
 
-`Docs`_  are hosted on Github.
+`Docs`_  are hosted on pypi (docs for development version are on `github <http://paver.github.com/paver/>`_).
 
-.. _`Docs`: http://paver.github.com/paver/
+.. _`Docs`: http://packages.python.org/Paver/
 
 .. _paver-installation:
 
