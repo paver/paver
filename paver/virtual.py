@@ -9,10 +9,18 @@ except ImportError:
 else:
     has_virtualenv = True
 
-_easy_install_tmpl = "    subprocess.call([join(%s, 'easy_install'), '%s'])\n"
+_easy_install_tmpl_tmpl = "    subprocess.call([join(%%s, 'easy_install')%s, '%%s'])\n"
 def _create_bootstrap(script_name, packages_to_install, paver_command_line,
                       install_paver=True, more_text="", dest_dir='.',
-                      no_site_packages=False, unzip_setuptools=False):
+                      no_site_packages=False, unzip_setuptools=False,
+                      find_links=None):
+    if find_links is None:
+        flarg = ''
+    else:
+        if isinstance(find_links, basestring):
+            find_links = [find_links]
+        flarg = ", '--find-links', '%s'" % ' '.join(find_links)
+    _easy_install_tmpl = _easy_install_tmpl_tmpl % flarg
     if install_paver:
         paver_install = (_easy_install_tmpl %
                     ('bin_dir', 'paver==%s' % setup_meta['version']))
@@ -78,6 +86,9 @@ def bootstrap():
 
     script_name
         name of the generated script
+    find_links
+        additional URL(s) to search for packages. This should be either a
+        single URL (i.e. a string) or a list of URLs.
     packages_to_install
         packages to install with easy_install. The version of paver that
         you are using is included automatically. This should be a list of
@@ -100,7 +111,8 @@ def bootstrap():
                       vopts.get("paver_command_line", None),
                       dest_dir=vopts.get("dest_dir", '.'),
                       no_site_packages=vopts.get("no_site_packages", False),
-                      unzip_setuptools=vopts.get("unzip_setuptools", False))
+                      unzip_setuptools=vopts.get("unzip_setuptools", False),
+                      find_links=vopts.get("find_links", None))
 bootstrap.paver_constraint = _boostrap_constraint
 
 def virtualenv(dir):
