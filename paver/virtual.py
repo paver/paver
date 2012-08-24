@@ -9,13 +9,25 @@ except ImportError:
 else:
     has_virtualenv = True
 
-_easy_install_tmpl = "    subprocess.call([join(%s, 'easy_install'), '%s'])\n"
+_easy_install_tmpl = (
+    "    subprocess.call([join(%s, 'easy_install'), %s'%%s'])\n")
 def _create_bootstrap(script_name, packages_to_install, paver_command_line,
                       install_paver=True, more_text="", dest_dir='.',
-                      no_site_packages=False, unzip_setuptools=False):
+                      no_site_packages=False, unzip_setuptools=False,
+                      find_links=None):
+    # configure easy install template
+    easy_install_options = []
+    if find_links:
+        easy_install_options.extend(
+            ['--find-links', ' '.join(find_links)])
+    easy_install_options = (
+        easy_install_options
+        and "'%s', " % "', '".join(easy_install_options) or '')
+    confd_easy_install_tmpl = (_easy_install_tmpl %
+                               ('bin_dir',  easy_install_options))
     if install_paver:
-        paver_install = (_easy_install_tmpl %
-                    ('bin_dir', 'paver==%s' % setup_meta['version']))
+        paver_install = (confd_easy_install_tmpl %
+                         ('paver==%s' % setup_meta['version']))
     else:
         paver_install = ""
 
@@ -43,7 +55,7 @@ def after_install(options, home_dir):
         bin_dir = join(home_dir, 'bin')
 %s""" % (dest_dir, options, paver_install)
     for package in packages_to_install:
-        extra_text += _easy_install_tmpl % ('bin_dir', package)
+        extra_text += _confd_easy_install_tmpl % package
     if paver_command_line:
         command_list = list(paver_command_line.split())
         extra_text += "    subprocess.call([join(bin_dir, 'paver'),%s)" % repr(command_list)[1:]
@@ -93,6 +105,9 @@ def bootstrap():
         environment (defaults to False)
     unzip_setuptools
         unzip Setuptools when installing it (defaults to False)
+    find_links
+        additional URL(s) to search for packages. This should be a list of
+        strings.
     """
     vopts = options.virtualenv
     _create_bootstrap(vopts.get("script_name", "bootstrap.py"),
@@ -100,7 +115,8 @@ def bootstrap():
                       vopts.get("paver_command_line", None),
                       dest_dir=vopts.get("dest_dir", '.'),
                       no_site_packages=vopts.get("no_site_packages", False),
-                      unzip_setuptools=vopts.get("unzip_setuptools", False))
+                      unzip_setuptools=vopts.get("unzip_setuptools", False),
+                      find_links=vopts.get("find_links", []))
 bootstrap.paver_constraint = _boostrap_constraint
 
 def virtualenv(dir):
