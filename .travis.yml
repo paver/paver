@@ -3,13 +3,7 @@ python:
   - "2.5"
   - "2.6"
   - "2.7"
-  - "pypy"
 
-matrix:
-  allow_failures:
-    - "pypy"
-
-# jython hacks
 before_install:
   - export JYTHON_URL='http://downloads.sourceforge.net/project/jython/jython/2.5.2/jython_installer-2.5.2.jar?r=&ts=1344463879&use_mirror=garr'
   - if [ "$TRAVIS_PYTHON_VERSION" == "jython" ]; then wget $JYTHON_URL -O jython_installer.jar; java -jar jython_installer.jar -s -d $HOME/jython; fi
@@ -19,7 +13,6 @@ before_install:
 before_script:
   - if [ "$TRAVIS_PYTHON_VERSION" == "jython" ]; then export PATH="$HOME/virtualenv/jython/bin:$PATH"; export PYTHON_EXE=jython; export PIP_EXE=$HOME/virtualenv/jython/bin/pip; jython -c "print ''"; elif [ "$TRAVIS_PYTHON_VERSION" == "pypy" ]; then export PYTHON_EXE=pypy; export PIP_EXE=pip; else export PYTHON_EXE=python; export PIP_EXE=pip; fi
 
-# install dependencies
 install:
   - if [ "$TRAVIS_PYTHON_VERSION" == "jython" ]; then export PIP_EXE=$HOME/virtualenv/jython/bin/pip; else export PIP_EXE=pip; fi
   - echo $PIP_EXE
