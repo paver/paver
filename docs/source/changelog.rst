@@ -3,7 +3,7 @@
 Paver Changelog
 ===============
 
-1.1.1 (June 11, 2012)
+1.1.1 (August 25, 2012)
 ------------------------
 * path.py fix for Jython compatibility (github `issue #70 <https://github.com/paver/paver/issues/70>`_, thanks to Arfrever)
 * bundled cog updated to version 2.2 for Jython compatibility
