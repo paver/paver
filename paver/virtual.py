@@ -14,9 +14,11 @@ _easy_install_tmpl = (
 def _create_bootstrap(script_name, packages_to_install, paver_command_line,
                       install_paver=True, more_text="", dest_dir='.',
                       no_site_packages=False, unzip_setuptools=False,
-                      find_links=None):
+                      index_url=None, find_links=None):
     # configure easy install template
     easy_install_options = []
+    if index_url:
+        easy_install_options.extend(['--index-url', index_url])
     if find_links:
         easy_install_options.extend(
             ['--find-links', ' '.join(find_links)])
@@ -105,6 +107,8 @@ def bootstrap():
         environment (defaults to False)
     unzip_setuptools
         unzip Setuptools when installing it (defaults to False)
+    index_url
+        base URL of Python Package Index
     find_links
         additional URL(s) to search for packages. This should be a list of
         strings.
@@ -116,6 +120,7 @@ def bootstrap():
                       dest_dir=vopts.get("dest_dir", '.'),
                       no_site_packages=vopts.get("no_site_packages", False),
                       unzip_setuptools=vopts.get("unzip_setuptools", False),
+                      index_url=vopts.get("index_url", None),
                       find_links=vopts.get("find_links", []))
 bootstrap.paver_constraint = _boostrap_constraint
 
