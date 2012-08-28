@@ -3,12 +3,12 @@
 Paver Changelog
 ===============
 
-1.1.1 (June 11, 2012)
+1.1.1 (August 25, 2012)
 ------------------------
 * path.py fix for Jython compatibility (github `issue #70 <https://github.com/paver/paver/issues/70>`_, thanks to Arfrever)
 * bundled cog updated to version 2.2 for Jython compatibility
 * fixes regression for setuptools intallation (i.e. using --root parameter, github `issue #71 <https://github.com/paver/paver/issues/71>`_, thanks to Afrever for the report and yedpodtrzitko for the fix)
-* basic jython compatibility now ensure (jython 2.5.2 now added to `travis <https://secure.travis-ci.org/#!/paver/paver>`_)
+* basic jython compatibility tested
 
 1.1.0 (July 30, 2012)
 ------------------------
