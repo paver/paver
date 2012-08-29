@@ -18,10 +18,10 @@ def _create_bootstrap(script_name, packages_to_install, paver_command_line,
     # configure easy install template
     easy_install_options = []
     if index_url:
-        easy_install_options.extend(['--index-url', index_url])
+        easy_install_options.extend(["--index-url", index_url])
     if find_links:
         easy_install_options.extend(
-            ['--find-links', ' '.join(find_links)])
+            ["--find-links", " ".join(find_links)])
     easy_install_options = (
         easy_install_options
         and "'%s', " % "', '".join(easy_install_options) or '')
