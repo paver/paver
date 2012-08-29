@@ -13,8 +13,8 @@ _easy_install_tmpl = (
     "    subprocess.call([join(%s, 'easy_install'), %s'%%s'])\n")
 def _create_bootstrap(script_name, packages_to_install, paver_command_line,
                       install_paver=True, more_text="", dest_dir='.',
-                      no_site_packages=False, unzip_setuptools=False,
-                      index_url=None, find_links=None):
+                      no_site_packages=None, system_site_packages=None,
+                      unzip_setuptools=False, index_url=None, find_links=None):
     # configure easy install template
     easy_install_options = []
     if index_url:
@@ -33,19 +33,17 @@ def _create_bootstrap(script_name, packages_to_install, paver_command_line,
     else:
         paver_install = ""
 
-    options = """
-
-    options.no_site_packages = %s
-    if hasattr(options,"system_site_packages"):
-        options.system_site_packages = %s
-        """%(bool(no_site_packages),not bool(no_site_packages))
-
+    options = ""
+    # if deprecated 'no_site_packages' was specified and 'system_site_packages'
+    # wasn't, set it from that value
+    if system_site_packages is None and no_site_packages is not None:
+        system_site_packages = not no_site_packages
+    if system_site_packages is not None:
+        options += ("    options.system_site_packages = %s\n" %
+                    bool(system_site_packages))
     if unzip_setuptools:
-        if options:
-            options += "\n"
-        options += "    options.unzip_setuptools = True"
-    if options:
-        options += "\n"
+        options += "    options.unzip_setuptools = True\n"
+    options += "\n"
 
     extra_text = """def adjust_options(options, args):
     args[:] = ['%s']
@@ -104,7 +102,10 @@ def bootstrap():
         '.')
     no_site_packages
         don't give access to the global site-packages dir to the virtual
-        environment (defaults to False)
+        environment (default; deprecated)
+    system_site_packages
+        give access to the global site-packages dir to the virtual
+        environment
     unzip_setuptools
         unzip Setuptools when installing it (defaults to False)
     index_url
@@ -118,7 +119,9 @@ def bootstrap():
                       vopts.get("packages_to_install", []),
                       vopts.get("paver_command_line", None),
                       dest_dir=vopts.get("dest_dir", '.'),
-                      no_site_packages=vopts.get("no_site_packages", False),
+                      no_site_packages=vopts.get("no_site_packages", None),
+                      system_site_packages=vopts.get("system_site_packages",
+                                                     None),
                       unzip_setuptools=vopts.get("unzip_setuptools", False),
                       index_url=vopts.get("index_url", None),
                       find_links=vopts.get("find_links", []))
