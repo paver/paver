@@ -14,7 +14,8 @@ _easy_install_tmpl = (
 def _create_bootstrap(script_name, packages_to_install, paver_command_line,
                       install_paver=True, more_text="", dest_dir='.',
                       no_site_packages=None, system_site_packages=None,
-                      unzip_setuptools=False, index_url=None, find_links=None):
+                      unzip_setuptools=False, distribute=None, index_url=None,
+                      find_links=None):
     # configure easy install template
     easy_install_options = []
     if index_url:
@@ -43,6 +44,8 @@ def _create_bootstrap(script_name, packages_to_install, paver_command_line,
                     bool(system_site_packages))
     if unzip_setuptools:
         options += "    options.unzip_setuptools = True\n"
+    if distribute is not None:
+        options += "    options.use_distribute = %s\n" % bool(distribute)
     options += "\n"
 
     extra_text = """def adjust_options(options, args):
@@ -108,6 +111,9 @@ def bootstrap():
         environment
     unzip_setuptools
         unzip Setuptools when installing it (defaults to False)
+    distribute
+        use Distribute instead of Setuptools. Set environment variable
+        VIRTUALENV_DISTRIBUTE to make it the default.
     index_url
         base URL of Python Package Index
     find_links
@@ -123,6 +129,7 @@ def bootstrap():
                       system_site_packages=vopts.get("system_site_packages",
                                                      None),
                       unzip_setuptools=vopts.get("unzip_setuptools", False),
+                      distribute=vopts.get("distribute", None),
                       index_url=vopts.get("index_url", None),
                       find_links=vopts.get("find_links", []))
 bootstrap.paver_constraint = _boostrap_constraint
