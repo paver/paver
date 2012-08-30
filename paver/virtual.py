@@ -9,28 +9,39 @@ except ImportError:
 else:
     has_virtualenv = True
 
-_easy_install_tmpl = (
-    "    subprocess.call([join(%s, 'easy_install'), %s'%%s'])\n")
+_install_cmd_tmpl = """
+    try:
+        subprocess.call([
+            join(%(bin_dir_var)s, 'pip'), 'install',
+            %(cmd_options)s'%%(package)s'
+        ])
+    except OSError:
+        subprocess.call([
+            join(%(bin_dir_var)s, 'easy_install'),
+            %(cmd_options)s'%%(package)s'
+    ])
+"""
 def _create_bootstrap(script_name, packages_to_install, paver_command_line,
                       install_paver=True, more_text="", dest_dir='.',
                       no_site_packages=None, system_site_packages=None,
                       unzip_setuptools=False, distribute=None, index_url=None,
                       find_links=None):
-    # configure easy install template
-    easy_install_options = []
+    # configure package installation template
+    install_cmd_options = []
     if index_url:
-        easy_install_options.extend(["--index-url", index_url])
+        install_cmd_options.extend(['--index-url', index_url])
     if find_links:
-        easy_install_options.extend(
-            ["--find-links", " ".join(find_links)])
-    easy_install_options = (
-        easy_install_options
-        and "'%s', " % "', '".join(easy_install_options) or '')
-    confd_easy_install_tmpl = (_easy_install_tmpl %
-                               ('bin_dir',  easy_install_options))
+        install_cmd_options.extend(
+            ['--find-links', ' '.join(find_links)])
+    install_cmd_options = (
+        install_cmd_options
+        and "'%s', " % "', '".join(install_cmd_options) or '')
+    confd_install_cmd_tmpl = (
+        _install_cmd_tmpl %
+        {'bin_dir_var': 'bin_dir', 'cmd_options': install_cmd_options})
     if install_paver:
-        paver_install = (confd_easy_install_tmpl %
-                         ('paver==%s' % setup_meta['version']))
+        paver_install = (confd_install_cmd_tmpl %
+                         {'package': 'paver==%s' % setup_meta['version']})
     else:
         paver_install = ""
 
@@ -58,7 +69,7 @@ def after_install(options, home_dir):
         bin_dir = join(home_dir, 'bin')
 %s""" % (dest_dir, options, paver_install)
     for package in packages_to_install:
-        extra_text += confd_easy_install_tmpl % package
+        extra_text += confd_install_cmd_tmpl % package
     if paver_command_line:
         command_list = list(paver_command_line.split())
         extra_text += "    subprocess.call([join(bin_dir, 'paver'),%s)" % repr(command_list)[1:]
@@ -94,7 +105,7 @@ def bootstrap():
     script_name
         name of the generated script
     packages_to_install
-        packages to install with easy_install. The version of paver that
+        packages to install with pip/easy_install. The version of paver that
         you are using is included automatically. This should be a list of
         strings.
     paver_command_line
