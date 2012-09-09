@@ -9,7 +9,7 @@ import traceback
 
 from os.path import *
 
-VERSION = "1.1.1"
+VERSION = "1.1.2"
 
 class PavementError(Exception):
     """Exception that represents a problem in the pavement.py file
