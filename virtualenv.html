@@ -96,9 +96,20 @@ line arguments, not the paver command itself).</dd>
 &#8216;.&#8217;)</dd>
 <dt>no_site_packages</dt>
 <dd>don&#8217;t give access to the global site-packages dir to the virtual
-environment (defaults to False)</dd>
+environment (default; deprecated)</dd>
+<dt>system_site_packages</dt>
+<dd>give access to the global site-packages dir to the virtual
+environment</dd>
 <dt>unzip_setuptools</dt>
 <dd>unzip Setuptools when installing it (defaults to False)</dd>
+<dt>distribute</dt>
+<dd>use Distribute instead of Setuptools. Set environment variable
+VIRTUALENV_DISTRIBUTE to make it the default.</dd>
+<dt>index_url</dt>
+<dd>base URL of Python Package Index</dd>
+<dt>find_links</dt>
+<dd>additional URL(s) to search for packages. This should be a list of
+strings.</dd>
 </dl>
 </dd></dl>
 
@@ -171,7 +182,7 @@ environment (defaults to False)</dd>
     </div>
     <div class="footer">
       &copy; Copyright 2008, SitePen, Inc..
-      Last updated on Aug 27, 2012.
+      Last updated on Sep 10, 2012.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.6.
     </div>
   </body>
