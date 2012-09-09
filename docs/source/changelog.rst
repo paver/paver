@@ -3,6 +3,11 @@
 Paver Changelog
 ===============
 
+1.1.2 (TBA)
+------------------------
+* ``virtual.bootstrap`` enhancements: support for ``find-links``, ``index-url``, ``system-site-packages`` and ``distribute`` options (github `issue #79 <https://github.com/paver/paver/issues/79>`_, thanks to pmcnr)
+
+
 1.1.1 (August 25, 2012)
 ------------------------
 * path.py fix for Jython compatibility (github `issue #70 <https://github.com/paver/paver/issues/70>`_, thanks to Arfrever)
