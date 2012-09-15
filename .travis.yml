@@ -3,6 +3,7 @@ python:
   - "2.5"
   - "2.6"
   - "2.7"
+  - "3.2"
 
 before_install:
   - export JYTHON_URL='http://downloads.sourceforge.net/project/jython/jython/2.5.2/jython_installer-2.5.2.jar?r=&ts=1344463879&use_mirror=garr'
