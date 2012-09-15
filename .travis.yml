@@ -17,7 +17,8 @@ before_script:
 install:
   - if [ "$TRAVIS_PYTHON_VERSION" == "jython" ]; then export PIP_EXE=$HOME/virtualenv/jython/bin/pip; else export PIP_EXE=pip; fi
   - echo $PIP_EXE
-  - export TEST_REQS_FILE=test-requirements.txt; if [ "$TRAVIS_PYTHON_VERSION" == "3.2" ]; then export TEST_REQS_FILE="test-requirements-3.txt"
+  - export TEST_REQS_FILE=test-requirements.txt
+  - if [ "$TRAVIS_PYTHON_VERSION" == "3.2" ]; then export TEST_REQS_FILE="test-requirements-3.txt"; fi
   - if [ "$TRAVIS_PYTHON_VERSION" == "jython" ]; then source $HOME/virtualenv/jython/bin/activate; fi; $PIP_EXE install -r "$TEST_REQS_FILE"
 
 # run tests
