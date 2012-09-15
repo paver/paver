@@ -11,6 +11,7 @@ from os.path import *
 
 import six
 from six import print_
+from six.moves import xrange
 
 VERSION = "1.1.2"
 

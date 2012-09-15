@@ -114,8 +114,8 @@ class SectionedFile(object):
         self.contents = []
         self.sections = {}
         if from_string is not None:
-            import StringIO
-            f = StringIO.StringIO(from_string)
+            from six import StringIO
+            f = StringIO(from_string)
         else:
             f = open(filename)
         self._read_file(f)
@@ -262,7 +262,7 @@ def _cogsh(cog):
 def _runcog(options, uncog=False):
     """Common function for the cog and runcog tasks."""
     
-    from paver.cog import Cog
+    from cogapp import Cog
     options.order('cog', 'sphinx', add_rest=True)
     c = Cog()
     if uncog:
