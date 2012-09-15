@@ -20,6 +20,7 @@ install:
   - export TEST_REQS_FILE=test-requirements.txt
   - if [ "$TRAVIS_PYTHON_VERSION" == "3.2" ]; then export TEST_REQS_FILE="test-requirements-3.txt"; fi
   - if [ "$TRAVIS_PYTHON_VERSION" == "jython" ]; then source $HOME/virtualenv/jython/bin/activate; fi; $PIP_EXE install -r "$TEST_REQS_FILE"
+  - $PIP_EXE install -r requirements.txt
 
 # run tests
 # script:  if [ "$TRAVIS_PYTHON_VERSION" == "jython" ]; then $HOME/virtualenv/jython/bin/jython setup.py develop; $HOME/virtualenv/jython/bin/paver test; else $PYTHON_EXE setup.py test; fi;
