@@ -107,6 +107,6 @@ PavementError = tasks.PavementError
 if sys.version_info > (2,5):
     from paver.path25 import path, pushd
 else:
-    from paver.path import path
+    from path import path
 
 import paver.misctasks

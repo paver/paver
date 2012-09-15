@@ -138,7 +138,7 @@ def publish_docs(options):
         f.writelines(["#!/bin/sh", os.linesep, "ssh%s $*" % (" -i "+options.deploy_key if getattr(options, "deploy_key", None) else "")])
         f.close()
 
-        os.chmod(git, 0777)
+        os.chmod(git, int('777', 8))
 
         safe_clone.chdir()
 

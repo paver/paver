@@ -550,7 +550,7 @@ def needs(*args):
         needs_list = func.needs
         if len(req) == 1:
             req = req[0]
-        if isinstance(req, basestring):
+        if isinstance(req, six.string_types):
             needs_list.append(req)
         elif isinstance(req, (list, tuple)):
             needs_list.extend(req)

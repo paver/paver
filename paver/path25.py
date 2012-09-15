@@ -4,7 +4,7 @@ from __future__ import with_statement
 import os
 from contextlib import contextmanager
 
-from paver.path import path
+from path import path
 from paver import tasks
 
 __all__ = ['path', 'pushd']

@@ -1,7 +1,7 @@
 """Miscellaneous tasks that don't fit into one of the other groupings."""
 import pkgutil
 import zipfile
-from StringIO import StringIO
+from six import StringIO
 from os.path import join, dirname, exists, abspath
 from paver.easy import dry, task
 from paver.tasks import VERSION, cmdopts
