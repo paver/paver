@@ -9,6 +9,9 @@ import traceback
 
 from os.path import *
 
+import six
+from six import print_
+
 VERSION = "1.1.2"
 
 class PavementError(Exception):
@@ -68,7 +71,7 @@ class Environment(object):
             self._print(output)
 
     def _print(self, output):
-        print output
+        print_(output)
         sys.stdout.flush()
 
     def _exit(self, code):
@@ -184,7 +187,8 @@ class Environment(object):
         if running_top_level:
             try:
                 return do_task()
-            except Exception, e:
+            except Exception:
+                e = sys.exc_info()[1]
                 self._print("""
 
 Captured Task Output:
@@ -444,12 +448,12 @@ class Task(object):
                 environment.error("Option %s added for hiding, but it's not in parser...?" % opt_str)
 
         name = self.name
-        print "\n%s" % name
-        print "-" * len(name)
+        print_("\n%s" % name)
+        print_("-" * len(name))
         parser.print_help()
-        print
-        print self.__doc__
-        print
+        print_()
+        print_(self.__doc__)
+        print_()
 
     def _set_value_to_task(self, task_name, option_name, dist_option_name, value):
         import paver.options
@@ -587,7 +591,7 @@ def might_call(*args):
         might_call = func.might_call
         if len(req) == 1:
             req = req[0]
-        if isinstance(req, basestring):
+        if isinstance(req, six.string_types):
             might_call.append(req)
         elif isinstance(req, (list, tuple)):
             might_call.extend(req)
@@ -753,7 +757,7 @@ def help(args, help_function):
         task_name = args[0]
         task = environment.get_task(task_name)
         if not task:
-            print "Task not found: %s" % (task_name)
+            print_("Task not found: %s" % (task_name))
             return
 
         task.display_help()
@@ -766,10 +770,10 @@ def help(args, help_function):
     maxlen, task_list = _group_by_module(task_list)
     fmt = "  %-" + str(maxlen) + "s - %s"
     for group_name, group in task_list:
-        print "\nTasks from %s:" % (group_name)
+        print_("\nTasks from %s:" % (group_name))
         for task in group:
             if not getattr(task, "no_help", False):
-                print(fmt % (task.shortname, task.description))
+                print_(fmt % (task.shortname, task.description))
 
 def _process_commands(args, auto_pending=False):
     first_loop = True
@@ -812,13 +816,15 @@ def _launch_pavement(args):
 
     if not exists(environment.pavement_file):
         environment.pavement_file = None
-        exec "from paver.easy import *\n" in mod.__dict__
+        six.exec_("from paver.easy import *\n", mod.__dict__)
         _process_commands(args)
         return
 
     mod.__file__ = environment.pavement_file
     try:
-        execfile(environment.pavement_file, mod.__dict__)
+        with open(environment.pavement_file) as pf:
+            source = pf.read()
+        exec(compile(source, environment.pavement_file, 'exec'), mod.__dict__)
         auto_task = getattr(mod, 'auto', None)
         auto_pending = isinstance(auto_task, Task)
 
@@ -831,14 +837,15 @@ def _launch_pavement(args):
         mod.__dict__.update(resident_tasks)
 
         _process_commands(args, auto_pending=auto_pending)
-    except PavementError, e:
+    except PavementError:
+        e = sys.exc_info()[1]
         # this is hacky, but it is needed if problem would occur within
         # argument parsing, which is actually quite common
         if getattr(environment.options, "propagate_traceback", False) \
             or '--propagate-traceback' in args:
             raise
-        print "\n\n*** Problem with pavement:\n%s\n%s\n\n" % (
-                    abspath(environment.pavement_file), e)
+        print_("\n\n*** Problem with pavement:\n%s\n%s\n\n" % (
+                    abspath(environment.pavement_file), e))
 
 def main(args=None):
     global environment
@@ -850,6 +857,7 @@ def main(args=None):
     try:
         args = _parse_global_options(args)
         _launch_pavement(args)
-    except BuildFailure, e:
+    except BuildFailure:
+        e = sys.exc_info()[1]
         environment.error("Build failed: %s", e)
         sys.exit(1)
