@@ -14,4 +14,4 @@ pip-log.txt
 /virtualenv
 .tox
 *\$py\.class*
-
+.pip-download-cache
