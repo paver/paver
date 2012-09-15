@@ -822,8 +822,11 @@ def _launch_pavement(args):
 
     mod.__file__ = environment.pavement_file
     try:
-        with open(environment.pavement_file) as pf:
+        pf = open(environment.pavement_file)
+        try:
             source = pf.read()
+        finally:
+            pf.close()
         exec(compile(source, environment.pavement_file, 'exec'), mod.__dict__)
         auto_task = getattr(mod, 'auto', None)
         auto_pending = isinstance(auto_task, Task)
