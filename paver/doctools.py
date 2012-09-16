@@ -202,7 +202,7 @@ class Includer(object):
     4. return just the section desired if a section is requested
     
     If a cog object is provided at initialization, the text will be
-    sent to the CogGenerator (cog.gen) rather than returned as
+    output (via cog's out) rather than returned as
     a string.
     
     You can pass in include_markers which is a dictionary that maps
@@ -246,7 +246,7 @@ class Includer(object):
             else:
                 value = f[section]
         if self.cog:
-            self.cog.gen.out(value)
+            self.cog.cogmodule.out(value)
         else:
             return value
 
@@ -256,7 +256,7 @@ def _cogsh(cog):
     def shfunc(command, insert_output=True):
         output = sh(command, capture=insert_output)
         if insert_output:
-            cog.gen.out(output)
+            cog.cogmodule.out(output)
     return shfunc
 
 def _runcog(options, uncog=False):
