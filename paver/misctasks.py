@@ -1,7 +1,7 @@
 """Miscellaneous tasks that don't fit into one of the other groupings."""
 import pkgutil
 import zipfile
-from six import StringIO
+import six
 from os.path import join, dirname, exists, abspath
 from paver.easy import dry, task
 from paver.tasks import VERSION, cmdopts
@@ -38,7 +38,7 @@ def minilib(options):
         defaults, path, release, setuputils, misctasks, options,
         tasks, easy
     """
-    filelist = ['__init__', 'defaults', 'path', 'path25', 'release',
+    filelist = ['__init__', 'defaults', 'release',
                 'setuputils', "misctasks", "options", "tasks", "easy"]
     filelist.extend(options.get('extra_files', []))
 
@@ -50,11 +50,11 @@ def minilib(options):
 
     def generate_zip():
         # Write the mini library to a buffer.
-        buf = StringIO()
+        buf = six.BytesIO()
         destfile = zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED)
         for filename in filelist:
             destfile.writestr("paver/%s.py" % filename,
-                              pkgutil.get_data('paver', "%s.py" % filename))
+                pkgutil.get_data('paver', "%s.py" % filename))
         destfile.close()
 
         # Write the buffer to disk.

@@ -13,7 +13,7 @@ import six
 from six import print_
 from six.moves import xrange
 
-VERSION = "1.1.2"
+VERSION = "1.2.0.dev0"
 
 class PavementError(Exception):
     """Exception that represents a problem in the pavement.py file
@@ -730,7 +730,12 @@ def _cmp_task_names(a, b):
         return 1
     if b_in_pavement and not a_in_pavement:
         return -1
-    return cmp(a, b)
+    # trick taken from python3porting.org
+    return (a > b) - (b < a)
+
+if six.PY3:
+    import functools
+    _task_names_key = functools.cmp_to_key(_cmp_task_names)
 
 def _group_by_module(items):
     groups = []
@@ -767,7 +772,10 @@ def help(args, help_function):
     help_function()
 
     task_list = environment.get_tasks()
-    task_list = sorted(task_list, cmp=_cmp_task_names)
+    if six.PY3:
+        task_list = sorted(task_list, key=_task_names_key)
+    else:
+        task_list = sorted(task_list, cmp=_cmp_task_names)
     maxlen, task_list = _group_by_module(task_list)
     fmt = "  %-" + str(maxlen) + "s - %s"
     for group_name, group in task_list:

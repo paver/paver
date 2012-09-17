@@ -6,7 +6,7 @@ import paver.doctools
 import paver.virtual
 import paver.misctasks
 from paver.setuputils import setup
-
+path.chdir = path.__enter__ #XXX hack
 
 options = environment.options
 
