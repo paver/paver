@@ -1,19 +1,19 @@
+from mock import Mock, patch
 from paver import svn
-from paver.tests.mock import Mock, patch
 
-@patch(svn, "sh")
+@patch('paver.svn.sh')
 def test_simple_checkout(sh):
     svn.checkout("http://foo", "bar")
     assert sh.called
     assert sh.call_args[0][0] == "svn co http://foo bar"
 
-@patch(svn, "sh")
+@patch('paver.svn.sh')
 def test_checkout_with_revision(sh):
     svn.checkout("http://foober", "baz", revision="1212")
     assert sh.called
     assert sh.call_args[0][0] == "svn co -r 1212 http://foober baz", sh.call_args[0][0]
 
-@patch(svn, "sh")
+@patch('paver.svn.sh')
 def test_simple_update(sh):
     svn.update("bar")
     assert sh.called
@@ -23,25 +23,25 @@ def test_simple_update(sh):
     assert sh.called
     assert sh.call_args[0][0] == "svn up "
 
-@patch(svn, "sh")
+@patch('paver.svn.sh')
 def test_update_with_revision(sh):
     svn.update(revision="1234")
     assert sh.called
     assert sh.call_args[0][0] == "svn up -r 1234 "
 
-@patch(svn, "sh")
+@patch('paver.svn.sh')
 def test_simple_export(sh):
     svn.export("http://foo", "bar")
     assert sh.called
     assert sh.call_args[0][0] == "svn export http://foo bar"
 
-@patch(svn, "sh")
+@patch('paver.svn.sh')
 def test_export_with_revision(sh):
     svn.export("http://foo", "bar", revision="1234")
     assert sh.called
     assert sh.call_args[0][0] == "svn export -r 1234 http://foo bar"
 
-@patch(svn, "sh")
+@patch('paver.svn.sh')
 def test_svn_info(sh):
     sh.return_value="""Path: dojotoolkit/dojo
 URL: http://svn.dojotoolkit.org/src/dojo/trunk

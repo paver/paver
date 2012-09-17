@@ -1,10 +1,10 @@
 import sys
+from mock import patch, Mock
 from paver import easy
-from paver.tests.mock import patch, Mock
 import subprocess # for easy.sh tests
 
 
-@patch(subprocess, "Popen")
+@patch('subprocess.Popen')
 def test_sh_raises_BuildFailure(popen):
     popen.return_value = Mock()
     popen.return_value.returncode = 1
@@ -25,8 +25,8 @@ def test_sh_raises_BuildFailure(popen):
     assert popen.call_args[1]['shell'] == True
     assert 'stdout' not in popen.call_args[1]
 
-@patch(subprocess, "Popen")
-@patch(easy, "error")
+@patch('paver.easy.error')
+@patch('subprocess.Popen')
 def test_sh_with_capture_raises_BuildFailure(popen, error):
     popen.return_value = Mock()
     popen.return_value.returncode = 1
@@ -50,7 +50,7 @@ def test_sh_with_capture_raises_BuildFailure(popen, error):
     assert error.called
     assert error.call_args == (('some stderr', ), {})
 
-@patch(subprocess, "Popen")
+@patch('subprocess.Popen')
 def test_sh_ignores_error(popen):
     popen.return_value = Mock()
     popen.return_value.communicate = Mock()
@@ -63,7 +63,7 @@ def test_sh_ignores_error(popen):
     assert popen.call_args[1]['shell'] == True
     assert 'stdout' not in popen.call_args[1]
 
-@patch(subprocess, "Popen")
+@patch('subprocess.Popen')
 def test_sh_ignores_error_with_capture(popen):
     popen.return_value = Mock()
     popen.return_value.returncode = 1

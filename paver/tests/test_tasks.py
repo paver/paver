@@ -3,10 +3,10 @@ from pprint import pprint
 
 from six import print_
 from nose.tools import assert_equals
+from mock import Mock
 
 from paver import setuputils, misctasks, tasks, options
 
-from paver.tests.mock import Mock
 from paver.tests.utils import _set_environment, FakeExitException
 
 OP_T1_CALLED = 0
