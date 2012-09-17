@@ -1,4 +1,5 @@
 from distutils.core import Command
+from six import print_
 
 from paver.setuputils import install_distutils_tasks, \
                             DistutilsTaskFinder, _get_distribution, \
@@ -91,7 +92,7 @@ def test_task_with_distutils_dep():
     assert sdist.called
     assert _sdist.called
     cmd = d.get_command_obj('sdist')
-    print "Cmd is: %s" % cmd
+    print_("Cmd is: %s" % cmd)
     assert cmd.foo
     assert _sdist.foo_set
     

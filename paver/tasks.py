@@ -795,7 +795,7 @@ def _process_commands(args, auto_pending=False):
         first_loop = False
 
 def call_pavement(new_pavement, args):
-    if isinstance(args, basestring):
+    if isinstance(args, six.string_types):
         args = args.split()
     global environment
     environment_stack.append(environment)

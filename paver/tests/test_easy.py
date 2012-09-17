@@ -1,3 +1,4 @@
+import sys
 from paver import easy
 from paver.tests.mock import patch, Mock
 import subprocess # for easy.sh tests
@@ -12,7 +13,8 @@ def test_sh_raises_BuildFailure(popen):
 
     try:
         easy.sh('foo')
-    except easy.BuildFailure, e:
+    except easy.BuildFailure:
+        e = sys.exc_info()[1]
         args = e.args
         assert args == ('Subprocess return code: 1', )
     else:
@@ -32,7 +34,8 @@ def test_sh_with_capture_raises_BuildFailure(popen, error):
     popen.return_value.communicate.return_value = ['some stderr']
     try:
         easy.sh('foo', capture=True)
-    except easy.BuildFailure, e:
+    except easy.BuildFailure:
+        e = sys.exc_info()[1]
         args = e.args
         assert args == ('Subprocess return code: 1', )
     else:

@@ -12,6 +12,7 @@
 # Scripts maintained at http://www.voidspace.org.uk/python/index.shtml
 # Comments, suggestions and bug reports welcome.
 
+#XXX Modified for paver python 3 compatibility, should probably update to a newer version
 
 __all__ = (
     'Mock',
@@ -81,7 +82,13 @@ def _importer(name):
 
 
 def patch(target, attribute, new=None):
-    if isinstance(target, basestring):
+    # <python3>
+    try:
+        string_types = basestring
+    except NameError:
+        string_types = str
+    if isinstance(target, string_types):
+        #XXX </python3>
         target = _importer(target)
         
     def patcher(func):

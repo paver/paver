@@ -1,6 +1,7 @@
 import os
 from pprint import pprint
 
+from six import print_
 from nose.tools import assert_equals
 
 from paver import setuputils, misctasks, tasks, options
@@ -139,7 +140,7 @@ def test_basic_command_line():
     _set_environment(t1=t1)
     try:
         tr, args = tasks._parse_command_line(['foo'])
-        print tr
+        print_(tr)
         assert False, "Expected BuildFailure exception for unknown task"
     except tasks.BuildFailure:
         pass
@@ -422,7 +423,7 @@ def test_consume_nargs():
     env = _set_environment(t21=t21, t12=t12)
     try:
         tr, args = tasks._parse_command_line("t21 t12".split())
-        print tr
+        print_(tr)
         assert False, "Expected BuildFailure exception for not enougth args"
     except tasks.BuildFailure:
         pass
