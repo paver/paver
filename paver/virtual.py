@@ -9,23 +9,32 @@ except ImportError:
 else:
     has_virtualenv = True
 
-_install_cmd_tmpl = """
+_pip_then_easy_install_tmpl = """
     try:
-        subprocess.call([
-            join(%(bin_dir_var)s, 'pip'), 'install',
-            %(cmd_options)s'%%(package)s'
-        ])
+        subprocess.call(
+            [join(%(bin_dir_var)s, 'pip'), 'install']
+            + %(cmd_options)r
+            + %%(packages)r
+        )
     except OSError:
-        subprocess.call([
-            join(%(bin_dir_var)s, 'easy_install'),
-            %(cmd_options)s'%%(package)s'
-    ])
+        subprocess.call(
+            [join(%(bin_dir_var)s, 'easy_install')]
+            + %(cmd_options)r
+            + %%(packages)r
+        )
+"""
+_easy_install_tmpl = """
+    subprocess.call(
+        [join(%(bin_dir_var)s, 'easy_install')]
+        + %(cmd_options)r
+        + %%(packages)r
+    )
 """
 def _create_bootstrap(script_name, packages_to_install, paver_command_line,
                       install_paver=True, more_text="", dest_dir='.',
                       no_site_packages=None, system_site_packages=None,
                       unzip_setuptools=False, distribute=None, index_url=None,
-                      find_links=None):
+                      find_links=None, prefer_easy_install=False):
     # configure package installation template
     install_cmd_options = []
     if index_url:
@@ -33,17 +42,15 @@ def _create_bootstrap(script_name, packages_to_install, paver_command_line,
     if find_links:
         install_cmd_options.extend(
             ['--find-links', ' '.join(find_links)])
-    install_cmd_options = (
-        install_cmd_options
-        and "'%s', " % "', '".join(install_cmd_options) or '')
-    confd_install_cmd_tmpl = (
-        _install_cmd_tmpl %
+    install_cmd_tmpl = (_easy_install_tmpl if prefer_easy_install
+                        else _pip_then_easy_install_tmpl)
+    confd_install_cmd_tmpl = (install_cmd_tmpl %
         {'bin_dir_var': 'bin_dir', 'cmd_options': install_cmd_options})
+    # make copy to local scope to add paver to packages to install
+    packages_to_install = packages_to_install[:]
     if install_paver:
-        paver_install = (confd_install_cmd_tmpl %
-                         {'package': 'paver==%s' % setup_meta['version']})
-    else:
-        paver_install = ""
+        packages_to_install.insert(0, 'paver==%s' % setup_meta['version'])
+    install_cmd = confd_install_cmd_tmpl % {'packages': packages_to_install}
 
     options = ""
     # if deprecated 'no_site_packages' was specified and 'system_site_packages'
@@ -67,9 +74,7 @@ def after_install(options, home_dir):
         bin_dir = join(home_dir, 'Scripts')
     else:
         bin_dir = join(home_dir, 'bin')
-%s""" % (dest_dir, options, paver_install)
-    for package in packages_to_install:
-        extra_text += confd_install_cmd_tmpl % package
+%s""" % (dest_dir, options, install_cmd)
     if paver_command_line:
         command_list = list(paver_command_line.split())
         extra_text += "    subprocess.call([join(bin_dir, 'paver'),%s)" % repr(command_list)[1:]
@@ -130,6 +135,9 @@ def bootstrap():
     find_links
         additional URL(s) to search for packages. This should be a list of
         strings.
+    prefer_easy_install
+        prefer easy_install to pip for package installation if both are
+        installed (defaults to False)
     """
     vopts = options.virtualenv
     _create_bootstrap(vopts.get("script_name", "bootstrap.py"),
@@ -142,7 +150,9 @@ def bootstrap():
                       unzip_setuptools=vopts.get("unzip_setuptools", False),
                       distribute=vopts.get("distribute", None),
                       index_url=vopts.get("index_url", None),
-                      find_links=vopts.get("find_links", []))
+                      find_links=vopts.get("find_links", []),
+                      prefer_easy_install=vopts.get("prefer_easy_install",
+                                                    False))
 bootstrap.paver_constraint = _boostrap_constraint
 
 def virtualenv(dir):
