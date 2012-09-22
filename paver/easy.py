@@ -41,7 +41,6 @@ def sh(command, capture=False, ignore_error=False, cwd=None):
     If the dry_run option is True, the command will not
     actually be run."""
     def runpipe():
-        capture = True #XXX debugging
         kwargs = { 'shell': True, 'cwd': cwd}
         if capture:
             kwargs['stderr'] = subprocess.STDOUT
