@@ -11,6 +11,12 @@ try:
 except ImportError:
     has_sphinx = False
 
+try:
+    import cogapp
+    has_cog = True
+except ImportError:
+    has_cog = False
+
 def _get_paths():
     """look up the options that determine where all of the files are."""
     opts = options
@@ -261,10 +267,11 @@ def _cogsh(cog):
 
 def _runcog(options, uncog=False):
     """Common function for the cog and runcog tasks."""
-    
-    from cogapp import Cog
+    if not has_cog:
+        raise BuildFailure('install Cog to build html docs')
+
     options.order('cog', 'sphinx', add_rest=True)
-    c = Cog()
+    c = cogapp.Cog()
     if uncog:
         c.options.bNoGenerate = True
     c.options.bReplace = True

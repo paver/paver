@@ -1,9 +1,15 @@
 import sys
+
+from nose.plugins.skip import SkipTest
 from six import print_
 
 from paver.easy import *
-
 from paver import doctools, tasks, options
+
+def _no25():
+    if sys.version == (2, 5):
+        raise SkipTest('No cog integration in Python 2.5')
+
 
 def test_sections_from_file():
     simpletext = """# [[[section foo]]]
@@ -130,6 +136,7 @@ print sys.path
 """, "Second was '%s'" % (second)
     
 def test_cogging():
+    _no25()
     env = tasks.Environment(doctools)
     tasks.environment = env
     opt = env.options
@@ -149,6 +156,7 @@ def test_cogging():
     assert "print sys.path" not in data
     
 def test_cogging_with_markers_removed():
+    _no25()
     env = tasks.Environment(doctools)
     tasks.environment = env
     opt = env.options
