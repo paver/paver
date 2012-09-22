@@ -1,4 +1,4 @@
-from mock import Mock, patch
+from mock import patch
 from paver import svn
 
 @patch('paver.svn.sh')

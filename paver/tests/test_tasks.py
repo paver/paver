@@ -3,7 +3,6 @@ from pprint import pprint
 
 from six import print_
 from nose.tools import assert_equals
-from mock import Mock
 
 from paver import setuputils, misctasks, tasks, options
 

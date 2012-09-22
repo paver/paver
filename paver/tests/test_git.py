@@ -1,5 +1,5 @@
-from mock import Mock, patch
-from paver import git, easy
+from mock import patch
+from paver import git
 
 import os
 
