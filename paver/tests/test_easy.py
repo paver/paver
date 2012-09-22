@@ -2,14 +2,11 @@ import sys
 from six import b
 from mock import patch, Mock
 from paver import easy
-import subprocess # for easy.sh tests
-
+from subprocess import PIPE, STDOUT
 
 @patch('subprocess.Popen')
 def test_sh_raises_BuildFailure(popen):
-    popen.return_value = Mock()
     popen.return_value.returncode = 1
-    popen.return_value.communicate = Mock()
     popen.return_value.communicate.return_value = [b('some stderr')]
 
     try:
@@ -29,9 +26,7 @@ def test_sh_raises_BuildFailure(popen):
 @patch('paver.easy.error')
 @patch('subprocess.Popen')
 def test_sh_with_capture_raises_BuildFailure(popen, error):
-    popen.return_value = Mock()
     popen.return_value.returncode = 1
-    popen.return_value.communicate = Mock()
     popen.return_value.communicate.return_value = [b('some stderr')]
     try:
         easy.sh('foo', capture=True)
@@ -45,16 +40,14 @@ def test_sh_with_capture_raises_BuildFailure(popen, error):
     assert popen.called
     assert popen.call_args[0][0] == 'foo'
     assert popen.call_args[1]['shell'] == True
-    assert popen.call_args[1]['stdout'] == subprocess.PIPE
-    assert popen.call_args[1]['stderr'] == subprocess.STDOUT
+    assert popen.call_args[1]['stdout'] == PIPE
+    assert popen.call_args[1]['stderr'] == STDOUT
 
     assert error.called
     assert error.call_args == (('some stderr', ), {})
 
 @patch('subprocess.Popen')
 def test_sh_ignores_error(popen):
-    popen.return_value = Mock()
-    popen.return_value.communicate = Mock()
     popen.return_value.communicate.return_value = [b('some stderr')]
     popen.return_value.returncode = 1
     easy.sh('foo', ignore_error=True)
@@ -66,14 +59,12 @@ def test_sh_ignores_error(popen):
 
 @patch('subprocess.Popen')
 def test_sh_ignores_error_with_capture(popen):
-    popen.return_value = Mock()
     popen.return_value.returncode = 1
-    popen.return_value.communicate = Mock()
     popen.return_value.communicate.return_value = [b('some stderr')]
     easy.sh('foo', capture=True, ignore_error=True)
 
     assert popen.called
     assert popen.call_args[0][0] == 'foo'
     assert popen.call_args[1]['shell'] == True
-    assert popen.call_args[1]['stdout'] == subprocess.PIPE
-    assert popen.call_args[1]['stderr'] == subprocess.STDOUT
+    assert popen.call_args[1]['stdout'] == PIPE
+    assert popen.call_args[1]['stderr'] == STDOUT
