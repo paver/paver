@@ -631,28 +631,28 @@ def test_description_retrieval_trial():
     def t1():
         """ Task it is """
     
-    assert_equals("Task it is", t1.description)
+    assert t1.description == "Task it is"
 
 def test_description_empty_without_docstring():
     @tasks.task
     def t1():
         pass
     
-    assert_equals("", t1.description)
+    assert t1.description == ""
 
 def test_description_retrieval_first_sentence():
     @tasks.task
     def t1():
         """ Task it is. Not with another sentence. """
     
-    assert_equals("Task it is", t1.description)
+    assert t1.description == "Task it is"
 
 def test_description_retrieval_first_sentence_even_with_version_numbers():
     @tasks.task
     def t1():
         """ Task it is, installs Django 1.0. Not with another sentence. """
     
-    assert_equals("Task it is, installs Django 1.0", t1.description)
+    assert t1.description == "Task it is, installs Django 1.0"
 
 def test_auto_task_is_not_run_with_noauto():
     @tasks.no_auto

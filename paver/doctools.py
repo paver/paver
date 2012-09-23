@@ -121,11 +121,10 @@ class SectionedFile(object):
         self.sections = {}
         if from_string is not None:
             from six import StringIO
-            f = StringIO(from_string)
+            self._read_file(StringIO(from_string))
         else:
-            f = open(filename)
-        with f:
-            self._read_file(f)
+            with open(filename) as f:
+                self._read_file(f)
         
     def _read_file(self, f):
         """Do the work of reading the file."""
