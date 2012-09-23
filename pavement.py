@@ -66,7 +66,7 @@ if paver.doctools.has_sphinx:
         """Build Paver's documentation and install it into paver/docs"""
         builtdocs = path("docs") / options.sphinx.builddir / "html"
         destdir = path("paver") / "docs"
-        destdir.rmtree()
+        destdir.rmtree_p()
         builtdocs.move(destdir)
     
     @task
@@ -96,10 +96,10 @@ if paver.virtual.has_virtualenv:
 def clean():
     """Cleans up this paver directory. Removes the virtualenv traces and
     the build directory."""
-    path("build").rmtree()
-    path("bin").rmtree()
-    path("lib").rmtree()
-    path(".Python").remove()
+    path("build").rmtree_p()
+    path("bin").rmtree_p()
+    path("lib").rmtree_p()
+    path(".Python").remove_p()
     
 @task
 @needs("uncog")
@@ -176,6 +176,6 @@ def publish_docs(options):
 
 
     finally:
-        safe_clone.rmtree()
-        docs_repo.rmtree()
+        safe_clone.rmtree_p()
+        docs_repo.rmtree_p()
         os.remove(git)

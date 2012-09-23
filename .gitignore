@@ -3,7 +3,7 @@
 *.egg-info
 *~
 /build
-/dist
+dist
 /nbproject/
 pip-log.txt
 /.project
@@ -16,3 +16,8 @@ pip-log.txt
 .tox
 *\$py\.class*
 .pip-download-cache
+/docs/build/
+/docs/samples/started/newway/paver-minilib.zip
+/docs/samples/started/newway/setup.py
+MANIFEST
+/paver/docs/

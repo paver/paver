@@ -14,7 +14,7 @@ import six
 from six import print_
 from six.moves import xrange
 
-VERSION = "1.2.0.dev1"
+VERSION = "1.2.0.dev2"
 
 class PavementError(Exception):
     """Exception that represents a problem in the pavement.py file

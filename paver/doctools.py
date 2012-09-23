@@ -26,15 +26,15 @@ def _get_paths():
         raise BuildFailure("Sphinx documentation root (%s) does not exist."
                            % docroot)
     builddir = docroot / opts.get("builddir", ".build")
-    builddir.mkdir()
+    builddir.mkdir_p()
     srcdir = docroot / opts.get("sourcedir", "")
     if not srcdir.exists():
         raise BuildFailure("Sphinx source file dir (%s) does not exist" 
                             % srcdir)
     htmldir = builddir / "html"
-    htmldir.mkdir()
+    htmldir.mkdir_p()
     doctrees = builddir / "doctrees"
-    doctrees.mkdir()
+    doctrees.mkdir_p()
     return Bunch(locals())
 
 @task
@@ -66,8 +66,8 @@ def doc_clean():
     options list."""
     options.order('sphinx', add_rest=True)
     paths = _get_paths()
-    paths.builddir.rmtree()
-    paths.builddir.mkdir()
+    paths.builddir.rmtree_p()
+    paths.builddir.mkdir_p()
 
 _sectionmarker = re.compile(r'\[\[\[section\s+(.+)\]\]\]')
 _endmarker = re.compile(r'\[\[\[endsection\s*.*\]\]\]')
