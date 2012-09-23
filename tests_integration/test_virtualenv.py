@@ -33,8 +33,9 @@ class TestVirtualenvTaskSpecification(TestCase):
             site_packages = join(self.basedir, 'virtualenv', 'Lib', 'site-packages')
         else:
             site_packages = join(self.basedir, 'virtualenv', 'lib', 'python%s' % sys.version[:3], 'site-packages')
-        f = open(join(site_packages,  "some_venv_module.py"), "w")
-        f.close()
+
+        with open(join(site_packages,  "some_venv_module.py"), "w"):
+            pass
 
         subpavement = """
 from paver import tasks
@@ -49,9 +50,8 @@ def t1():
         pavement_dir = mkdtemp(prefix="unrelated_pavement_module_")
 
         try:
-            f = open(join(pavement_dir, "pavement.py"), "w")
-            f.write(subpavement)
-            f.close()
+            with open(join(pavement_dir, "pavement.py"), "w") as f:
+                f.write(subpavement)
 
             chdir(pavement_dir)
 

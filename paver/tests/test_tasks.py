@@ -2,7 +2,6 @@ import os
 from pprint import pprint
 
 from six import print_
-from nose.tools import assert_equals
 
 from paver import setuputils, misctasks, tasks, options
 
@@ -697,8 +696,8 @@ def test_task_can_be_called_repeatedly():
     tasks._process_commands(['t1', 'spam'])
     tasks._process_commands(['t1', 'eggs'])
 
-    assert_equals('eggs', env.patch_captured[~0])
-    assert_equals('spam', env.patch_captured[~2])
+    assert 'eggs' == env.patch_captured[~0]
+    assert 'spam' == env.patch_captured[~2]
 
 
 def test_options_passed_to_task():

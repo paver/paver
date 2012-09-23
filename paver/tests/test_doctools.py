@@ -148,7 +148,8 @@ def test_cogging():
     env.options = opt
     doctools.cog()
     textfile = basedir / "data/textfile.rst"
-    data = open(textfile).read()
+    with open(textfile) as f:
+        data = f.read()
     print_(data)
     assert "print sys.path" in data
     doctools.uncog()
@@ -168,12 +169,15 @@ def test_cogging_with_markers_removed():
     opt.cog.delete_code = True
     env.options = opt
     textfile = basedir / "data/textfile.rst"
-    original_data = open(textfile).read()
+    with open(textfile) as f:
+        original_data = f.read()
     try:
         doctools.cog()
-        data = open(textfile).read()
+        with open(textfile) as f:
+            data = f.read()
         print_(data)
         assert "[[[cog" not in data
     finally:
-        open(textfile, "w").write(original_data)
+        with open(textfile, "w") as f:
+            f.write(original_data)
 

@@ -124,7 +124,8 @@ class SectionedFile(object):
             f = StringIO(from_string)
         else:
             f = open(filename)
-        self._read_file(f)
+        with f:
+            self._read_file(f)
         
     def _read_file(self, f):
         """Do the work of reading the file."""
