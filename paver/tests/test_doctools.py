@@ -7,7 +7,7 @@ from paver.easy import *
 from paver import doctools, tasks, options
 
 def _no25():
-    if sys.version == (2, 5):
+    if sys.version_info[:2] == (2, 5):
         raise SkipTest('No cog integration in Python 2.5')
 
 

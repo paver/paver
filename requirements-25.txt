@@ -1,3 +1,2 @@
 six==1.2
 path.py==2.4
-cogapp==2.3
