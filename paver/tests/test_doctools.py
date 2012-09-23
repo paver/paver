@@ -154,7 +154,8 @@ def test_cogging():
     print_(data)
     assert "print sys.path" in data
     doctools.uncog()
-    data = open(textfile).read()
+    with open(textfile) as f:
+        data = f.read()
     assert "print sys.path" not in data
     
 def test_cogging_with_markers_removed():
