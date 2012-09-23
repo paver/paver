@@ -26,7 +26,7 @@ class TestVirtualenvTaskSpecification(TestCase):
         Use distribution's bootstrap to do so.
         """
         copyfile(join(dirname(__file__), pardir, "bootstrap.py"), join(self.basedir, "bootstrap.py"))
-        check_call(["python", join(self.basedir, "bootstrap.py")], stdout=PIPE, stderr=PIPE, cwd=self.basedir)
+        check_call([sys.executable, join(self.basedir, "bootstrap.py")], stdout=PIPE, stderr=PIPE, cwd=self.basedir)
 
     def test_running_task_in_specified_virtualenv(self):
         self._prepare_virtualenv()
@@ -35,6 +35,7 @@ class TestVirtualenvTaskSpecification(TestCase):
         else:
             site_packages = join(self.basedir, 'virtualenv', 'lib', 'python%s' % sys.version[:3], 'site-packages')
 
+        # just create the file
         with open(join(site_packages,  "some_venv_module.py"), "w"):
             pass
 
@@ -62,7 +63,9 @@ def t1():
                 python_bin = join(environ['VIRTUAL_ENV'], "bin", "python")
             else:
                 python_bin = "python"
-            check_call([python_bin, paver_bin, "t1"], env={'PYTHONPATH' : join(dirname(__file__), pardir)})
+            # removed: env={'PYTHONPATH' : join(dirname(__file__), pardir)})
+            # seems to work without it
+            check_call([python_bin, paver_bin, "t1"])
 
         finally:
             rmtree(pavement_dir)

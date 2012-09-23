@@ -89,7 +89,8 @@ if paver.virtual.has_virtualenv:
                               """bin_dir, 'python'), '-c', """
                               """'import sys; sys.path.append("."); """
                               """import paver.command; paver.command.main()', """
-                              """'develop'])""")
+                              """'develop'])""",
+                              dest_dir=options.virtualenv.dest_dir)
     
 @task
 def clean():

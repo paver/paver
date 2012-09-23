@@ -14,7 +14,7 @@ import six
 from six import print_
 from six.moves import xrange
 
-VERSION = "1.2.0.dev0"
+VERSION = "1.2.0.dev1"
 
 class PavementError(Exception):
     """Exception that represents a problem in the pavement.py file
@@ -309,7 +309,10 @@ class Task(object):
         if self.use_virtualenv and self.virtualenv_dir:
             #TODO: Environment recovery?
             activate_this = join(self.virtualenv_dir, "bin", "activate_this.py")
-            execfile(activate_this, dict(__file__=activate_this))
+            with open(activate_this) as f:
+                s = f.read()
+            code = compile(s, activate_this, 'exec')
+            exec(code, dict(__file__=activate_this))
         retval = environment._run_task(self.name, self.needs, self.func)
         self.called = True
         return retval
