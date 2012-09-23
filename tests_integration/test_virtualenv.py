@@ -63,9 +63,11 @@ def t1():
                 python_bin = join(environ['VIRTUAL_ENV'], "bin", "python")
             else:
                 python_bin = "python"
-            # removed: env={'PYTHONPATH' : join(dirname(__file__), pardir)})
-            # seems to work without it
-            check_call([python_bin, paver_bin, "t1"])
+            check_call([python_bin, paver_bin, "t1"],
+                env={
+                    'PYTHONPATH' : join(dirname(__file__), pardir),
+                    'PATH': environ['PATH']
+                })
 
         finally:
             rmtree(pavement_dir)
