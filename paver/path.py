@@ -6,10 +6,13 @@ from __future__ import with_statement
 import functools
 import os
 from contextlib import contextmanager
+import sys
 
-from path import path as _orig_path
+if sys.version_info[0] == 3:
+    from paver.deps.path3 import path as _orig_path
+else:
+    from paver.deps.path2 import path as _orig_path
 
-from paver.easy import dry
 from paver import tasks
 
 __all__ = ['path', 'pushd']
@@ -53,6 +56,8 @@ class path(_orig_path):
 _silence_nested_calls = False
 
 def _make_wrapper(name, func):
+    from paver.easy import dry
+
     @functools.wraps(func)
     def wrapper(*args, **kwds):
         global _silence_nested_calls
