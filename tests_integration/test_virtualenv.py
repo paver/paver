@@ -46,9 +46,6 @@ from paver.virtual import virtualenv
 @tasks.task
 @virtualenv(dir="%s")
 def t1():
-    import os,sys
-    print(os.environ)
-    print(sys.path)
     import some_venv_module
 """ % join(self.basedir, "virtualenv")
 
