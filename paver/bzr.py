@@ -2,6 +2,11 @@
 
 This module does not include any tasks, only functions."""
 
+import sys
+
+if sys.version_info[0] == 3:
+    raise ImportError("Bazaar-NG is not available for Python 3")
+
 from paver.options import Bunch
 from bzrlib.builtins import cmd_branch, cmd_checkout, cmd_update, cmd_pull, cmd_version_info
 from StringIO import StringIO
