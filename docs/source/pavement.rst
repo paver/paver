@@ -227,9 +227,9 @@ More complex dependencies
 or environment, you might decide to call an appropriate task in the middle of
 another one.
 
-There are two key options for fixing that::
+There are two key options for fixing that:
 
-# ``@might_call`` decorator, which indicates that task might invoke ``call_task`` on one or more of the specified tasks. This allows you to provide command line options to task that might be called (it is inserted in dependency chain)::
+#. ``@might_call`` decorator, which indicates that task might invoke ``call_task`` on one or more of the specified tasks. This allows you to provide command line options to task that might be called (it is inserted in dependency chain)::
 
     @task
     @cmdopts([
@@ -251,7 +251,8 @@ There are two key options for fixing that::
 
         do_cleanup()
 
-# Providing options and arguments to another tasks directly. Options are provided with final assignet value::
+#. Providing options and arguments to another tasks directly.
+   Options are provided with final assigned value::
 
     @task
     @cmdopts([

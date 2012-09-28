@@ -332,8 +332,7 @@ def cog(options):
         directory to look in for files to cog. If not set,
         'docroot' is looked up.
     pattern
-        file glob to look for under basedir. By default,
-        *.rst
+        file glob to look for under basedir. By default, ``*.rst``
     includedir
         If you have external files to include in your
         documentation, setting includedir to the root
@@ -341,6 +340,7 @@ def cog(options):
         in your Cog namespace as 'include'. This lets you
         easily include files and sections of files. Here's
         an example usage::
+
             [[[cog include('filename_under_includedir.py', 'mysection')]]]
             [[[end]]]
     defines
