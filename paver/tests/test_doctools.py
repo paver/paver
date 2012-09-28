@@ -1,6 +1,16 @@
-from paver.easy import *
+from __future__ import with_statement
+import sys
 
+from nose.plugins.skip import SkipTest
+from paver.deps.six import print_
+
+from paver.easy import *
 from paver import doctools, tasks, options
+
+def _no25():
+    if sys.version_info[:2] == (2, 5):
+        raise SkipTest('No cog integration in Python 2.5')
+
 
 def test_sections_from_file():
     simpletext = """# [[[section foo]]]
@@ -12,7 +22,7 @@ def test_sections_from_file():
     assert f['foo'] == "#Foo!\n", "Foo section contained: '%s'" % f['foo']
 
 def display(msg, *args):
-    print msg % args
+    print_(msg % args)
 
 doctools.debug = display
 
@@ -41,7 +51,8 @@ Yo.
     try:
         f = doctools.SectionedFile(from_string=myfile)
         assert False, "Expected a BuildFailure"
-    except BuildFailure, e:
+    except BuildFailure:
+        e = sys.exc_info()[1]
         assert str(e) == """No end marker for section 'bar'
 (in file 'None', starts at line 2)""", "error was: %s" % (str(e))
 
@@ -58,7 +69,8 @@ Second one.
     try:
         f = doctools.SectionedFile(from_string=myfile)
         assert False, "Expected a BuildFailure"
-    except BuildFailure, e:
+    except BuildFailure:
+        e = sys.exc_info()[1]
         assert str(e) == """section 'foo' redefined
 (in file 'None', first section at line 2, second at line 6)""", \
         "error was: %s" % (str(e))
@@ -75,7 +87,8 @@ This is a good section.
     try:
         f = doctools.SectionedFile(from_string=myfile)
         assert False, "Expected a BuildFailure"
-    except BuildFailure, e:
+    except BuildFailure:
+        e = sys.exc_info()[1]
         assert str(e) == """End section marker with no starting marker
 (in file 'None', at line 6)""", \
         "error was: %s" % (str(e))
@@ -100,7 +113,8 @@ def test_bad_section():
     try:
         f['foo']
         assert False, "Should have a BuildFailure"
-    except BuildFailure, e:
+    except BuildFailure:
+        e = sys.exc_info()[1]
         assert str(e) == "No section 'foo' in file 'None'", \
                "Error: '%s'" % (str(e))
     
@@ -123,6 +137,7 @@ print sys.path
 """, "Second was '%s'" % (second)
     
 def test_cogging():
+    _no25()
     env = tasks.Environment(doctools)
     tasks.environment = env
     opt = env.options
@@ -134,14 +149,17 @@ def test_cogging():
     env.options = opt
     doctools.cog()
     textfile = basedir / "data/textfile.rst"
-    data = open(textfile).read()
-    print data
+    with open(textfile) as f:
+        data = f.read()
+    print_(data)
     assert "print sys.path" in data
     doctools.uncog()
-    data = open(textfile).read()
+    with open(textfile) as f:
+        data = f.read()
     assert "print sys.path" not in data
     
 def test_cogging_with_markers_removed():
+    _no25()
     env = tasks.Environment(doctools)
     tasks.environment = env
     opt = env.options
@@ -153,12 +171,15 @@ def test_cogging_with_markers_removed():
     opt.cog.delete_code = True
     env.options = opt
     textfile = basedir / "data/textfile.rst"
-    original_data = open(textfile).read()
+    with open(textfile) as f:
+        original_data = f.read()
     try:
         doctools.cog()
-        data = open(textfile).read()
-        print data
+        with open(textfile) as f:
+            data = f.read()
+        print_(data)
         assert "[[[cog" not in data
     finally:
-        open(textfile, "w").write(original_data)
-    
+        with open(textfile, "w") as f:
+            f.write(original_data)
+

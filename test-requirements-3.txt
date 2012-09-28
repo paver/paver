@@ -1,5 +1,5 @@
 nose
-unittest2
+unittest2py3k
 virtualenv
 mock
 cogapp

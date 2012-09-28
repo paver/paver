@@ -2,4 +2,4 @@ nose
 unittest2
 virtualenv
 mock
-cogapp
+

@@ -1,3 +1,4 @@
+from __future__ import with_statement
 import sys
 import os
 import optparse
@@ -9,7 +10,15 @@ import traceback
 
 from os.path import *
 
-VERSION = "1.1.2"
+import paver.deps.six as six
+from paver.deps.six import print_
+
+# using six.moves is complicated because we include it and it's thus not at
+# the top level
+if six.PY3:
+    xrange = range
+
+VERSION = "1.2.0.dev2"
 
 class PavementError(Exception):
     """Exception that represents a problem in the pavement.py file
@@ -68,7 +77,7 @@ class Environment(object):
             self._print(output)
 
     def _print(self, output):
-        print output
+        print_(output)
         sys.stdout.flush()
 
     def _exit(self, code):
@@ -184,7 +193,8 @@ class Environment(object):
         if running_top_level:
             try:
                 return do_task()
-            except Exception, e:
+            except Exception:
+                e = sys.exc_info()[1]
                 self._print("""
 
 Captured Task Output:
@@ -303,7 +313,10 @@ class Task(object):
         if self.use_virtualenv and self.virtualenv_dir:
             #TODO: Environment recovery?
             activate_this = join(self.virtualenv_dir, "bin", "activate_this.py")
-            execfile(activate_this, dict(__file__=activate_this))
+            with open(activate_this) as f:
+                s = f.read()
+            code = compile(s, activate_this, 'exec')
+            exec(code, dict(__file__=activate_this))
         retval = environment._run_task(self.name, self.needs, self.func)
         self.called = True
         return retval
@@ -444,12 +457,12 @@ class Task(object):
                 environment.error("Option %s added for hiding, but it's not in parser...?" % opt_str)
 
         name = self.name
-        print "\n%s" % name
-        print "-" * len(name)
+        print_("\n%s" % name)
+        print_("-" * len(name))
         parser.print_help()
-        print
-        print self.__doc__
-        print
+        print_()
+        print_(self.__doc__)
+        print_()
 
     def _set_value_to_task(self, task_name, option_name, dist_option_name, value):
         import paver.options
@@ -546,7 +559,7 @@ def needs(*args):
         needs_list = func.needs
         if len(req) == 1:
             req = req[0]
-        if isinstance(req, basestring):
+        if isinstance(req, six.string_types):
             needs_list.append(req)
         elif isinstance(req, (list, tuple)):
             needs_list.extend(req)
@@ -587,7 +600,7 @@ def might_call(*args):
         might_call = func.might_call
         if len(req) == 1:
             req = req[0]
-        if isinstance(req, basestring):
+        if isinstance(req, six.string_types):
             might_call.append(req)
         elif isinstance(req, (list, tuple)):
             might_call.extend(req)
@@ -725,7 +738,12 @@ def _cmp_task_names(a, b):
         return 1
     if b_in_pavement and not a_in_pavement:
         return -1
-    return cmp(a, b)
+    # trick taken from python3porting.org
+    return (a > b) - (b < a)
+
+if six.PY3:
+    import functools
+    _task_names_key = functools.cmp_to_key(_cmp_task_names)
 
 def _group_by_module(items):
     groups = []
@@ -753,7 +771,7 @@ def help(args, help_function):
         task_name = args[0]
         task = environment.get_task(task_name)
         if not task:
-            print "Task not found: %s" % (task_name)
+            print_("Task not found: %s" % (task_name))
             return
 
         task.display_help()
@@ -762,14 +780,17 @@ def help(args, help_function):
     help_function()
 
     task_list = environment.get_tasks()
-    task_list = sorted(task_list, cmp=_cmp_task_names)
+    if six.PY3:
+        task_list = sorted(task_list, key=_task_names_key)
+    else:
+        task_list = sorted(task_list, cmp=_cmp_task_names)
     maxlen, task_list = _group_by_module(task_list)
     fmt = "  %-" + str(maxlen) + "s - %s"
     for group_name, group in task_list:
-        print "\nTasks from %s:" % (group_name)
+        print_("\nTasks from %s:" % (group_name))
         for task in group:
             if not getattr(task, "no_help", False):
-                print(fmt % (task.shortname, task.description))
+                print_(fmt % (task.shortname, task.description))
 
 def _process_commands(args, auto_pending=False):
     first_loop = True
@@ -790,7 +811,7 @@ def _process_commands(args, auto_pending=False):
         first_loop = False
 
 def call_pavement(new_pavement, args):
-    if isinstance(args, basestring):
+    if isinstance(args, six.string_types):
         args = args.split()
     global environment
     environment_stack.append(environment)
@@ -812,13 +833,18 @@ def _launch_pavement(args):
 
     if not exists(environment.pavement_file):
         environment.pavement_file = None
-        exec "from paver.easy import *\n" in mod.__dict__
+        six.exec_("from paver.easy import *\n", mod.__dict__)
         _process_commands(args)
         return
 
     mod.__file__ = environment.pavement_file
     try:
-        execfile(environment.pavement_file, mod.__dict__)
+        pf = open(environment.pavement_file)
+        try:
+            source = pf.read()
+        finally:
+            pf.close()
+        exec(compile(source, environment.pavement_file, 'exec'), mod.__dict__)
         auto_task = getattr(mod, 'auto', None)
         auto_pending = isinstance(auto_task, Task)
 
@@ -831,14 +857,15 @@ def _launch_pavement(args):
         mod.__dict__.update(resident_tasks)
 
         _process_commands(args, auto_pending=auto_pending)
-    except PavementError, e:
+    except PavementError:
+        e = sys.exc_info()[1]
         # this is hacky, but it is needed if problem would occur within
         # argument parsing, which is actually quite common
         if getattr(environment.options, "propagate_traceback", False) \
             or '--propagate-traceback' in args:
             raise
-        print "\n\n*** Problem with pavement:\n%s\n%s\n\n" % (
-                    abspath(environment.pavement_file), e)
+        print_("\n\n*** Problem with pavement:\n%s\n%s\n\n" % (
+                    abspath(environment.pavement_file), e))
 
 def main(args=None):
     global environment
@@ -850,6 +877,7 @@ def main(args=None):
     try:
         args = _parse_global_options(args)
         _launch_pavement(args)
-    except BuildFailure, e:
+    except BuildFailure:
+        e = sys.exc_info()[1]
         environment.error("Build failed: %s", e)
         sys.exit(1)
