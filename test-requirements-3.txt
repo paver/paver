@@ -2,3 +2,4 @@ nose
 unittest2py3k
 virtualenv
 mock
+cogapp
