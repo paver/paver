@@ -1,7 +1,7 @@
 """Miscellaneous tasks that don't fit into one of the other groupings."""
 import pkgutil
 import zipfile
-import six
+import paver.deps.six as six
 from os.path import join, dirname, exists, abspath
 from paver.easy import dry, task
 from paver.tasks import VERSION, cmdopts
@@ -40,7 +40,7 @@ def minilib(options):
     """
     filelist = ['__init__', 'defaults', 'release', 'path',
                 'setuputils', "misctasks", "options", "tasks", "easy",
-                'deps/__init__', 'deps/path2', 'deps/path3']
+                'deps/__init__', 'deps/path2', 'deps/path3', 'deps/six']
     filelist.extend(options.get('extra_files', []))
 
     output_version = ""

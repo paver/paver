@@ -2,7 +2,7 @@ from __future__ import with_statement
 import sys
 
 from nose.plugins.skip import SkipTest
-from six import print_
+from paver.deps.six import print_
 
 from paver.easy import *
 from paver import doctools, tasks, options

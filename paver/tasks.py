@@ -10,9 +10,13 @@ import traceback
 
 from os.path import *
 
-import six
-from six import print_
-from six.moves import xrange
+import paver.deps.six as six
+from paver.deps.six import print_
+
+# using six.moves is complicated because we include it and it's thus not at
+# the top level
+if six.PY3:
+    xrange = range
 
 VERSION = "1.2.0.dev2"
 

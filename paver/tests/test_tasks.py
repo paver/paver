@@ -2,7 +2,7 @@ from __future__ import with_statement
 import os
 from pprint import pprint
 
-from six import print_
+from paver.deps.six import print_
 
 from paver import setuputils, misctasks, tasks, options
 
