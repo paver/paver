@@ -7,7 +7,6 @@ import paver.virtual
 import paver.misctasks
 from paver.setuputils import setup
 
-
 options = environment.options
 
 setup(**setup_meta)
@@ -66,7 +65,7 @@ if paver.doctools.has_sphinx:
         """Build Paver's documentation and install it into paver/docs"""
         builtdocs = path("docs") / options.sphinx.builddir / "html"
         destdir = path("paver") / "docs"
-        destdir.rmtree()
+        destdir.rmtree_p()
         builtdocs.move(destdir)
     
     @task
@@ -89,16 +88,17 @@ if paver.virtual.has_virtualenv:
                               """bin_dir, 'python'), '-c', """
                               """'import sys; sys.path.append("."); """
                               """import paver.command; paver.command.main()', """
-                              """'develop'])""")
+                              """'develop'])""",
+                              dest_dir=options.virtualenv.dest_dir)
     
 @task
 def clean():
     """Cleans up this paver directory. Removes the virtualenv traces and
     the build directory."""
-    path("build").rmtree()
-    path("bin").rmtree()
-    path("lib").rmtree()
-    path(".Python").remove()
+    path("build").rmtree_p()
+    path("bin").rmtree_p()
+    path("lib").rmtree_p()
+    path(".Python").remove_p()
     
 @task
 @needs("uncog")
@@ -138,7 +138,7 @@ def publish_docs(options):
         f.writelines(["#!/bin/sh", os.linesep, "ssh%s $*" % (" -i "+options.deploy_key if getattr(options, "deploy_key", None) else "")])
         f.close()
 
-        os.chmod(git, 0777)
+        os.chmod(git, int('777', 8))
 
         safe_clone.chdir()
 
@@ -175,6 +175,6 @@ def publish_docs(options):
 
 
     finally:
-        safe_clone.rmtree()
-        docs_repo.rmtree()
+        safe_clone.rmtree_p()
+        docs_repo.rmtree_p()
         os.remove(git)

@@ -1,6 +1,7 @@
 """Tasks and utility functions and classes for working with project
 documentation."""
 
+from __future__ import with_statement
 import re
 
 from paver.easy import *
@@ -11,6 +12,12 @@ try:
 except ImportError:
     has_sphinx = False
 
+try:
+    import cogapp
+    has_cog = True
+except ImportError:
+    has_cog = False
+
 def _get_paths():
     """look up the options that determine where all of the files are."""
     opts = options
@@ -19,15 +26,15 @@ def _get_paths():
         raise BuildFailure("Sphinx documentation root (%s) does not exist."
                            % docroot)
     builddir = docroot / opts.get("builddir", ".build")
-    builddir.mkdir()
+    builddir.mkdir_p()
     srcdir = docroot / opts.get("sourcedir", "")
     if not srcdir.exists():
         raise BuildFailure("Sphinx source file dir (%s) does not exist" 
                             % srcdir)
     htmldir = builddir / "html"
-    htmldir.mkdir()
+    htmldir.mkdir_p()
     doctrees = builddir / "doctrees"
-    doctrees.mkdir()
+    doctrees.mkdir_p()
     return Bunch(locals())
 
 @task
@@ -59,8 +66,8 @@ def doc_clean():
     options list."""
     options.order('sphinx', add_rest=True)
     paths = _get_paths()
-    paths.builddir.rmtree()
-    paths.builddir.mkdir()
+    paths.builddir.rmtree_p()
+    paths.builddir.mkdir_p()
 
 _sectionmarker = re.compile(r'\[\[\[section\s+(.+)\]\]\]')
 _endmarker = re.compile(r'\[\[\[endsection\s*.*\]\]\]')
@@ -114,11 +121,11 @@ class SectionedFile(object):
         self.contents = []
         self.sections = {}
         if from_string is not None:
-            import StringIO
-            f = StringIO.StringIO(from_string)
+            from paver.deps.six import StringIO
+            self._read_file(StringIO(from_string))
         else:
-            f = open(filename)
-        self._read_file(f)
+            with open(filename) as f:
+                self._read_file(f)
         
     def _read_file(self, f):
         """Do the work of reading the file."""
@@ -202,7 +209,7 @@ class Includer(object):
     4. return just the section desired if a section is requested
     
     If a cog object is provided at initialization, the text will be
-    sent to the CogGenerator (cog.gen) rather than returned as
+    output (via cog's out) rather than returned as
     a string.
     
     You can pass in include_markers which is a dictionary that maps
@@ -246,7 +253,7 @@ class Includer(object):
             else:
                 value = f[section]
         if self.cog:
-            self.cog.gen.out(value)
+            self.cog.cogmodule.out(value)
         else:
             return value
 
@@ -256,15 +263,16 @@ def _cogsh(cog):
     def shfunc(command, insert_output=True):
         output = sh(command, capture=insert_output)
         if insert_output:
-            cog.gen.out(output)
+            cog.cogmodule.out(output)
     return shfunc
 
 def _runcog(options, uncog=False):
     """Common function for the cog and runcog tasks."""
-    
-    from paver.cog import Cog
+    if not has_cog:
+        raise BuildFailure('install Cog to build html docs')
+
     options.order('cog', 'sphinx', add_rest=True)
-    c = Cog()
+    c = cogapp.Cog()
     if uncog:
         c.options.bNoGenerate = True
     c.options.bReplace = True
@@ -324,8 +332,7 @@ def cog(options):
         directory to look in for files to cog. If not set,
         'docroot' is looked up.
     pattern
-        file glob to look for under basedir. By default,
-        *.rst
+        file glob to look for under basedir. By default, ``*.rst``
     includedir
         If you have external files to include in your
         documentation, setting includedir to the root
@@ -333,6 +340,7 @@ def cog(options):
         in your Cog namespace as 'include'. This lets you
         easily include files and sections of files. Here's
         an example usage::
+
             [[[cog include('filename_under_includedir.py', 'mysection')]]]
             [[[end]]]
     defines

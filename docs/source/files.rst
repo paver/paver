@@ -3,6 +3,6 @@
 File Handling in Paver (paver.path)
 ===================================
 
-.. automodule:: paver.path25
+.. automodule:: paver.path
    :members:
 

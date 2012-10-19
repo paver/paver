@@ -11,7 +11,8 @@ def dry(message, func, *args, **kw):
 
     Runs func with the given arguments and keyword arguments. If this
     is a dry run, print the message rather than running the function."""
-    info(message)
+    if message is not None:
+        info(message)
     if tasks.environment.dry_run:
         return
     return func(*args, **kw)
@@ -47,8 +48,10 @@ def sh(command, capture=False, ignore_error=False, cwd=None):
             kwargs['stdout'] = subprocess.PIPE
         p = subprocess.Popen(command, **kwargs)
         p_stdout = p.communicate()[0]
+        if p_stdout is not None:
+            p_stdout = p_stdout.decode(sys.getdefaultencoding())
         if p.returncode and not ignore_error:
-            if capture:
+            if capture and p_stdout is not None:
                 error(p_stdout)
             raise BuildFailure("Subprocess return code: %d" % p.returncode)
 
@@ -104,9 +107,6 @@ PavementError = tasks.PavementError
 
 # these are down here to avoid circular dependencies. Ideally, nothing would
 # be using paver.easy other than pavements.
-if sys.version_info > (2,5):
-    from paver.path25 import path, pushd
-else:
-    from paver.path import path
+from paver.path import path
 
 import paver.misctasks

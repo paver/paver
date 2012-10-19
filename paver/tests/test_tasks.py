@@ -1,11 +1,11 @@
+from __future__ import with_statement
 import os
 from pprint import pprint
 
-from nose.tools import assert_equals
+from paver.deps.six import print_
 
 from paver import setuputils, misctasks, tasks, options
 
-from paver.tests.mock import Mock
 from paver.tests.utils import _set_environment, FakeExitException
 
 OP_T1_CALLED = 0
@@ -139,7 +139,7 @@ def test_basic_command_line():
     _set_environment(t1=t1)
     try:
         tr, args = tasks._parse_command_line(['foo'])
-        print tr
+        print_(tr)
         assert False, "Expected BuildFailure exception for unknown task"
     except tasks.BuildFailure:
         pass
@@ -422,7 +422,7 @@ def test_consume_nargs():
     env = _set_environment(t21=t21, t12=t12)
     try:
         tr, args = tasks._parse_command_line("t21 t12".split())
-        print tr
+        print_(tr)
         assert False, "Expected BuildFailure exception for not enougth args"
     except tasks.BuildFailure:
         pass
@@ -632,28 +632,28 @@ def test_description_retrieval_trial():
     def t1():
         """ Task it is """
     
-    assert_equals("Task it is", t1.description)
+    assert t1.description == "Task it is"
 
 def test_description_empty_without_docstring():
     @tasks.task
     def t1():
         pass
     
-    assert_equals("", t1.description)
+    assert t1.description == ""
 
 def test_description_retrieval_first_sentence():
     @tasks.task
     def t1():
         """ Task it is. Not with another sentence. """
     
-    assert_equals("Task it is", t1.description)
+    assert t1.description == "Task it is"
 
 def test_description_retrieval_first_sentence_even_with_version_numbers():
     @tasks.task
     def t1():
         """ Task it is, installs Django 1.0. Not with another sentence. """
     
-    assert_equals("Task it is, installs Django 1.0", t1.description)
+    assert t1.description == "Task it is, installs Django 1.0"
 
 def test_auto_task_is_not_run_with_noauto():
     @tasks.no_auto
@@ -697,8 +697,8 @@ def test_task_can_be_called_repeatedly():
     tasks._process_commands(['t1', 'spam'])
     tasks._process_commands(['t1', 'eggs'])
 
-    assert_equals('eggs', env.patch_captured[~0])
-    assert_equals('spam', env.patch_captured[~2])
+    assert 'eggs' == env.patch_captured[~0]
+    assert 'spam' == env.patch_captured[~2]
 
 
 def test_options_passed_to_task():

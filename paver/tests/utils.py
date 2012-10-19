@@ -1,4 +1,5 @@
-import new
+import types
+import paver.deps.six as six
 
 from paver import setuputils, tasks
 
@@ -22,9 +23,13 @@ def _set_environment(patch_print=False, **kw):
     pavement = FakeModule(**kw)
     env = tasks.Environment(pavement)
     tasks.environment = env
-    env._exit = new.instancemethod(patched_exit, env, tasks.Environment)
+    if six.PY3:
+        method_args = (env,)
+    else:
+        method_args = (env, tasks.Environment)
+    env._exit = types.MethodType(patched_exit, *method_args)
     if patch_print:
-        env._print = new.instancemethod(patched_print, env, tasks.Environment)
+        env._print = types.MethodType(patched_print, *method_args)
         env.patch_captured = []
     return env
 
