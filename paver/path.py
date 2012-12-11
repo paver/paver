@@ -20,15 +20,15 @@ __all__ = ['path', 'pushd']
 
 @contextmanager
 def pushd(dir):
-    '''A context manager (Python 2.5+ only) for stepping into a 
-    directory and automatically coming back to the previous one. 
+    '''A context manager (Python 2.5+ only) for stepping into a
+    directory and automatically coming back to the previous one.
     The original directory is returned. Usage is like this::
-    
+
         from __future__ import with_statement
         # the above line is only needed for Python 2.5
-        
+
         from paver.easy import *
-        
+
         @task
         def my_task():
             with pushd('new/directory') as old_dir:
@@ -83,6 +83,7 @@ _METHOD_BLACKLIST = [
 
 
 for name in _METHOD_BLACKLIST:
+    if not hasattr(_orig_path, name):
+        continue
     wrapper = _make_wrapper(name, getattr(_orig_path, name))
     setattr(path, name, wrapper)
-
