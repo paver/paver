@@ -83,5 +83,7 @@ _METHOD_BLACKLIST = [
 
 
 for name in _METHOD_BLACKLIST:
+    if not hasattr(_orig_path, name):
+        continue
     wrapper = _make_wrapper(name, getattr(_orig_path, name))
     setattr(path, name, wrapper)
