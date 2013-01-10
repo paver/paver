@@ -828,7 +828,7 @@ class path(_base):
     def ismount(self): return os.path.ismount(self)
 
     if hasattr(os.path, 'samefile'):
-        def samefile(self): return os.path.samefile(self)
+        def samefile(self, otherfile): return os.path.samefile(self, otherfile)
 
     def getatime(self): return os.path.getatime(self)
     atime = property(
