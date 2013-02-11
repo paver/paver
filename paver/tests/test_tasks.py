@@ -460,8 +460,8 @@ def test_optional_args_in_tasks():
 
     @tasks.task
     def t2(options, optarg1='foo', optarg2='bar'):
-        assert optarg1 is 'foo'
-        assert optarg2 is 'bar'
+        assert optarg1 == 'foo'
+        assert optarg2 == 'bar'
 
     env = _set_environment(t1=t1, t2=t2)
     tasks._process_commands(['t1', 't2'])
