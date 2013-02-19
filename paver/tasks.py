@@ -1,6 +1,7 @@
 from __future__ import with_statement
 import sys
 import os
+import copy
 import optparse
 import re
 import types
@@ -433,7 +434,7 @@ class Task(object):
     option %s for %r is already in use
     by another task in the dependency chain.""" % (self, option, task))
                         # add just names; longname now contains --initial-dashes
-                        self.option_names.add((task.shortname, longname[2:]))
+                        self.option_names.add((task.shortname, longname[2:], option.dest))
 
                         if getattr(task, 'no_help', False):
                             if shortname:
@@ -489,11 +490,15 @@ class Task(object):
             self.display_help(parser)
             sys.exit(0)
 
-        for task_name, option_name in self.option_names:
-            dist_option_name = option_name
+        for task_name, option_name, option_dest in self.option_names:
+            if option_name != option_dest:
+                dist_option_name = copy.copy(option_name)
+                option_name = option_dest
+            else:
+                dist_option_name = option_name
             option_name = option_name.replace('-', '_')
 
-            value = getattr(options, option_name)
+            value = getattr(options, option_name, getattr(options, option_dest))
 
             self._set_value_to_task(task_name, option_name, dist_option_name, value)
 
