@@ -352,6 +352,25 @@ def test_exactly_same_parameters_must_be_specified_in_order_to_allow_sharing():
     except tasks.PavementError:
         pass
 
+def test_dest_parameter_should_map_opt_to_property():
+    from optparse import make_option as opt
+
+    @tasks.task
+    @tasks.cmdopts([opt('-f', '--force', dest='force')])
+    def t1(options):
+        assert options.force == '1'
+
+    @tasks.task
+    @tasks.cmdopts([opt('-f', '--force', dest='foo_force')])
+    def t2(options):
+        assert options.foo_force == '1'
+
+    environment = _set_environment(t1=t1, t2=t2)
+    tasks._process_commands("t1 -f 1".split())
+    tasks._process_commands("t2 -f 1".split())
+    assert t1.called
+    assert t2.called
+
 def test_dotted_options():
     environment = _set_environment()
     tasks._process_commands(['this.is.cool=1'])
@@ -801,7 +820,6 @@ def test_calling_nonconsuming_task_with_arguments():
     @tasks.task
     def t2():
         pass
-
 
     @tasks.task
     def t1():
