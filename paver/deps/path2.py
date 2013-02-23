@@ -56,6 +56,8 @@ import errno
 __version__ = '2.4'
 __all__ = ['path']
 
+PRE_PY3 = sys.version_info[0] < 3
+
 # Platform-specific support for path.owner
 if os.name == 'nt':
     try:
@@ -110,6 +112,10 @@ class path(_base):
             resultStr = _base.__add__(self, more)
         except TypeError:  # Python bug
             resultStr = NotImplemented
+
+        if isinstance(resultStr, unicode) and PRE_PY3:
+            resultStr = resultStr.encode('utf-8')
+
         if resultStr is NotImplemented:
             return resultStr
         return self.__class__(resultStr)
