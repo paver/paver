@@ -113,7 +113,10 @@ class path(_base):
         except TypeError:  # Python bug
             resultStr = NotImplemented
 
-        if isinstance(resultStr, unicode) and PRE_PY3:
+        # On python 2, unicode result breaks os.path.join
+        # if we are inheriting from str
+        # see https://github.com/paver/paver/issues/78
+        if isinstance(resultStr, unicode) and not os.path.supports_unicode_filenames:
             resultStr = resultStr.encode('utf-8')
 
         if resultStr is NotImplemented:
