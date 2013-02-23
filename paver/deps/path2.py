@@ -41,6 +41,8 @@ This module requires Python 2.3 or later.
 
 from __future__ import generators
 
+import __builtin__
+
 import sys
 import warnings
 import os
@@ -84,7 +86,7 @@ except NameError:
 
 # Universal newline support
 _textmode = 'U'
-if hasattr(__builtins__, 'file') and not hasattr(file, 'newlines'):
+if hasattr(__builtin__, 'file') and not hasattr(file, 'newlines'):
     _textmode = 'r'
 
 class TreeWalkWarning(Warning):
