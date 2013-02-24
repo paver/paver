@@ -13,9 +13,9 @@ class TestVirtualenvTaskSpecification(TestCase):
     def setUp(self):
         super(TestVirtualenvTaskSpecification, self).setUp()
 
-        if 'TRAVIS_PYTHON_VERSION' in environ and environ['TRAVIS_PYTHON_VERSION'] == 'jython':
+        if 'TRAVIS_PYTHON_VERSION' in environ and environ['TRAVIS_PYTHON_VERSION'] in ('jython', 'pypy'):
             from nose import SkipTest
-            raise SkipTest("Jython virtual tests not yet supported")
+            raise SkipTest("%s virtual tests not yet supported" % environ['TRAVIS_PYTHON_VERSION'])
 
         self.basedir = mkdtemp(prefix="test_paver_venv")
         self.oldcwd = getcwd()
