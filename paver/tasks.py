@@ -19,7 +19,7 @@ from paver.deps.six import print_
 if six.PY3:
     xrange = range
 
-VERSION = "1.2.0.dev2"
+VERSION = "1.2.0"
 
 class PavementError(Exception):
     """Exception that represents a problem in the pavement.py file

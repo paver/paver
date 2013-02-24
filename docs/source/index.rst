@@ -87,7 +87,11 @@ See the :ref:`changelog <changelog>` for more information about recent improveme
 Installation
 ------------
 
-The easiest way to get Paver is if you have setuptools_ installed.
+The easiest way to get Paver is if you have pip_ or distutils_ installed.
+
+``pip install Paver``
+
+or
 
 ``easy_install Paver``
 
@@ -97,7 +101,8 @@ Without setuptools, it's still pretty easy. Download the Paver .tgz file from
 ``python setup.py install``
 
 .. _Paver's Cheeseshop page: http://pypi.python.org/pypi/Paver/
-.. _setuptools: http://peak.telecommunity.com/DevCenter/EasyInstall
+.. _pip: http://www.pip-installer.org
+.. _distribute: https://pypi.python.org/pypi/distribute
 
 Help and Development
 --------------------

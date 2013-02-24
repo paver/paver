@@ -3,8 +3,11 @@
 Paver Changelog
 ===============
 
-1.1.2 (TBA)
+1.2 (February 24, 2013)
 ------------------------
+* ***Python 3 support***, thanks to `@rkuppe <https://github.com/rkruppe>`_
+* pypy support now tested on Travis
+* ``pip`` now preferred over easy_install (github `issue #81 <https://github.com/paver/paver/issues/81>`_, thanks to pmcnr)
 * ``virtual.bootstrap`` enhancements: support for ``find-links``, ``index-url``, ``system-site-packages`` and ``distribute`` options (github `issue #79 <https://github.com/paver/paver/issues/79>`_, thanks to pmcnr)
 * new :func:`tasks.consume_nargs` decorator, similar to :func:`tasks.consume_args` but accepting an argument: the number of arguments that the decorated function will consume. If no argument is passed to ``consume_nargs`` decorator, all comand-line arguments will be consumed.
 
