@@ -1,6 +1,27 @@
+from paver.easy import error, dry, BuildFailure
+
 import subprocess
+import shlex
 import sys
-from paver.easy import error, dry
+
+try:
+    _shlex_quote = shlex.quote
+except AttributeError:
+    # Backport from Python 3.x. This suite is accordingly under the PSF
+    # License rather than the BSD license used for the rest of the code.
+    import re
+    _find_unsafe = re.compile(r'[^\w@%+=:,./-]').search
+
+    def _shlex_quote(s):
+        """Return a shell-escaped version of the string *s*."""
+        if not s:
+            return "''"
+        if _find_unsafe(s) is None:
+            return s
+
+        # use single quotes, and put single quotes into double quotes
+        # the string $'b is then quoted as '$'"'"'b'
+        return "'" + s.replace("'", "'\"'\"'") + "'"
 
 
 def sh(command, capture=False, ignore_error=False, cwd=None):
@@ -13,6 +34,9 @@ def sh(command, capture=False, ignore_error=False, cwd=None):
 
     If the dry_run option is True, the command will not
     actually be run."""
+    if isinstance(command, (list, tuple)):
+        command = ' '.join([_shlex_quote(c) for c in command])
+
     def runpipe():
         kwargs = {'shell': True, 'cwd': cwd}
         if capture:
