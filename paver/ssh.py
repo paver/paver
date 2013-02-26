@@ -7,5 +7,4 @@ from paver.easy import sh
 
 def scp(source, dest):
     """Copy the source file to the destination."""
-    sh("scp %s %s" % (source, dest))
-    
+    sh(["scp", source, dest])
