@@ -137,6 +137,8 @@ print sys.path
 """, "Second was '%s'" % (second)
     
 def test_cogging():
+    if not paver.doctools.has_cog:
+        raise SkipTest("Cog must be installed for this test")
     _no25()
     env = tasks.Environment(doctools)
     tasks.environment = env
@@ -159,6 +161,8 @@ def test_cogging():
     assert "print sys.path" not in data
     
 def test_cogging_with_markers_removed():
+    if not paver.doctools.has_cog:
+        raise SkipTest("Cog must be installed for this test")
     _no25()
     env = tasks.Environment(doctools)
     tasks.environment = env
