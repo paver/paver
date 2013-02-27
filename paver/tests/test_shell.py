@@ -23,7 +23,7 @@ def test_sh_raises_BuildFailure(popen):
     assert popen.call_args[1]['shell'] == True
     assert 'stdout' not in popen.call_args[1]
 
-@patch('paver.easy.error')
+@patch('paver.shell.error')
 @patch('subprocess.Popen')
 def test_sh_with_capture_raises_BuildFailure(popen, error):
     popen.return_value.returncode = 1
@@ -68,3 +68,13 @@ def test_sh_ignores_error_with_capture(popen):
     assert popen.call_args[1]['shell'] == True
     assert popen.call_args[1]['stdout'] == PIPE
     assert popen.call_args[1]['stderr'] == STDOUT
+
+@patch('subprocess.Popen')
+def test_sh_with_multi_command(popen):
+    popen.return_value.returncode = 0
+
+    easy.sh(['foo', ' bar', 'fi"zz'])
+
+    assert popen.called
+    assert popen.call_args[0][0] == "foo ' bar' 'fi\"zz'"
+    assert popen.call_args[1]['shell'] == True
