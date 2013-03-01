@@ -107,6 +107,6 @@ PavementError = tasks.PavementError
 
 # these are down here to avoid circular dependencies. Ideally, nothing would
 # be using paver.easy other than pavements.
-from paver.path import path
+from paver.path import path, pushd
 
 import paver.misctasks
