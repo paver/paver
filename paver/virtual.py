@@ -34,11 +34,13 @@ def _create_bootstrap(script_name, packages_to_install, paver_command_line,
                       install_paver=True, more_text="", dest_dir='.',
                       no_site_packages=None, system_site_packages=None,
                       unzip_setuptools=False, distribute=None, index_url=None,
-                      find_links=None, prefer_easy_install=False):
+                      no_index=False, find_links=None, prefer_easy_install=False):
     # configure package installation template
     install_cmd_options = []
     if index_url:
         install_cmd_options.extend(['--index-url', index_url])
+    if no_index:
+        install_cmd_options.extend(['--no-index'])
     if find_links:
         for link in find_links:
             install_cmd_options.extend(
@@ -133,6 +135,8 @@ def bootstrap():
         VIRTUALENV_DISTRIBUTE to make it the default.
     index_url
         base URL of Python Package Index
+    no_index
+        ignore package index (only looking at find_links URL(s) instead)
     find_links
         additional URL(s) to search for packages. This should be a list of
         strings.
@@ -151,6 +155,7 @@ def bootstrap():
                       unzip_setuptools=vopts.get("unzip_setuptools", False),
                       distribute=vopts.get("distribute", None),
                       index_url=vopts.get("index_url", None),
+                      no_index=vopts.get("no_index", False),
                       find_links=vopts.get("find_links", []),
                       prefer_easy_install=vopts.get("prefer_easy_install",
                                                     False))
