@@ -40,8 +40,9 @@ def _create_bootstrap(script_name, packages_to_install, paver_command_line,
     if index_url:
         install_cmd_options.extend(['--index-url', index_url])
     if find_links:
-        install_cmd_options.extend(
-            ['--find-links', ' '.join(find_links)])
+        for link in find_links:
+            install_cmd_options.extend(
+                ['--find-links', link])
     install_cmd_tmpl = (_easy_install_tmpl if prefer_easy_install
                         else _pip_then_easy_install_tmpl)
     confd_install_cmd_tmpl = (install_cmd_tmpl %
