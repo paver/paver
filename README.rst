@@ -6,8 +6,8 @@
     :height: 126
     :width: 240
 
-:Web: http://paver.github.com/paver/
-:Download: http://pypi.python.org/pypi/paver/
+:Web: http://packages.python.org/Paver/
+:Download: https://pypi.python.org/pypi/Paver/
 :Source: http://github.com/paver/paver/
 :Keywords: build, scripting, make alternative, svn, git, path.py, documentation,
   automation, tasks, virtualenv, integration
@@ -30,7 +30,7 @@ Current build status:
 
 .. image:: https://secure.travis-ci.org/paver/paver.png?branch=master
 
-`Documentation`_  is hosted on pypi (docs for development version are on `github <http://paver.github.com/paver/>`_).
+`Documentation`_  is hosted on PyPI (docs for development version are on `GitHub <http://paver.github.com/paver/>`_).
 
 .. _`Documentation`: http://packages.python.org/Paver/
 
@@ -80,7 +80,7 @@ Bug tracker
 ===========
 
 If you have any suggestions, bug reports or annoyances please report them
-to Github `issue tracker`_.
+to GitHub `issue tracker`_.
 
 .. _`issue tracker`: http://github.com/paver/paver/issues/
 
