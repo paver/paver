@@ -178,3 +178,46 @@ def publish_docs(options):
         safe_clone.rmtree_p()
         docs_repo.rmtree_p()
         os.remove(git)
+
+
+@task
+def release():
+    """ Release new version of Paver """
+
+    # To avoid dirty workdirs and various artifacts, offload complete environment
+    # to temporary directory located outside of current worktree
+
+    import os
+    from subprocess import check_call, CalledProcessError
+    from tempfile import mkdtemp, mkstemp
+
+    release_clone = path(mkdtemp(prefix='paver-release-'))
+    current_repo = path(os.curdir).abspath()
+    branch = getattr(options, 'branch', 'master')
+
+    # install release requirements to be sure we are generating everything properly
+    sh('pip install -r release-requirements.txt')
+
+
+    # clone current branch to temporary directory
+    try:
+        release_clone.chdir()
+        sh('git init')
+        check_call(['git', 'remote', 'add', '-t', branch, '-f', 'origin', 'file://'+str(current_repo)])
+        check_call(['git', 'checkout', '-b', branch, "origin/%s" % branch])
+
+        # build documentation
+        sh('paver html')
+
+        # create source directory
+        sh('paver sdist')
+
+        # create source directory and upload it to PyPI
+        sh('paver sdist upload')
+
+        # also upload sphinx documentation
+        sh('paver upload_sphinx --upload-dir=paver/docs')
+
+    finally:
+        release_clone.rmtree_p()
+
