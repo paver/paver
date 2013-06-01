@@ -18,6 +18,7 @@ requirements is also easy.""",
     maintainer_email='bugs@almad.net',
     url='http://paver.github.com/',
     packages=['paver', 'paver.deps'],
+    tests_require=['nose', 'virtualenv', 'mock', 'cogapp'],
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
