@@ -5,7 +5,7 @@ class Bunch(dict):
     """A dictionary that provides attribute-style access."""
 
     def __repr__(self):
-        keys = self.keys()
+        keys = list(self.keys())
         keys.sort()
         args = ', '.join(['%s=%r' % (key, self[key]) for key in keys])
         return '%s(%s)' % (self.__class__.__name__, args)
