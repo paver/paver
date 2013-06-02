@@ -16,7 +16,7 @@ requirements is also easy.""",
     author_email='dangoor+paver@gmail.com',
     maintainer='Lukas Linhart',
     maintainer_email='bugs@almad.net',
-    url='http://paver.github.com/',
+    url='http://github.com/paver/paver',
     packages=['paver', 'paver.deps'],
     tests_require=['nose', 'virtualenv', 'mock', 'cogapp'],
     classifiers=[
