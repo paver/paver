@@ -1,0 +1,3 @@
+cogapp
+sphinx
+Sphinx-PyPI-upload
