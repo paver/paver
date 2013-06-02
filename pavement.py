@@ -195,16 +195,16 @@ def release():
     current_repo = path(os.curdir).abspath()
     branch = getattr(options, 'branch', 'master')
 
-    # install release requirements to be sure we are generating everything properly
-    sh('pip install -r release-requirements.txt')
-
-
     # clone current branch to temporary directory
     try:
         release_clone.chdir()
         sh('git init')
         check_call(['git', 'remote', 'add', '-t', branch, '-f', 'origin', 'file://'+str(current_repo)])
         check_call(['git', 'checkout', '-b', branch, "origin/%s" % branch])
+
+        # install release requirements to be sure we are generating everything properly
+        sh('pip install -r release-requirements.txt')
+
 
         # build documentation
         sh('paver html')
