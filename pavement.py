@@ -221,3 +221,35 @@ def release():
     finally:
         release_clone.rmtree_p()
 
+@task
+@consume_args
+def bump(args):
+    import paver.version
+    version = map(int, paver.version.VERSION.split('.')[0:3])
+
+    if len(args) > 0 and args[0] == 'major':
+        version[1] += 1
+    else:
+        version[2] += 1
+
+    version = map(str, version)
+
+    module_content = "VERSION='%s'\n" % '.'.join(version)
+
+    # bump version in paver
+    with open(path('paver/version.py'), 'w') as f:
+        f.write(module_content)
+
+    # bump version in sphinx
+    conf = []
+    with open(path('docs/source/conf.py'), 'r') as f:
+        for line in f.readlines():
+            if line.startswith('version = '):
+                line = "version = '%s'\n" % '.'.join(version[0:2])
+            elif line.startswith('release = '):
+                line = "release = '%s'" % '.'.join(version[0:3])
+
+            conf.append(line)
+
+    with open(path('docs/source/conf.py'), 'w') as f:
+        f.writelines(conf)

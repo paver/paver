@@ -13,13 +13,12 @@ from os.path import *
 
 import paver.deps.six as six
 from paver.deps.six import print_
+from paver.version import VERSION
 
 # using six.moves is complicated because we include it and it's thus not at
 # the top level
 if six.PY3:
     xrange = range
-
-VERSION = "1.2.0"
 
 class PavementError(Exception):
     """Exception that represents a problem in the pavement.py file
