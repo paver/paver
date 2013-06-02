@@ -926,7 +926,8 @@ class path(_base):
     # --- Create/delete operations on directories
 
     def mkdir(self, mode=0o777):
-        os.mkdir(self, mode)
+        if not self.exists():
+            os.mkdir(self, mode)
 
     def mkdir_p(self, mode=0o777):
         try:
@@ -936,7 +937,8 @@ class path(_base):
                 raise
 
     def makedirs(self, mode=0o777):
-        os.makedirs(self, mode)
+        if not self.exists():
+            os.makedirs(self, mode)
 
     def makedirs_p(self, mode=0o777):
         try:
@@ -946,7 +948,8 @@ class path(_base):
                 raise
 
     def rmdir(self):
-        os.rmdir(self)
+        if self.exists():
+            os.rmdir(self)
 
     def rmdir_p(self):
         try:
@@ -956,7 +959,8 @@ class path(_base):
                 raise
 
     def removedirs(self):
-        os.removedirs(self)
+        if self.exists():
+            os.removedirs(self)
 
     def removedirs_p(self):
         try:
@@ -976,7 +980,8 @@ class path(_base):
         os.utime(self, None)
 
     def remove(self):
-        os.remove(self)
+        if self.exists():
+            os.remove(self)
 
     def remove_p(self):
         try:
@@ -986,7 +991,8 @@ class path(_base):
                 raise
 
     def unlink(self):
-        os.unlink(self)
+        if not self.exists():
+            os.unlink(self)
 
     def unlink_p(self):
         self.remove_p()
@@ -1033,7 +1039,10 @@ class path(_base):
     copytree = shutil.copytree
     if hasattr(shutil, 'move'):
         move = shutil.move
-    rmtree = shutil.rmtree
+
+    def rmtree(self, *args, **kw):
+        if self.exists():
+            shutil.rmtree(self, *args, **kw)
 
     def rmtree_p(self):
         try:
