@@ -3,6 +3,14 @@
 Paver Changelog
 ===============
 
+1.2.1 (June 2, 2013)
+------------------------
+* Fixed most of the regressions from 1.2:
+* documentation was missing from tarball (github `issue #95 <https://github.com/paver/paver/issues/95>`_)
+* path.push missing in paver.easy (github `issue #97 <https://github.com/paver/paver/issues/97>`_, thanks to leonhandreke)
+* broken backward compatibility with python2.5 and custom tasks (github `issue #94 <https://github.com/paver/paver/issues/94>`_)
+* Variety of Python 3 problems (thanks to `Afrever <https://github.com/Arfrever>`_)
+
 1.2 (February 24, 2013)
 ------------------------
 * ***Python 3 support***, thanks to `@rkuppe <https://github.com/rkruppe>`_
