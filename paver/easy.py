@@ -49,7 +49,7 @@ def sh(command, capture=False, ignore_error=False, cwd=None):
         p = subprocess.Popen(command, **kwargs)
         p_stdout = p.communicate()[0]
         if p_stdout is not None:
-            p_stdout = p_stdout.decode(sys.getdefaultencoding())
+            p_stdout = p_stdout.decode(sys.getdefaultencoding(), 'ignore')
         if p.returncode and not ignore_error:
             if capture and p_stdout is not None:
                 error(p_stdout)

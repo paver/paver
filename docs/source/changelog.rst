@@ -10,6 +10,7 @@ Paver Changelog
 * path.push missing in paver.easy (github `issue #97 <https://github.com/paver/paver/issues/97>`_, thanks to leonhandreke)
 * broken backward compatibility with python2.5 and custom tasks (github `issue #94 <https://github.com/paver/paver/issues/94>`_)
 * Variety of Python 3 problems (thanks to `Afrever <https://github.com/Arfrever>`_)
+* Ignore non-system-default characters when sh()ing command with bad output
 
 1.2 (February 24, 2013)
 ------------------------
