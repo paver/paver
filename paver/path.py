@@ -63,7 +63,7 @@ def _make_wrapper(name, func):
         global _silence_nested_calls
         msg = None
         if not _silence_nested_calls:
-            msg = name + ' ' + ' '.join(args)
+            msg = name + ' ' + ' '.join(map(repr, args))
         try:
             _silence_nested_calls = True
             return dry(msg, func, *args, **kwds)
