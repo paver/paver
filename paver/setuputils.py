@@ -189,6 +189,8 @@ def _get_shortname(taskname):
 class DistutilsTaskFinder(object):
     def get_task(self, taskname):
         dist = _get_distribution()
+        environ = tasks.environment
+        dist.command_packages = getattr(environ, 'command_packages', None)
         command_name = _get_shortname(taskname)
         try:
             command_class = dist.get_command_class(command_name)

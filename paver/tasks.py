@@ -698,6 +698,8 @@ def _parse_global_options(args):
     parser.add_option("--propagate-traceback", action="store_true",
                     help="propagate traceback, do not hide it under BuildFailure"
                         "(for debugging)")
+    parser.add_option('-x', '--command-packages', action="store",
+                    help="list of packages that provide distutils commands")
     parser.set_defaults(file=environment.pavement_file)
 
     parser.disable_interspersed_args()
