@@ -42,9 +42,13 @@ Installation
 You can install Paver either via the Python Package Index (PyPI)
 or from source.
 
-To install using `pip`,::
+To install a PyPI release using `pip`::
 
     $ pip install -U Paver
+
+… or alternatively from source (github `master`)::
+
+    $ pip install -e git+https://github.com/paver/paver.git#egg=Paver
 
 To install using `easy_install`::
 
