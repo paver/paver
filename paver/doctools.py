@@ -46,7 +46,7 @@ def html():
       the root under which Sphinx will be working. Default: docs
     builddir
       directory under the docroot where the resulting files are put.
-      default: build
+      default: .build
     sourcedir
       directory under the docroot for the source files
       default: (empty string)
