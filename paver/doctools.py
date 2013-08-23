@@ -8,6 +8,7 @@ from paver.easy import *
 
 try:
     import sphinx
+    import sphinx.apidoc
     has_sphinx = True
 except ImportError:
     has_sphinx = False
@@ -31,6 +32,10 @@ def _get_paths():
     if not srcdir.exists():
         raise BuildFailure("Sphinx source file dir (%s) does not exist" 
                             % srcdir)
+    apidir = None
+    if opts.get("apidir", "api"):
+        apidir = srcdir / opts.get("apidir", "api")
+        apidir.mkdir_p()
     htmldir = builddir / "html"
     htmldir.mkdir_p()
     doctrees = builddir / "doctrees"
@@ -50,11 +55,21 @@ def html():
     sourcedir
       directory under the docroot for the source files
       default: (empty string)
+    apidir
+      directory under the sourcedir for the auto-generated API docs (empty = don't create them)
+      default: api
     """
     if not has_sphinx:
         raise BuildFailure('install sphinx to build html docs')
     options.order('sphinx', add_rest=True)
     paths = _get_paths()
+
+    # First, auto-gen additional sources
+    if paths.apidir:
+        sphinxopts = ['', '-f', '-o', paths.apidir] + options.setup.packages
+        dry("sphinx-apidoc %s" % (" ".join(sphinxopts),), sphinx.apidoc.main, sphinxopts)
+
+    # Then generate HTML tree
     sphinxopts = ['', '-b', 'html', '-d', paths.doctrees, 
         paths.srcdir, paths.htmldir]
     dry("sphinx-build %s" % (" ".join(sphinxopts),), sphinx.main, sphinxopts)
@@ -68,6 +83,9 @@ def doc_clean():
     paths = _get_paths()
     paths.builddir.rmtree_p()
     paths.builddir.mkdir_p()
+    if paths.apidir and paths.apidir != paths.srcdir:
+        paths.apidir.rmtree_p()
+        paths.apidir.mkdir_p()
 
 _sectionmarker = re.compile(r'\[\[\[section\s+(.+)\]\]\]')
 _endmarker = re.compile(r'\[\[\[endsection\s*.*\]\]\]')
