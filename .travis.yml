@@ -14,7 +14,9 @@ before_install:
   - if [ "$TRAVIS_PYTHON_VERSION" == "jython" ]; then $HOME/jython/bin/virtualenv -p $HOME/jython/bin/jython $HOME/virtualenv/jython; fi
 
 before_script:
-  - if [ "$TRAVIS_PYTHON_VERSION" == "jython" ]; then export PATH="$HOME/virtualenv/jython/bin:$PATH"; export PYTHON_EXE=jython; export PIP_EXE=$HOME/virtualenv/jython/bin/pip; jython -c "print ''"; elif [ "$TRAVIS_PYTHON_VERSION" == "pypy" ]; then export PYTHON_EXE=pypy; export PIP_EXE=pip; else export PYTHON_EXE=python; export PIP_EXE=pip; fi
+  - export PIP_EXE=pip
+  - export PYTHON_EXE=python
+  - if [ "$TRAVIS_PYTHON_VERSION" == "jython" ]; then export PATH="$HOME/virtualenv/jython/bin:$PATH"; export PYTHON_EXE=jython; export PIP_EXE=$HOME/virtualenv/jython/bin/pip; jython -c "print ''"; elif [ "$TRAVIS_PYTHON_VERSION" == "pypy" ]; then export PYTHON_EXE=pypy; export PIP_EXE=pip; fi
 
 install:
   - if [ "$TRAVIS_PYTHON_VERSION" == "jython" ]; then export PIP_EXE=$HOME/virtualenv/jython/bin/pip; else export PIP_EXE=pip; fi
