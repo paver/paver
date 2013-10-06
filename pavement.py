@@ -247,7 +247,7 @@ def bump(args):
             if line.startswith('version = '):
                 line = "version = '%s'\n" % '.'.join(version[0:2])
             elif line.startswith('release = '):
-                line = "release = '%s'" % '.'.join(version[0:3])
+                line = "release = '%s'\n" % '.'.join(version[0:3])
 
             conf.append(line)
 
