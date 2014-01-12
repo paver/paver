@@ -162,6 +162,7 @@ Contents
    cmdline
    tips
    articles
+   paverfullapi
    changelog
    credits
 
