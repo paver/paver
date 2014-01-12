@@ -1,5 +1,0 @@
-nose
-unittest2
-mock
-virtualenv<1.10
-

@@ -3,6 +3,11 @@
 Paver Changelog
 ===============
 
+1.3 (TBA)
+------------------------
+* ***Removed support for Python 2.5***. 2.6 is deprecated and will be removed in next release.
+
+
 1.2.2 (Jan 12, 2014)
 ------------------------
 * Fixed `version.py` missing from minilib (github `issue #112 <https://github.com/paver/paver/issues/112>`_)
