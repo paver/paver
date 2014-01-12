@@ -3,7 +3,7 @@
 Paver Changelog
 ===============
 
-1.2.1 (October 9, 2013)
+1.2.2 (Jan 12, 2014)
 ------------------------
 * Fixed `version.py` missing from minilib (github `issue #112 <https://github.com/paver/paver/issues/112>`_)
 
