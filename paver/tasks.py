@@ -7,6 +7,7 @@ import re
 import types
 import inspect
 import itertools
+import operator
 import traceback
 
 from os.path import *
@@ -752,20 +753,12 @@ if six.PY3:
     _task_names_key = functools.cmp_to_key(_cmp_task_names)
 
 def _group_by_module(items):
-    groups = []
-    current_group_name = None
-    current_group = None
-    maxlen = 5
-    for item in items:
-        name = item.name
-        dotpos = name.rfind(".")
-        group_name = name[:dotpos]
-        maxlen = max(len(item.shortname), maxlen)
-        if current_group_name != group_name:
-            current_group = []
-            current_group_name = group_name
-            groups.append([group_name, current_group])
-        current_group.append(item)
+    def key(item):
+        dotpos = item.name.rfind('.')
+        return item.name[:dotpos]
+
+    maxlen = max(len(item.shortname) for item in items)
+    groups = itertools.groupby(sorted(items, key=operator.attrgetter('name')), key=key)
     return maxlen, groups
 
 @task
