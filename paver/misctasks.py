@@ -40,7 +40,8 @@ def minilib(options):
     """
     filelist = ['__init__', 'defaults', 'release', 'path', 'version',
                 'setuputils', "misctasks", "options", "tasks", "easy",
-                'deps/__init__', 'deps/path2', 'deps/path3', 'deps/six']
+                'shell', 'deps/__init__', 'deps/path2', 'deps/path3',
+                'deps/six']
     filelist.extend(options.get('extra_files', []))
 
     output_version = ""
