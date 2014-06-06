@@ -13,7 +13,7 @@ if exists(_docsdir):
         """Open your web browser and display Paver's documentation."""
         import webbrowser
         webbrowser.open("file://%s"  % join(abspath(_docsdir), 'index.html') )
-        
+
 @task
 @cmdopts([('versioned_name', '', 'Determine if minilib uses version in its name')],
             share_with=['generate_setup'])
@@ -31,7 +31,7 @@ def minilib(options):
         purpose is to avoid import error while using different versions of minilib
         with easy_install
         (default False)
-    
+
     extra_files
         list of other paver modules to include (don't include the .py
         extension). By default, the following modules are included:
@@ -69,7 +69,7 @@ def minilib(options):
 @cmdopts([('versioned_name', '', 'Determine if setup refers to minilib with version in its name')],
             share_with=['minilib'])
 def generate_setup(options):
-    """Generates a setup.py file that uses paver behind the scenes. This 
+    """Generates a setup.py file that uses paver behind the scenes. This
     setup.py file will look in the directory that the user is running it
     in for a paver-minilib.zip and will add that to sys.path if available.
     Otherwise, it will just assume that paver is available."""
