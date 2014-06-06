@@ -38,7 +38,7 @@ def minilib(options):
         defaults, path, release, setuputils, misctasks, options,
         tasks, easy
     """
-    filelist = ['__init__', 'defaults', 'release', 'path', 'version',
+    filelist = ['__init__', '__main__', 'defaults', 'release', 'path', 'version',
                 'setuputils', "misctasks", "options", "tasks", "easy",
                 'shell', 'deps/__init__', 'deps/path2', 'deps/path3',
                 'deps/six']
