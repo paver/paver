@@ -65,6 +65,7 @@ copyright = '2008, SitePen, Inc.'
 version = '1.2'
 # The full version, including alpha/beta/rc tags.
 release = '1.2.3'
+# There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:
 #today = ''
 # Else, today_fmt is used as the format for a strftime call.
