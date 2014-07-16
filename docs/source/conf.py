@@ -64,7 +64,7 @@ copyright = '2008, SitePen, Inc.'
 # The short X.Y version.
 version = '1.2'
 # The full version, including alpha/beta/rc tags.
-release = '1.2.2'
+release = '1.2.3'
 # non-false value, then it is used:
 #today = ''
 # Else, today_fmt is used as the format for a strftime call.
