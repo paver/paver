@@ -143,6 +143,8 @@ class Environment(object):
         task = self.get_task(task_name)
         if hasattr(task, 'paver_constraint'):
             task.paver_constraint()
+        # Normalize task name
+        task_name = task.name
         if options:
             for option in options:
                 task._set_value_to_task(task_name, option, None, options[option])
