@@ -36,7 +36,7 @@ def sh(command, capture=False, ignore_error=False, cwd=None, env=None):
     actually be run.
     
     env is a dictionary of environment variables. Refer to subprocess.Popen's
-    documentation for furhter information on this."""
+    documentation for further information on this."""
     if isinstance(command, (list, tuple)):
         command = ' '.join([_shlex_quote(c) for c in command])
 
