@@ -10,7 +10,7 @@ from paver.setuputils import setup
 options = environment.options
 
 setup(**setup_meta)
-
+    
 options(
     minilib=Bunch(
         extra_files=['doctools', 'virtual'],
@@ -32,9 +32,6 @@ options(
         beginspec="<==",
         endspec="==>",
         endoutput="<==end==>"
-    ),
-    deploy=Bunch(
-        deploydir="blueskyonmars.com/projects/paver"
     )
 )
 
