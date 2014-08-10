@@ -7,21 +7,12 @@ python:
   - "3.4"
   - "pypy"
 
-before_install:
-  - export JYTHON_URL='http://downloads.sourceforge.net/project/jython/jython/2.5.2/jython_installer-2.5.2.jar?r=&ts=1344463879&use_mirror=garr'
-  - if [ "$TRAVIS_PYTHON_VERSION" == "jython" ]; then wget $JYTHON_URL -O jython_installer.jar; java -jar jython_installer.jar -s -d $HOME/jython; fi
-  - if [ "$TRAVIS_PYTHON_VERSION" == "jython" ]; then wget -nd "http://peak.telecommunity.com/dist/ez_setup.py"; $HOME/jython/bin/jython ez_setup.py; $HOME/jython/bin/easy_install pip; $HOME/jython/bin/pip install virtualenv; fi
-  - if [ "$TRAVIS_PYTHON_VERSION" == "jython" ]; then $HOME/jython/bin/virtualenv -p $HOME/jython/bin/jython $HOME/virtualenv/jython; fi
 
 before_script:
-  - if [ "$TRAVIS_PYTHON_VERSION" == "jython" ]; then export PATH="$HOME/virtualenv/jython/bin:$PATH"; export PYTHON_EXE=jython; export PIP_EXE=$HOME/virtualenv/jython/bin/pip; jython -c "print ''"; elif [ "$TRAVIS_PYTHON_VERSION" == "pypy" ]; then export PYTHON_EXE=pypy; export PIP_EXE=pip; else export PYTHON_EXE=python; export PIP_EXE=pip; fi
+  - if [ "$TRAVIS_PYTHON_VERSION" == "pypy" ]; then export PYTHON_EXE=pypy; export PIP_EXE=pip; else export PYTHON_EXE=python; fi
 
 install:
-  - if [ "$TRAVIS_PYTHON_VERSION" == "jython" ]; then export PIP_EXE=$HOME/virtualenv/jython/bin/pip; else export PIP_EXE=pip; fi
-  - echo $PIP_EXE
-  - export TEST_REQS_FILE=test-requirements.txt
-  - if [ "$TRAVIS_PYTHON_VERSION" == "3.2" ] || [ "$TRAVIS_PYTHON_VERSION" == "3.3" ]; then export TEST_REQS_FILE="test-requirements-3.txt"; fi
-  - if [ "$TRAVIS_PYTHON_VERSION" == "jython" ]; then source $HOME/virtualenv/jython/bin/activate; fi; $PIP_EXE install -r "$TEST_REQS_FILE"
+  - pip install -r test-requirements.txt
 
 # run tests
 # script:  if [ "$TRAVIS_PYTHON_VERSION" == "jython" ]; then $HOME/virtualenv/jython/bin/jython setup.py develop; $HOME/virtualenv/jython/bin/paver test; else $PYTHON_EXE setup.py test; fi;
@@ -32,4 +23,3 @@ notifications:
     channels: "irc.freenode.org#paver"
     on_success: always
     on_failure: always
-
