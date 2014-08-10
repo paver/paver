@@ -24,7 +24,7 @@ except AttributeError:
         return "'" + s.replace("'", "'\"'\"'") + "'"
 
 
-def sh(command, capture=False, ignore_error=False, cwd=None):
+def sh(command, capture=False, ignore_error=False, cwd=None, env=None):
     """Runs an external command. If capture is True, the output of the
     command will be captured and returned as a string.  If the command
     has a non-zero return code raise a BuildFailure. You can pass
@@ -33,12 +33,15 @@ def sh(command, capture=False, ignore_error=False, cwd=None):
     paver will chdir to 'some/path' before exectuting the command.
 
     If the dry_run option is True, the command will not
-    actually be run."""
+    actually be run.
+    
+    env is a dictionary of environment variables. Refer to subprocess.Popen's
+    documentation for further information on this."""
     if isinstance(command, (list, tuple)):
         command = ' '.join([_shlex_quote(c) for c in command])
 
     def runpipe():
-        kwargs = {'shell': True, 'cwd': cwd}
+        kwargs = {'shell': True, 'cwd': cwd, 'env': env}
         if capture:
             kwargs['stderr'] = subprocess.STDOUT
             kwargs['stdout'] = subprocess.PIPE
