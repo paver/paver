@@ -206,11 +206,11 @@ def release():
         # build documentation
         sh('paver html')
 
-        # create source directory
-        sh('paver sdist')
-
         # create source directory and upload it to PyPI
         sh('paver sdist upload')
+
+        # create wheel & update to pypi
+        sh('paver bdist_wheel upload')
 
         # also upload sphinx documentation
         sh('paver upload_sphinx --upload-dir=paver/docs')
