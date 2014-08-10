@@ -218,7 +218,9 @@ def build_release():
 @task
 def tag_release():
     import paver.version
-    sh("git tag -s 'Paver-%(version)s' -m 'Release version %(version)s'" % {version: paver.version.VERSION})
+    sh("git tag -s 'Paver-%(version)s' -m 'Release version %(version)s'" % {
+        'version': paver.version.VERSION
+    })
     sh("git push --tags")
     sh("paver register")
 
