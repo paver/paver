@@ -224,7 +224,7 @@ def tag_release():
 
 @task
 @needs(["tag_release", "build_release"])
-def relese():
+def release():
     """ Release new version of Paver """
 
 
