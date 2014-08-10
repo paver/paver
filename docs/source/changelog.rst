@@ -3,12 +3,16 @@
 Paver Changelog
 ===============
 
-1.3 (TBA)
+1.3 (August 10, 2014)
 ------------------------
 * ***Removed support for Python 2.5***. 2.6 is deprecated and will be removed in next release.
+* Fixed `shell.py` missing from minilib (github `issue #122 <https://github.com/paver/paver/issues/122>`_)
+* Added env keyword to sh. (github `issue #132 <https://github.com/paver/paver/issues/132>`_)
+* When both @cmdopts and @consume_nargs are used, the options before the
+args are parsed by the task's parser and given to it (github `issue #126 <https://github.com/paver/paver/issues/126>`_)
+*  Support list and tuple as `sh` argument (github `issue #92 <https://github.com/paver/paver/issues/92>`_)
 
-
-1.2.2 (Jan 12, 2014)
+1.2.2 (January 12, 2014)
 ------------------------
 * Fixed `version.py` missing from minilib (github `issue #112 <https://github.com/paver/paver/issues/112>`_)
 
