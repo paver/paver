@@ -1,3 +1,7 @@
 cogapp
 sphinx
 Sphinx-PyPI-upload
+pip>=1.4
+setuptools>=0.9
+wheel>=0.21
+nose
