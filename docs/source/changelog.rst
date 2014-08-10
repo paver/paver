@@ -10,7 +10,7 @@ Paver Changelog
 * Added env keyword to sh. (github `issue #132 <https://github.com/paver/paver/issues/132>`_)
 * When both @cmdopts and @consume_nargs are used, the options before the
 args are parsed by the task's parser and given to it (github `issue #126 <https://github.com/paver/paver/issues/126>`_)
-*  Support list and tuple as `sh` argument (github `issue #92 <https://github.com/paver/paver/issues/92>`_)
+* Support list and tuple as `sh` argument (github `issue #92 <https://github.com/paver/paver/issues/92>`_)
 
 1.2.2 (January 12, 2014)
 ------------------------
