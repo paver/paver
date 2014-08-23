@@ -853,7 +853,8 @@ def _launch_pavement(args):
             'generate_setup': generate_setup,
             'minilib': minilib,
             }
-        mod.__dict__.update(resident_tasks)
+        resident_tasks.update(mod.__dict__)
+        mod.__dict__ = resident_tasks
 
         _process_commands(args, auto_pending=auto_pending)
     except PavementError:
