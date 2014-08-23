@@ -729,10 +729,10 @@ def _parse_command_line(args):
     if not isinstance(task, Task):
         raise BuildFailure("%s is not a Task" % taskname)
 
+    if task.consume_args != float('inf'):
+        args = task.parse_args(args)
     if task.consume_args > 0:
         args = _consume_nargs(task, args)
-    else:
-        args = task.parse_args(args)
 
     return task, args
 

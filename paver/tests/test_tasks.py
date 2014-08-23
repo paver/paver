@@ -472,6 +472,37 @@ def test_consume_nargs():
     assert t31.called
     assert t32.called
 
+def test_consume_nargs_and_options():
+    from optparse import make_option
+
+    @tasks.task
+    @tasks.consume_nargs(2)
+    @tasks.cmdopts([
+        make_option("-f", "--foo", help="foo")
+    ])
+    def t1(options):
+        assert options.foo == "1"
+        assert options.t1.foo == "1"
+        assert options.args == ['abc', 'def']
+
+    @tasks.task
+    @tasks.consume_nargs(2)
+    @tasks.cmdopts([
+        make_option("-f", "--foo", help="foo")
+    ])
+    def t2(options):
+        assert options.foo == "2"
+        assert options.t2.foo == "2"
+        assert options.args == ['ghi', 'jkl']
+
+
+    environment = _set_environment(t1=t1, t2=t2)
+    tasks._process_commands([
+        't1', '--foo', '1', 'abc', 'def',
+        't2', '--foo', '2', 'ghi', 'jkl',
+    ])
+    assert t1.called
+
 def test_optional_args_in_tasks():
     @tasks.task
     def t1(options, optarg=None):

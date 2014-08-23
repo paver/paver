@@ -10,7 +10,7 @@ from paver.setuputils import setup
 options = environment.options
 
 setup(**setup_meta)
-
+    
 options(
     minilib=Bunch(
         extra_files=['doctools', 'virtual'],
@@ -32,9 +32,6 @@ options(
         beginspec="<==",
         endspec="==>",
         endoutput="<==end==>"
-    ),
-    deploy=Bunch(
-        deploydir="blueskyonmars.com/projects/paver"
     )
 )
 
@@ -181,9 +178,7 @@ def publish_docs(options):
 
 
 @task
-def release():
-    """ Release new version of Paver """
-
+def build_release():
     # To avoid dirty workdirs and various artifacts, offload complete environment
     # to temporary directory located outside of current worktree
 
@@ -205,21 +200,35 @@ def release():
         # install release requirements to be sure we are generating everything properly
         sh('pip install -r release-requirements.txt')
 
-
         # build documentation
         sh('paver html')
 
-        # create source directory
-        sh('paver sdist')
-
         # create source directory and upload it to PyPI
         sh('paver sdist upload')
+
+        # create wheel & update to pypi
+        sh('paver bdist_wheel upload')
 
         # also upload sphinx documentation
         sh('paver upload_sphinx --upload-dir=paver/docs')
 
     finally:
         release_clone.rmtree_p()
+
+@task
+def tag_release():
+    import paver.version
+    sh("git tag -s 'Paver-%(version)s' -m 'Release version %(version)s'" % {
+        'version': paver.version.VERSION
+    })
+    sh("git push --tags")
+    sh("paver register")
+
+@task
+@needs(["tag_release", "build_release"])
+def release():
+    """ Release new version of Paver """
+
 
 @task
 @consume_args
