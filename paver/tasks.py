@@ -861,7 +861,10 @@ def _launch_pavement(args):
             'generate_setup': generate_setup,
             'minilib': minilib,
             }
-        mod.__dict__.update(resident_tasks)
+        # Perform a "weak" update (leave existing keys alone)
+        for k in resident_tasks:
+            if k not in mod.__dict__:
+                mod.__dict__[k] = resident_tasks[k]
 
         _process_commands(args, auto_pending=auto_pending)
     except PavementError:
