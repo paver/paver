@@ -1,6 +1,8 @@
 """Tasks for managing virtualenv environments."""
-from paver.easy import task, options, dry, debug
+from paver.easy import task, options, dry, debug, BuildFailure
 from paver.release import setup_meta
+
+VIRTUALENV_MISSING_ERROR = "`virtualenv` is needed to use paver's virtualenv tasks, please install the package."
 
 try:
     import virtualenv as venv
@@ -83,7 +85,10 @@ def after_install(options, home_dir):
         extra_text += "    subprocess.call([join(bin_dir, 'paver'),%s)" % repr(command_list)[1:]
 
     extra_text += more_text
-    bootstrap_contents = venv.create_bootstrap_script(extra_text)
+    if has_virtualenv:
+        bootstrap_contents = venv.create_bootstrap_script(extra_text)
+    else:
+        raise BuildFailure(VIRTUALENV_MISSING_ERROR)
     fn = script_name
 
     debug("Bootstrap script extra text: " + extra_text)
@@ -96,8 +101,7 @@ def _boostrap_constraint():
     try:
         import virtualenv as venv
     except ImportError:
-        from paver.runtime import PaverImportError
-        raise PaverImportError("`virtualenv` is needed to use paver's virtualenv tasks")
+        raise BuildFailure(VIRTUALENV_MISSING_ERROR)
 
 
 @task
