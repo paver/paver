@@ -15,7 +15,7 @@ def test_join_on_unicode_path():
         # path.py on py2 is inheriting from str instead of unicode under this
         # circumstances, therefore we have to expect string
         if os.path.supports_unicode_filenames:
-            expected.decode('utf-8')
+            expected = expected.decode('utf-8')
 
     else:
         expected = 'something/ö'
