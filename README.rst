@@ -54,6 +54,23 @@ To install using `easy_install`::
 
     $ easy_install -U Paver
 
+.. _paver-installation:
+
+Testing
+============
+
+Reference test suite can be run using Docker::
+
+	sudo docker build -t  paver/paver . && sudo docker run -it paver/paver
+
+Alternatively, on your computer::
+
+	$ virtualenv paver-venv
+	$ source paver-venv/bin/activate
+	(paver-venv) $ pip install -r test-requirements.txt
+	(paver-venv) $ python setup.py test
+
+
 .. _getting-help:
 
 Getting Help
