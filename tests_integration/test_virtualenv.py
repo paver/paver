@@ -4,7 +4,8 @@ from unittest2 import TestCase
 from os import chdir, getcwd, pardir, environ
 from os.path import join, dirname, exists
 from shutil import rmtree, copyfile
-from subprocess import check_call, PIPE
+import subprocess
+from subprocess import Popen, PIPE, check_call, CalledProcessError
 import sys
 from tempfile import mkdtemp
 
@@ -26,7 +27,13 @@ class TestVirtualenvTaskSpecification(TestCase):
         Use distribution's bootstrap to do so.
         """
         copyfile(join(dirname(__file__), pardir, "bootstrap.py"), join(self.basedir, "bootstrap.py"))
-        check_call([sys.executable, join(self.basedir, "bootstrap.py")], stdout=PIPE, stderr=PIPE, cwd=self.basedir)
+        #check_call([sys.executable, join(self.basedir, "bootstrap.py")], stdout=PIPE, stderr=subprocess.STDOUT, cwd=self.basedir)
+        p =  Popen([sys.executable, join(self.basedir, "bootstrap.py")], stderr=PIPE, stdout=PIPE, cwd=self.basedir)
+        stdout, stderr = p.communicate()
+        if p.returncode != 0:
+            print "Command failed with exit code" + str(p.returncode) + ", stderr: " + stderr
+            #raise CalledProcessError("Command failed")
+            raise ValueError("Command %s failed" % (' '.join([sys.executable, join(self.basedir, "bootstrap.py")])))
 
     def test_running_task_in_specified_virtualenv(self):
         self._prepare_virtualenv()
@@ -75,6 +82,6 @@ def t1():
 
     def tearDown(self):
         chdir(self.oldcwd)
-        rmtree(self.basedir)
+        #rmtree(self.basedir)
 
         super(TestVirtualenvTaskSpecification, self).tearDown()
