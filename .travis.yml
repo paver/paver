@@ -23,3 +23,8 @@ notifications:
     channels: "irc.freenode.org#paver"
     on_success: always
     on_failure: always
+  webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/df73774c7ab7fa0c1769
+    on_success: change
+    on_failure: always
