@@ -21,4 +21,6 @@ RUN /paver-venv/bin/pip install -r /paver-base/test-requirements.txt
 RUN ls /paver-base
 
 WORKDIR /paver-base
-ENTRYPOINT ["/paver-venv/bin/python", "setup.py", "test"]
+
+CMD ["/paver-venv/bin/python", "setup.py", "test"]
+

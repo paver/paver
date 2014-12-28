@@ -61,9 +61,17 @@ Testing
 
 Reference test suite can be run using Docker::
 
-	sudo docker build -t  paver/paver . && sudo docker run -it paver/paver
+	sudo docker run -it paver/paver
 
-Alternatively, on your computer::
+When developing locally, build it first::
+
+    sudo docker build -t  paver/paver . && sudo docker run -it paver/paver
+
+When trying to debug inside the dev environment, run::
+
+    sudo docker run -it paver/paver /bin/bash
+
+Alternatively, on your computer without any virtualization to catch environment-specific bugs::
 
 	$ virtualenv paver-venv
 	$ source paver-venv/bin/activate
