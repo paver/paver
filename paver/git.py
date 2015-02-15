@@ -22,6 +22,10 @@ def pull(destination, remote="origin", branch="master"):
     """
     sh("cd %(destination)s; git pull %(remote)s %(branch)s" % dict(
         destination=destination, remote=remote, branch=branch) )
+        
+def latest_tag():
+    """Get the most recent git tag. Useful for using in package version."""
+    return str(sh("git describe --tags --always HEAD", capture=True).strip())
 
 def branch_list(path="", remote_branches_only=False, __override__=None):
     """
