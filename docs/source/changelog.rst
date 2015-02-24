@@ -3,7 +3,14 @@
 Paver Changelog
 ===============
 
-1.3 (August 10, 2014)
+1.2.4 (February 23, 2015)
+------------------------
+
+* Make path comparison better (github `issue #78 <https://github.com/paver/paver/issues/78>`_)
+* Add last_tag task
+* six upgraded to 1.6.1
+
+1.2.3 (August 10, 2014)
 ------------------------
 * ***Removed support for Python 2.5***. 2.6 is deprecated and will be removed in next release.
 * Fixed `shell.py` missing from minilib (github `issue #122 <https://github.com/paver/paver/issues/122>`_)
