@@ -343,7 +343,7 @@ regenerate as often as you need to. With a template language, you have
 the template and the finalized output, but not a file that has both.
 
 So, as I'm writing this Getting Started document, I can glance up and see
-the index.rst contents right inline. You'll notice The #[[[cog part in there
+the index.rst contents right inline. You'll notice The # [[ [cog part in there
 is calling an include() function. This is the second part offered by
 Paver. Paver lets you specify an "includedir" for use with Cog.
 This lets you include files relative to that directory. And, critically,
