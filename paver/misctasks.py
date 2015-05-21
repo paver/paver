@@ -57,6 +57,9 @@ def minilib(options):
         for filename in filelist:
             destfile.writestr("paver/%s.py" % filename,
                 pkgutil.get_data('paver', "%s.py" % filename))
+        # allow minilib to be invoked directly by Python
+        destfile.writestr("__main__.py",
+            "import paver.tasks; paver.tasks.main()\n")
         destfile.close()
 
         # Write the buffer to disk.
