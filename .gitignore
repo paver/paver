@@ -8,6 +8,8 @@ dist
 pip-log.txt
 /.project
 /.pydevproject
+/.idea
+/.eggs
 /include
 /lib
 /lib64
