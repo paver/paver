@@ -17,6 +17,10 @@ class TestVirtualenvTaskSpecification(TestCase):
             from nose import SkipTest
             raise SkipTest("%s virtual tests not yet supported" % environ['TRAVIS_PYTHON_VERSION'])
 
+        if 'APPVEYOR' in environ:
+            from nose import SkipTest
+            raise SkipTest("Integration tests not (yet) running on Windows/Appveor. Patches welcome.")
+
         self.basedir = mkdtemp(prefix="test_paver_venv")
         self.oldcwd = getcwd()
 
