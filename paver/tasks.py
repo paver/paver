@@ -221,7 +221,10 @@ Captured Task Output:
         def scan_module(module):
             modules.add(module)
             for name in dir(module):
-                item = getattr(module, name, None)
+                try:
+                    item = getattr(module, name, None)
+                except ImportError:
+                    item = None
                 if isinstance(item, Task):
                     result.add(item)
                 if isinstance(item, types.ModuleType) and item not in modules:
