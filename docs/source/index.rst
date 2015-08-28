@@ -8,7 +8,7 @@ Paver: Easy Scripting for Software Projects
 
 `Japanese translation available <http://paver.github.com/paver-docs-jp/>`_
 thanks to Tetsuya Morimoto. Latest stable documentation is
-`on PyPI <http://packages.python.org/Paver/>`_, latest development docs are
+`on PyPI <https://pypi.python.org/pypi/Paver>`_, latest development docs are
 `on github pages <http://paver.github.com/>`_
 
 Paver is a Python-based software project scripting tool along the
