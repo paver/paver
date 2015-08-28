@@ -847,6 +847,25 @@ def test_calling_task_with_arguments():
 
     tasks._process_commands(['t1'])
 
+def test_calling_task_with_empty_arguments():
+    @tasks.task
+    def t1():
+        env.call_task('t3', args=['argument1'])
+        env.call_task('t2', args=[])
+
+    @tasks.task
+    @tasks.consume_args
+    def t2(args):
+        assert args == []
+
+    @tasks.task
+    @tasks.consume_args
+    def t3(args):
+        assert args == ['argument1']
+
+    env = _set_environment(t1=t1, t2=t2, t3=t3)
+    tasks._process_commands(['t1'])
+
 def test_calling_nonconsuming_task_with_arguments():
     @tasks.task
     def t2():
