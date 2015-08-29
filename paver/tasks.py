@@ -147,11 +147,11 @@ class Environment(object):
             for option in options:
                 task._set_value_to_task(task_name, option, None, options[option])
 
-        if args and task.consume_args > 0:
+        if args is not None and task.consume_args > 0:
             args = _consume_nargs(task, args)
         elif args and (task.consume_args == 0):
             raise BuildFailure("Task %s is not decorated with @consume_(n)args,"
-                                "but has been called with them")
+                                "but has been called with them" % task)
         task()
 
     def _run_task(self, task_name, needs, func):
