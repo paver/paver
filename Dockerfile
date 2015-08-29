@@ -3,7 +3,7 @@ MAINTAINER Lukas Linhart "bugs@almad.net"
 
 
 RUN apt-get update
-RUN apt-get -y -q install python-virtualenv python-pip python-sphinx python-markupsafe python-nose python-docutils python-pygments python-jinja2 python-wheel python-gdbm python-tk python-dev
+RUN apt-get -y -q install ssh python-virtualenv python-pip python-sphinx python-markupsafe python-nose python-docutils python-pygments python-jinja2 python-wheel python-gdbm python-tk python-dev
 
 # Debian bug workaround
 RUN ln -s /usr/lib/python2.7/plat-*/_sysconfigdata_nd.py /usr/lib/python2.7/
@@ -20,5 +20,12 @@ RUN /paver-venv/bin/pip install -r /paver-base/test-requirements.txt
 
 RUN ls /paver-base
 
+RUN mkdir /var/run/sshd
+
 WORKDIR /paver-base
-ENTRYPOINT ["/paver-venv/bin/python", "setup.py", "test"]
+
+EXPOSE 22
+
+# ENTRYPOINT ["/paver-venv/bin/python", "setup.py", "test"]
+
+ENTRYPOINT ["/usr/sbin/sshd", "-D"]
