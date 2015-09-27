@@ -316,7 +316,11 @@ class Task(object):
     def __call__(self, *args, **kw):
         if self.use_virtualenv and self.virtualenv_dir:
             #TODO: Environment recovery?
-            activate_this = join(self.virtualenv_dir, "bin", "activate_this.py")
+            if platform.system() == 'Windows':
+                bin_dir = 'Scripts'
+            else:
+                bin_dir = 'bin'
+            activate_this = join(self.virtualenv_dir, bin_dir, "activate_this.py")
             with open(activate_this) as f:
                 s = f.read()
             code = compile(s, activate_this, 'exec')
