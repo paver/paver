@@ -1,4 +1,4 @@
-==============================================
+﻿==============================================
  Paver - Easy Scripting for Software Projects
 ==============================================
 
@@ -71,13 +71,19 @@ When trying to debug inside the dev environment, run::
 
     sudo docker run -it paver/paver /bin/bash
 
-Alternatively, on your computer without any virtualization to catch environment-specific bugs::
+Alternatively, on your unix computer without any virtualization to catch environment-specific bugs::
 
 	$ virtualenv paver-venv
 	$ source paver-venv/bin/activate
 	(paver-venv) $ pip install -r test-requirements.txt
 	(paver-venv) $ python setup.py test
 
+The equivalent on your windows computer over the command promt::
+
+	> virtualenv paver-venv
+	> paver-venv\Scripts\activate
+	(paver-venv) > pip install -r test-requirements.txt
+	(paver-venv) > python setup.py test
 
 .. _getting-help:
 
