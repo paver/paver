@@ -141,7 +141,7 @@ def find_package_data(
 
 class DistutilsTask(tasks.Task):
     def __init__(self, distribution, command_name, command_class):
-        name_sections = str(command_class).split(".")
+        name_sections = command_class.__module__.split(".")
         if name_sections[-2] == name_sections[-1]:
             del name_sections[-2]
         self.name = ".".join(name_sections)
