@@ -66,8 +66,8 @@ def latest_tag(repo_path, relative_to='tip'):
     Returns:
         The string name of the latest tag."""
 
-    stdout = sh('hg log --template "{{latesttag}}" -r {rev}'.format(
-        rev=relative_to), capture=True)
+    stdout = sh('hg log --template "{{latesttag}}" -r {rev} -R {repo}'.format(
+        rev=relative_to, repo=repo_path), capture=True)
 
     return stdout.strip()
 
@@ -103,7 +103,8 @@ def branches(repo_path, closed=False):
     Returns:
         A python tuple.  The first item of the tuple is the current branch.
         The second item of the tuple is a list of the branches"""
-    current_branch = sh('hg branch -R {repo}'.format(repo=repo_path))
+    current_branch = sh('hg branch -R {repo}'.format(repo=repo_path),
+                        capture=True).strip()
 
     closed_string = ''
     if closed:
