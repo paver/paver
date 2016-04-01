@@ -23,9 +23,9 @@ def clone(url, dest_folder, rev=None):
         None"""
     rev_string = ''
     if rev:
-        rev_string = '-r %s' % rev
+        rev_string = ' -r %s' % rev
 
-    sh('hg clone {rev} {url} {dest}'.format(
+    sh('hg clone{rev} {url} {dest}'.format(
         rev=rev_string, url=url, dest=dest_folder))
 
 
@@ -44,9 +44,15 @@ def pull(repo_path, rev=None, url=None):
         None"""
     rev_string = ''
     if rev:
-        rev_string = '-r %s' % rev
+        rev_string = ' -r %s' % rev
 
-    sh('hg pull {rev} -R {repo}'.format(rev=rev_string, repo=repo_path))
+    url_string = ''
+    if url:
+        url_string = ' ' + url
+
+    sh('hg pull{rev} -R {repo}{url}'.format(rev=rev_string,
+                                            repo=repo_path,
+                                            url=url_string))
 
 
 def latest_tag(repo_path, relative_to='tip'):
@@ -80,9 +86,9 @@ def update(repo_path, rev='tip', clean=False):
         None"""
     clean_string = ''
     if clean:
-        clean_string = '--clean'
+        clean_string = ' --clean'
 
-    sh('hg update -r {rev} -R {repo} {clean}'.format(
+    sh('hg update -r {rev} -R {repo}{clean}'.format(
         rev=rev, repo=repo_path, clean=clean_string))
 
 
@@ -101,13 +107,18 @@ def branches(repo_path, closed=False):
 
     closed_string = ''
     if closed:
-        closed_string = '--closed'
+        closed_string = ' --closed'
 
-    stdout_string = sh('hg branches -R {repo} {closed}'.format(
+    stdout_string = sh('hg branches -R {repo}{closed}'.format(
         repo=repo_path, closed=closed_string), capture=True)
 
     # Branch list comes out in the format:
     # <branchname>        <revnum>:<sha1>
-    branches = [string.split()[0] for string in stdout_string.split('\n')]
+    try:
+        branches = [line.split()[0] for line in stdout_string.split('\n')
+                    if len(line) > 0]
+    except IndexError as e:
+        print 'std', stdout_string
+        print 'e', string
 
     return current_branch, branches
