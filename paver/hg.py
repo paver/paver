@@ -115,11 +115,7 @@ def branches(repo_path, closed=False):
 
     # Branch list comes out in the format:
     # <branchname>        <revnum>:<sha1>
-    try:
-        branches = [line.split()[0] for line in stdout_string.split('\n')
-                    if len(line) > 0]
-    except IndexError as e:
-        print 'std', stdout_string
-        print 'e', string
+    branches = [line.split()[0] for line in stdout_string.split('\n')
+                if len(line) > 0]
 
     return current_branch, branches
