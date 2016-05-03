@@ -1,0 +1,39 @@
+FROM python:3.5
+MAINTAINER Lukas Linhart "bugs@almad.net"
+
+RUN apt-get update && \
+	apt-get install -y \
+		python3.4 \
+		python3.3 \
+		jython \
+		pypy \
+		python-tox
+
+
+ADD paver/ /paver-base/paver/
+ADD tests_integration/ /paver-base/tests_integration/
+ADD distutils_scripts/ /paver-base/distutils_scripts/
+ADD *requirements.txt /paver-base/
+ADD bootstrap.py pavement.py setup.py paver-minilib.zip tox.ini MANIFEST.in LICENSE.txt /paver-base/
+
+ENV PIP_DISABLE_PIP_VERSION_CHECK=1
+
+# Debian bug workaround
+RUN ln -s /usr/lib/python2.7/plat-*/_sysconfigdata_nd.py /usr/lib/python2.7/
+
+
+# RUN pyvenv /paver-venv
+# RUN /paver-venv/bin/pip install -r /paver-base/release-requirements.txt && \
+#	/paver-venv/bin/pip install -r /paver-base/test-requirements.txt && \
+#	/paver-venv/bin/pip install tox
+
+
+# Final cleanup
+RUN rm -rf "$PIP_DOWNLOAD_CACHE" /var/lib/apt/lists/*
+
+WORKDIR /paver-base
+
+# CMD ["/paver-venv/bin/tox"]
+
+CMD tox
+
