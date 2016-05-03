@@ -6,24 +6,29 @@ python:
   - "3.6"
   - "pypy"
 
-
 before_script:
-  - if [ "$TRAVIS_PYTHON_VERSION" == "pypy" ]; then export PYTHON_EXE=pypy; export PIP_EXE=pip; else export PYTHON_EXE=python; fi
-
+- if [ "$TRAVIS_PYTHON_VERSION" == "pypy" ]; then export PYTHON_EXE=pypy; export PIP_EXE=pip;
+  else export PYTHON_EXE=python; fi
 install:
-  - pip install -r test-requirements.txt
-
-# run tests
-# script:  if [ "$TRAVIS_PYTHON_VERSION" == "jython" ]; then $HOME/virtualenv/jython/bin/jython setup.py develop; $HOME/virtualenv/jython/bin/paver test; else $PYTHON_EXE setup.py test; fi;
-script: $PYTHON_EXE setup.py test
-
+- pip install -r test-requirements.txt
+script: "$PYTHON_EXE setup.py test"
 notifications:
   irc:
-    channels: "irc.freenode.org#paver"
+    channels: irc.freenode.org#paver
     on_success: always
     on_failure: always
   webhooks:
     urls:
-      - https://webhooks.gitter.im/e/df73774c7ab7fa0c1769
+    - https://webhooks.gitter.im/e/df73774c7ab7fa0c1769
     on_success: change
     on_failure: always
+deploy:
+  provider: pypi
+  user: Almad
+  password:
+    secure: W+lni4zSYg0CA4ju7jjSdDx5vt1jUsNpsS98amdOu34ycKTJL9WAEXmi4Ye1dqP37Rm4ZBln9h9USQ+NiGSMGKNcG3dZKYb3PklEGdxqSiGV2EFrTZEVEfDhGflV4vUfqcv1Zy7ms+A0n+GmLgp1nneEgXHgoWGdIP19HyGthag=
+  on:
+    tags: true
+    branch: master
+    distributions: sdist bdist_wheel
+    repo: paver/paver
