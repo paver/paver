@@ -3,3 +3,4 @@ unittest2six
 virtualenv
 mock
 cogapp
+wheel
