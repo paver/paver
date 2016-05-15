@@ -16,5 +16,6 @@ done more quickly.
    virtualenv
    svn
    bzr
+   hg
    ssh
    
