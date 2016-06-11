@@ -64,7 +64,7 @@ if on_rtd:
     @task
     def rtd():
         """ Prepare environment for read the docs """
-        sh("pip install -r test-requirements.txt")
+        sh("pip install -r docs-requirements.txt")
 
         # ...and override caches, as we got in-process dependency update
         import paver.doctools
