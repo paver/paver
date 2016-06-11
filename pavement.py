@@ -73,7 +73,7 @@ if on_rtd:
         paver.doctools.cogapp = cogapp
 
     @task
-    @needs('rtd', 'html', 'setuptools.command.install')
+    @needs('rtd', 'cog', 'paver.doctools.html', 'setuptools.command.install')
     def install():
         """ Build the documentation including cogging, then install """
         sh('ls -lah')
