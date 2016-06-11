@@ -76,6 +76,7 @@ if on_rtd:
     @needs('rtd', 'html', 'setuptools.command.install')
     def install():
         """ Build the documentation including cogging, then install """
+        sh('ls -lah')
 
 
 if paver.doctools.has_sphinx:
