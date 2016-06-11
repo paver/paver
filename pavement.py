@@ -1,3 +1,5 @@
+import os
+
 from paver.easy import *
 
 from paver.release import setup_meta
@@ -54,6 +56,27 @@ else:
 
 options.setup.package_data=paver.setuputils.find_package_data("paver", package="paver",
                                                 only_in_packages=False)
+
+
+# Hook cogging documentation before install step on RTD
+on_rtd = os.environ.get('READTHEDOCS') == 'True'
+if on_rtd:
+    @task
+    def rtd():
+        """ Prepare environment for read the docs """
+        sh("pip install -r test-requirements.txt")
+
+        # ...and override caches, as we got in-process dependency update
+        import paver.doctools
+        import cogapp
+        paver.doctools.has_cog = True
+        paver.doctools.cogapp = cogapp
+
+    @task
+    @needs('rtd', 'html', 'setuptools.command.install')
+    def install():
+        """ Build the documentation including cogging, then install """
+
 
 if paver.doctools.has_sphinx:
     @task
