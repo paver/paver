@@ -28,7 +28,8 @@ Documentation
 
 Current build status:
 
-.. image:: https://secure.travis-ci.org/paver/paver.png?branch=master
+.. image:: https://travis-ci.org/paver/paver.svg?branch=master
+    :target: https://travis-ci.org/paver/paver
 
 `Documentation`_  is hosted on PyPI (docs for development version are on `GitHub <http://paver.github.com/paver/>`_).
 
