@@ -156,7 +156,12 @@ class Environment(object):
         task()
 
     def _run_task(self, task_name, needs, func):
-        (funcargs, varargs, varkw, defaults) = inspect.getargspec(func)
+        try:
+            getfullargspec = inspect.getfullargspec
+        except AttributeError:
+            (funcargs, varargs, varkw, defaults) = inspect.getargspec(func)
+        else:
+            (funcargs, varargs, varkw, defaults, _, _, _) = getfullargspec(func)
         kw = dict()
         for i in xrange(0, len(funcargs)):
             arg = funcargs[i]
