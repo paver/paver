@@ -2,7 +2,7 @@ from __future__ import with_statement
 import os
 from pprint import pprint
 
-from paver.deps.six import print_
+from paver.deps.six import exec_, PY2, print_
 
 from paver import setuputils, misctasks, tasks, options
 
@@ -934,3 +934,24 @@ def test_options_might_be_shared_both_way():
 
     assert t1.called
     assert t2.called
+
+
+if not PY2:
+    def test_paver_doesnt_crash_on_task_function_with_annotations():
+        local_scope = {}
+        # exec()ing so that it doesn't crash when this test file is run
+        # under Python 2 which doesn't support this syntax
+        exec_(
+            """
+@tasks.task
+def fun() -> None:
+    pass""",
+            globals(), local_scope,
+        )
+        fun = local_scope['fun']
+        environment = _set_environment(fun=fun)
+
+        # This call would fail with:
+        #     ValueError: Function has keyword-only arguments or annotations,
+        #     use getfullargspec() API which can support them
+        fun()
