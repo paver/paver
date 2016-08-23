@@ -203,6 +203,22 @@ For sharing, following must be fullfilled:
 
 Otherwise, ``PavementError`` is raised.
 
+You can combine both ``@consume_args`` and ``@cmdopts`` together::
+
+    @task
+    @cmdopts([
+        ('username=', 'u', 'Username to use when logging in to the servers')
+    ])
+    @consume_args
+    def exec(options):
+        pass
+
+
+* ``paver exec -u root`` will result in ``options.username = 'root', options.args = []``
+* ``paver exec -u root production`` will result in ``options.username = 'root', options.args = ['production']``
+* ``paver exec production -u root`` will result in ``options.args = ['production', '-u', 'root']`` with no ``options.username`` attribute.
+* ``paver exec -u root production -u other`` will result in ``options.username = 'root', options.args = ['production', '-u', 'other']``
+
 Hiding tasks
 ---------------
 

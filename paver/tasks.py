@@ -741,7 +741,8 @@ def _parse_command_line(args):
     if not isinstance(task, Task):
         raise BuildFailure("%s is not a Task" % taskname)
 
-    if task.consume_args != float('inf'):
+    if task.user_options or task.consume_args != float('inf'):
+        # backwards compatibility around mixing of @cmdopts & @consume_args
         args = task.parse_args(args)
     if task.consume_args > 0:
         args = _consume_nargs(task, args)

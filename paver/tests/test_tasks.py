@@ -404,6 +404,74 @@ def test_consume_args():
     tasks._process_commands("t3 -v 1".split())
     assert t3.called
 
+def test_consume_args_and_options():
+    @tasks.task
+    @tasks.cmdopts([
+        ("foo=", "f", "Help for foo")
+    ])
+    @tasks.consume_args
+    def t1(options):
+        assert options.foo == "1"
+        assert options.t1.foo == "1"
+        assert options.args == ['abc', 'def']
+
+    environment = _set_environment(t1=t1)
+    tasks._process_commands([
+        't1', '--foo', '1', 'abc', 'def',
+    ])
+    assert t1.called
+
+def test_consume_args_and_options_2():
+    @tasks.task
+    @tasks.cmdopts([
+        ("foo=", "f", "Help for foo")
+    ])
+    @tasks.consume_args
+    def t1(options):
+        assert not hasattr(options, 'foo')
+        assert not hasattr(options.t1, 'foo')
+        assert options.args == ['abc', 'def', '--foo', '1']
+
+    environment = _set_environment(t1=t1)
+    tasks._process_commands([
+        't1', 'abc', 'def', '--foo', '1',
+    ])
+    assert t1.called
+
+def test_consume_args_and_options_3():
+    @tasks.task
+    @tasks.cmdopts([
+        ("foo=", "f", "Help for foo")
+    ])
+    @tasks.consume_args
+    def t1(options):
+        assert options.foo == "1"
+        assert options.t1.foo == "1"
+        assert options.args == []
+
+    environment = _set_environment(t1=t1)
+    tasks._process_commands([
+        't1', '--foo', '1',
+    ])
+    assert t1.called
+
+def test_consume_args_and_options_conflict():
+    @tasks.task
+    @tasks.cmdopts([
+        ("foo=", "f", "Help for foo")
+    ])
+    @tasks.consume_args
+    def t1(options):
+        assert options.foo == "1"
+        assert options.t1.foo == "1"
+        assert options.args == ['abc', 'def', '--foo', '2']
+
+    environment = _set_environment(t1=t1)
+    tasks._process_commands([
+        't1', '--foo', '1', 'abc', 'def', '--foo', '2',
+    ])
+    assert t1.called
+
 def test_consume_nargs():
     # consume all args on first task
     @tasks.task
