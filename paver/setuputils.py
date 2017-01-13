@@ -162,7 +162,10 @@ class DistutilsTask(tasks.Task):
         distribution.parse_config_files()
         
     def __call__(self, *args, **kw):
+        # FIXME: Do we need both options associated with short AND regular name
+        # here or just one of those?
         options = tasks.environment.options.get(self.shortname, {})
+        options.update(tasks.environment.options.get(self.name, {}))
         opt_dict = self.distribution.get_option_dict(self.command_name)
         for (name, value) in options.items():
             opt_dict[name.replace('-', '_')] = ("command line", value)
