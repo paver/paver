@@ -635,8 +635,8 @@ class MyTaskFinder(object):
         return None
         
     def get_tasks(self):
-        return set([self.foo])
-    
+        return {self.foo}
+
     @tasks.task
     def foo(self):
         self.foo_called = True
