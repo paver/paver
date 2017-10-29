@@ -6,10 +6,10 @@ Paver: Easy Scripting for Software Projects
     :height: 126
     :width: 240
 
-`Japanese translation available <http://paver.github.com/paver-docs-jp/>`_
+`Japanese translation available <https://paver.github.io/paver-docs-jp/>`_
 thanks to Tetsuya Morimoto. Latest stable documentation is
 `on PyPI <https://pypi.python.org/pypi/Paver>`_, latest development docs are
-`on github pages <http://paver.github.com/>`_
+`on GitHub<https://github.com/paver/paver/tree/master/docs>`_
 
 Paver is a Python-based software project scripting tool along the
 lines of Make or Rake. It is not designed to handle the dependency
@@ -32,7 +32,7 @@ pavement.py::
         name="MyCoolProject",
         packages=['mycool'],
         version="1.0",
-        url="http://www.blueskyonmars.com/",
+        url="https://www.blueskyonmars.com/",
         author="Kevin Dangoor",
         author_email="dangoor@gmail.com"
     )
@@ -74,7 +74,7 @@ Features
 
 See how it works! Check out the :ref:`Getting Started Guide <gettingstarted>`.
 
-Paver was created by `Kevin Dangoor <http://blueskyonmars.com>`_ of `SitePen <http://sitepen.com>`_.
+Paver was created by `Kevin Dangoor <https://blueskyonmars.com>`_ of `SitePen <https://sitepen.com>`_.
 
 Status
 ------
@@ -100,8 +100,8 @@ Without setuptools, it's still pretty easy. Download the Paver .tgz file from
 
 ``python setup.py install``
 
-.. _Paver's Cheeseshop page: http://pypi.python.org/pypi/Paver/
-.. _pip: http://www.pip-installer.org
+.. _Paver's Cheeseshop page: https://pypi.python.org/pypi/Paver/
+.. _pip: https://www.pip-installer.org
 .. _distribute: https://pypi.python.org/pypi/distribute
 
 Help and Development
@@ -138,7 +138,7 @@ or
 
 * Using embedded minilib, thus invoking commands with setup.py instead of paver
 
-.. _mailing list: http://groups.google.com/group/paver
+.. _mailing list: https://groups.google.com/group/paver
 .. _Paver's list of issues: https://github.com/paver/paver/issues
 .. _issue 33: https://github.com/paver/paver/issues/33
 

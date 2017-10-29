@@ -330,7 +330,7 @@ def cog(options):
     in your Sphinx document root. Full documentation for Cog is
     here:
     
-    http://nedbatchelder.com/code/cog/
+    https://nedbatchelder.com/code/cog/
     
     In a nutshell, you put blocks in your file that look like
     this:

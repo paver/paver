@@ -9,7 +9,7 @@ setup(
     name="TheNewWay",
     packages=['newway'],
     version="1.0",
-    url="http://www.blueskyonmars.com/",
+    url="https://www.blueskyonmars.com/",
     author="Kevin Dangoor",
     author_email="dangoor@gmail.com"
 )
