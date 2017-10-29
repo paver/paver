@@ -1,4 +1,3 @@
-from __future__ import with_statement
 from unittest2 import TestCase
 
 from os import chdir, getcwd, pardir, environ
