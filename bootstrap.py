@@ -41,9 +41,9 @@ except ImportError:
 __version__ = "15.1.0"
 virtualenv_version = __version__  # legacy
 
-if sys.version_info < (2, 6):
+if sys.version_info < (2, 7):
     print('ERROR: %s' % sys.exc_info()[1])
-    print('ERROR: this script requires Python 2.6 or greater.')
+    print('ERROR: this script requires Python 2.7 or greater.')
     sys.exit(101)
 
 try:
@@ -540,7 +540,7 @@ def main():
         '-p', '--python',
         dest='python',
         metavar='PYTHON_EXE',
-        help='The Python interpreter to use, e.g., --python=python2.5 will use the python2.5 '
+        help='The Python interpreter to use, e.g., --python=python2.7 will use the python2.7 '
         'interpreter to create the new environment.  The default is the interpreter that '
         'virtualenv was installed with (%s)' % sys.executable)
 
@@ -1292,8 +1292,8 @@ def install_python(home_dir, lib_dir, inc_dir, bin_dir, site_packages, clear, sy
         secondary_exe = os.path.join(os.path.dirname(py_executable),
                                      expected_exe)
         py_executable_ext = os.path.splitext(py_executable)[1]
-        if py_executable_ext.lower() == '.exe':
-            # python2.4 gives an extension of '.4' :P
+        if py_executable_ext == '.exe':
+            # python2.7 gives an extension of '.7' :P
             secondary_exe += py_executable_ext
         if os.path.exists(secondary_exe):
             logger.warn('Not overwriting existing %s script %s (you must use %s)'
@@ -1792,8 +1792,8 @@ def create_bootstrap_script(extra_text, python_version=''):
         This example immediately installs a package, and runs a setup
         script from that package.
 
-    If you provide something like ``python_version='2.5'`` then the
-    script will start with ``#!/usr/bin/env python2.5`` instead of
+    If you provide something like ``python_version='2.7'`` then the
+    script will start with ``#!/usr/bin/env python2.7`` instead of
     ``#!/usr/bin/env python``.  You can use this when the script must
     be run with a particular Python version.
     """

@@ -7,10 +7,6 @@ from paver.deps.six import print_
 from paver.easy import *
 from paver import doctools, tasks, options
 
-def _no25():
-    if sys.version_info[:2] == (2, 5):
-        raise SkipTest('No cog integration in Python 2.5')
-
 
 def test_sections_from_file():
     simpletext = """# [[[section foo]]]
@@ -139,7 +135,6 @@ print sys.path
 def test_cogging():
     if not paver.doctools.has_cog:
         raise SkipTest("Cog must be installed for this test")
-    _no25()
     env = tasks.Environment(doctools)
     tasks.environment = env
     opt = env.options
@@ -163,7 +158,6 @@ def test_cogging():
 def test_cogging_with_markers_removed():
     if not paver.doctools.has_cog:
         raise SkipTest("Cog must be installed for this test")
-    _no25()
     env = tasks.Environment(doctools)
     tasks.environment = env
     opt = env.options
