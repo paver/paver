@@ -1,5 +1,5 @@
 from distutils.core import Command
-from paver.deps.six import print_
+from six import print_
 
 from paver.setuputils import install_distutils_tasks, \
                             DistutilsTaskFinder, _get_distribution, \

@@ -1,7 +1,7 @@
 import sys
 
 from nose.plugins.skip import SkipTest
-from paver.deps.six import print_
+from six import print_
 
 from paver.easy import *
 from paver import doctools, tasks, options

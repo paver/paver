@@ -1,7 +1,7 @@
 import os
 from pprint import pprint
 
-from paver.deps.six import exec_, PY2, print_
+from six import exec_, PY2, print_
 
 from paver import setuputils, misctasks, tasks, options
 
