@@ -48,10 +48,7 @@ def sh(command, capture=False, ignore_error=False, cwd=None, env=None):
         p = subprocess.Popen(command, **kwargs)
         p_stdout = p.communicate()[0]
         if p_stdout is not None:
-            if sys.version_info[0] == 2 and sys.version_info[1] < 7:
-                p_stdout = p_stdout.decode(sys.getdefaultencoding())
-            else:
-                p_stdout = p_stdout.decode(sys.getdefaultencoding(), 'ignore')
+            p_stdout = p_stdout.decode(sys.getdefaultencoding(), 'ignore')
         if p.returncode and not ignore_error:
             if capture and p_stdout is not None:
                 error(p_stdout)

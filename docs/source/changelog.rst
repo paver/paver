@@ -3,6 +3,10 @@
 Paver Changelog
 ===============
 
+1.3.0 (unreleased)
+------------------------
+* ***Removed support for Python 2.6***.
+
 1.2.4 (February 23, 2015)
 ------------------------
 
