@@ -6,9 +6,9 @@
     :height: 126
     :width: 240
 
-:Web: http://packages.python.org/Paver/
+:Web: https://pythonhosted.org/Paver/
 :Download: https://pypi.python.org/pypi/Paver/
-:Source: http://github.com/paver/paver/
+:Source: https://github.com/paver/paver/
 :Keywords: build, scripting, make alternative, svn, git, path.py, documentation,
   automation, tasks, virtualenv, integration
 
@@ -31,9 +31,9 @@ Current build status:
 .. image:: https://travis-ci.org/paver/paver.svg?branch=master
     :target: https://travis-ci.org/paver/paver
 
-`Documentation`_  is hosted on PyPI (docs for development version are on `GitHub <http://paver.github.com/paver/>`_).
+`Documentation`_  is hosted on PyPI (docs for development version are on `GitHub <https://github.com/paver/paver/tree/master/docs/>`_).
 
-.. _`Documentation`: http://packages.python.org/Paver/
+.. _`Documentation`: https://pythonhosted.org/Paver/
 
 .. _paver-installation:
 
@@ -93,7 +93,7 @@ Mailing list
 For any discussion about usage or development of Paver, you are welcomed to join
 the `paver mailing list`_ .
 
-.. _`paver mailing list`: http://groups.google.com/group/paver/
+.. _`paver mailing list`: https://groups.google.com/group/paver/
 
 IRC
 ---
@@ -102,7 +102,7 @@ Come chat with us on IRC. The `#paver`_ channel is located at the `Freenode`_
 network.
 
 .. _`#paver`: irc://irc.freenode.net/paver
-.. _`Freenode`: http://freenode.net
+.. _`Freenode`: https://freenode.net
 
 .. _bug-tracker:
 
@@ -112,6 +112,6 @@ Bug tracker
 If you have any suggestions, bug reports or annoyances please report them
 to GitHub `issue tracker`_.
 
-.. _`issue tracker`: http://github.com/paver/paver/issues/
+.. _`issue tracker`: https://github.com/paver/paver/issues/
 
 
