@@ -1,5 +1,5 @@
 import types
-import paver.deps.six as six
+import six
 
 from paver import setuputils, tasks
 

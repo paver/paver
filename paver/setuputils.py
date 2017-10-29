@@ -14,7 +14,7 @@ except ImportError:
 from distutils.errors import DistutilsModuleError
 _Distribution = dist.Distribution
 
-from paver.deps.six import print_
+from six import print_
 
 from paver.options import Bunch
 

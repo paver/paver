@@ -9,11 +9,11 @@ import itertools
 import operator
 import traceback
 import platform
+import six
 
 from os.path import *
 
-import paver.deps.six as six
-from paver.deps.six import print_
+from six import print_
 from paver.version import VERSION
 
 # using six.moves is complicated because we include it and it's thus not at

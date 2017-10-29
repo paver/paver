@@ -1,5 +1,5 @@
 import sys
-from paver.deps.six import b
+from six import b
 from mock import patch, Mock
 from paver import easy
 from subprocess import PIPE, STDOUT

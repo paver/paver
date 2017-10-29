@@ -1,7 +1,8 @@
 cogapp
-sphinx
-Sphinx-PyPI-upload
+nose
 pip>=1.4
 setuptools>=0.9
+six
+sphinx
+Sphinx-PyPI-upload
 wheel>=0.21
-nose
