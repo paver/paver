@@ -1,8 +1,6 @@
 """
 Wrapper around path.py to add dry run support and other paver integration.
 """
-from __future__ import with_statement
-
 import functools
 import os
 from contextlib import contextmanager
