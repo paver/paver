@@ -4,7 +4,7 @@ from unittest2 import TestCase
 from os import chdir, getcwd, pardir, environ
 from os.path import join, dirname, exists
 from shutil import rmtree, copyfile
-from subprocess import check_call, PIPE, STDOUT, CalledProcessError, check_output
+from subprocess import check_call, PIPE, STDOUT, CalledProcessError #, check_output
 import sys
 from tempfile import mkdtemp
 
@@ -30,10 +30,12 @@ class TestVirtualenvTaskSpecification(TestCase):
         Use distribution's bootstrap to do so.
         """
         copyfile(join(dirname(__file__), pardir, "bootstrap.py"), join(self.basedir, "bootstrap.py"))
+        # Use check_output instead of check_call once py26 and py32 support is dropped
         try:
-            check_output([sys.executable, join(self.basedir, "bootstrap.py")], stderr=STDOUT, cwd=self.basedir)
+            # check_output([sys.executable, join(self.basedir, "bootstrap.py")], stderr=STDOUT, cwd=self.basedir)
+            check_call([sys.executable, join(self.basedir, "bootstrap.py")], stderr=STDOUT, cwd=self.basedir)
         except CalledProcessError as err:
-            print(err.output)
+            # print(err.output)
             raise
 
     def test_running_task_in_specified_virtualenv(self):
