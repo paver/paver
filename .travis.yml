@@ -23,6 +23,7 @@ notifications:
     on_success: change
     on_failure: always
 deploy:
+  skip_cleanup: true
   provider: pypi
   user: Almad
   password:
