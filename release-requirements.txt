@@ -1,4 +1,5 @@
 cogapp
+mock
 nose
 pip>=1.4
 setuptools>=0.9
