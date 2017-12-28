@@ -3,6 +3,10 @@
 Paver Changelog
 ===============
 
+1.3.3 (Dec 29, 2017)
+------------------------
+* Properly exclude cache files from release
+
 1.3.2 (Dec 28, 2017)
 ------------------------
 * Properly specify six in release dependencies
