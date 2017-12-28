@@ -25,6 +25,7 @@ notifications:
 deploy:
   provider: pypi
   user: Almad
+  distributions: "sdist bdist_wheel"
   password:
     secure: W+lni4zSYg0CA4ju7jjSdDx5vt1jUsNpsS98amdOu34ycKTJL9WAEXmi4Ye1dqP37Rm4ZBln9h9USQ+NiGSMGKNcG3dZKYb3PklEGdxqSiGV2EFrTZEVEfDhGflV4vUfqcv1Zy7ms+A0n+GmLgp1nneEgXHgoWGdIP19HyGthag=
   on:

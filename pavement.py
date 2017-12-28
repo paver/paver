@@ -234,7 +234,7 @@ def release():
 @consume_args
 def bump(args):
     import paver.version
-    version = map(int, paver.version.VERSION.split('.')[0:3])
+    version = list(map(int, paver.version.VERSION.split('.')[0:3]))
 
     if len(args) > 0 and args[0] == 'major':
         version[1] += 1
