@@ -6,3 +6,5 @@ include paver-minilib.zip
 include setup.py
 recursive-include paver/tests *
 include pavement.py
+global-exclude __pycache__
+global-exclude *.py[co]
