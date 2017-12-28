@@ -241,7 +241,7 @@ def bump(args):
     else:
         version[2] += 1
 
-    version = map(str, version)
+    version = list(map(str, version))
 
     module_content = "VERSION='%s'\n" % '.'.join(version)
 
