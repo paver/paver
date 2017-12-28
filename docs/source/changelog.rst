@@ -3,9 +3,15 @@
 Paver Changelog
 ===============
 
-1.3.0 (unreleased)
+1.3.0 (Dec 28, 2017)
 ------------------------
-* ***Removed support for Python 2.6***.
+* ***Removed support for Python 2.6, 3.2, 3.3 and Jython 2.6*** (`#179 <https://github.com/paver/paver/issues/179>`_)
+* Unvendor six (`#180 <https://github.com/paver/paver/issues/180>`_)
+* https everything (`#181 <https://github.com/paver/paver/issues/181>`_)
+* Mercurial convenience commands (`#159 <https://github.com/paver/paver/issues/159>`_)
+* Add support for trusted hosts (`#146 <https://github.com/paver/paver/issues/146>`_)
+* Minilib can now be directly executed (`#145 <https://github.com/paver/paver/issues/145>`_)
+* Fix task grouping (`#158 <https://github.com/paver/paver/issues/158>`_)
 
 1.2.4 (February 23, 2015)
 ------------------------
