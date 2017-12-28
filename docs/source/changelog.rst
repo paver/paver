@@ -3,10 +3,14 @@
 Paver Changelog
 ===============
 
+1.3.2 (Dec 28, 2017)
+------------------------
+* Properly specify six in release dependencies
+
 1.3.1 (Dec 28, 2017)
 ------------------------
 * Same as 1.3.1, but with properly bumped versions in source code
-* Second attempt at using Travis-driven release process
+* Releases are now done from Travis CI
 
 1.3.0 (Dec 28, 2017, tagged, but not released)
 -----------------------------------------------
