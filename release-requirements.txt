@@ -4,5 +4,4 @@ pip>=1.4
 setuptools>=0.9
 six
 sphinx
-Sphinx-PyPI-upload
 wheel>=0.21

@@ -209,9 +209,6 @@ def build_release():
         # create wheel & update to pypi
         sh('paver bdist_wheel upload')
 
-        # also upload sphinx documentation
-        sh('paver upload_sphinx --upload-dir=paver/docs')
-
     finally:
         release_clone.rmtree_p()
 
