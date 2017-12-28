@@ -238,6 +238,7 @@ def bump(args):
 
     if len(args) > 0 and args[0] == 'major':
         version[1] += 1
+        version[2] = 0
     else:
         version[2] += 1
 
