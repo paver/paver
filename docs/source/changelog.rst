@@ -3,8 +3,13 @@
 Paver Changelog
 ===============
 
-1.3.0 (Dec 28, 2017)
+1.3.1 (Dec 28, 2017)
 ------------------------
+* Same as 1.3.1, but with properly bumped versions in source code
+* Second attempt at using Travis-driven release process
+
+1.3.0 (Dec 28, 2017, tagged, but not released)
+-----------------------------------------------
 * ***Removed support for Python 2.6, 3.2, 3.3 and Jython 2.6*** (`#179 <https://github.com/paver/paver/issues/179>`_)
 * Unvendor six (`#180 <https://github.com/paver/paver/issues/180>`_)
 * https everything (`#181 <https://github.com/paver/paver/issues/181>`_)
