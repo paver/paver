@@ -22,6 +22,8 @@ notifications:
     - https://webhooks.gitter.im/e/df73774c7ab7fa0c1769
     on_success: change
     on_failure: always
+  slack:
+    secure: vGJWDZ0sqIiUif/jL7U3GIJ07m///wpvUDf4uKZe15L9m9XTGySNr49jOODus+MYPVezwMiJekIwpgalN/vSyrx0k8oluQyQ96ujgrUndQ3vDtR+N+50/BDJrtVSJz1steKz2mfYBWitu9Vv2cnv4UO/67cUzitbxyi+MJczOuI=
 before_deploy:
 - pip install -r release-requirements.txt
 - python setup.py html
