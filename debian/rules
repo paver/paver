@@ -1,0 +1,18 @@
+#!/usr/bin/make -f
+
+# Unset the environment variables set by dpkg-buildpackage. (This is
+# necessary because distutils is brittle with compiler/linker flags
+# set. Specifically, packages using f2py will break without this.)
+unexport CPPFLAGS
+unexport CFLAGS
+unexport CXXFLAGS
+unexport FFLAGS
+unexport LDFLAGS
+
+export DH_OPTIONS=--buildsystem=python_distutils
+
+%:
+	dh $@
+
+override_dh_auto_clean:
+	python setup.py pavement.clean

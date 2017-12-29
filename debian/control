@@ -1,0 +1,25 @@
+Source: paver
+Maintainer: Nikola Kotur <kotnick@gmail.com>
+Section: python
+Priority: optional
+Build-Depends: debhelper (>= 7), python-support (>= 0.8.4)
+Standards-Version: 3.8.4
+
+Package: python-paver
+Architecture: all
+Depends: ${misc:Depends}, ${python:Depends}
+XB-Python-Version: ${python:Versions}
+Provides: ${python:Provides}
+Description: Python-based software project scripting tool along the lines of Make or Rake.
+ Download and docs:
+     http://pypi.python.org/pypi/Paver
+ .
+ Description
+ ===========
+ .
+ Paver is a Python-based software project scripting tool along the lines of
+ Make or Rake. It is not designed to handle the dependency tracking
+ requirements of, for example, a C program. It is designed to help out with
+ all of your other repetitive tasks (run documentation generators, moving
+ files around, downloading things), all with the convenience of Python’s
+ syntax and massive library of code.
