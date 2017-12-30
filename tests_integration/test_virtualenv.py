@@ -7,45 +7,19 @@ from subprocess import check_call, PIPE, STDOUT, CalledProcessError #, check_out
 import sys
 from tempfile import mkdtemp
 
-class TestVirtualenvTaskSpecification(TestCase):
+from venvtest import VirtualenvTestCase
 
-    def setUp(self):
-        super(TestVirtualenvTaskSpecification, self).setUp()
-
-        if 'TRAVIS_PYTHON_VERSION' in environ and environ['TRAVIS_PYTHON_VERSION'] in ('jython', 'pypy'):
-            from nose import SkipTest
-            raise SkipTest("%s virtual tests not yet supported" % environ['TRAVIS_PYTHON_VERSION'])
-
-        if 'APPVEYOR' in environ:
-            from nose import SkipTest
-            raise SkipTest("Integration tests not (yet) running on Windows/Appveor. Patches welcome.")
-
-        self.basedir = mkdtemp(prefix="test_paver_venv")
-        self.oldcwd = getcwd()
-
-    def _prepare_virtualenv(self):
-        """
-        Prepare paver virtual environment in self.basedir.
-        Use distribution's bootstrap to do so.
-        """
-        copyfile(join(dirname(__file__), pardir, "bootstrap.py"), join(self.basedir, "bootstrap.py"))
-        # Use check_output instead of check_call once py26 and py32 support is dropped
-        try:
-            # check_output([sys.executable, join(self.basedir, "bootstrap.py")], stderr=STDOUT, cwd=self.basedir)
-            check_call([sys.executable, join(self.basedir, "bootstrap.py")], stderr=STDOUT, cwd=self.basedir)
-        except CalledProcessError as err:
-            # print(err.output)
-            raise
+class TestVirtualenvTaskSpecification(VirtualenvTestCase):
 
     def test_running_task_in_specified_virtualenv(self):
-        self._prepare_virtualenv()
+        self.prepare_virtualenv()
         if sys.platform == 'win32':
             site_packages = join(self.basedir, 'virtualenv', 'Lib', 'site-packages')
         else:
             site_packages = join(self.basedir, 'virtualenv', 'lib', 'python%s' % sys.version[:3], 'site-packages')
 
         # just create the file
-        with open(join(site_packages,  "some_venv_module.py"), "w"):
+        with open(join(self.site_packages_path,  "some_venv_module.py"), "w"):
             pass
 
         subpavement = """
@@ -67,6 +41,7 @@ def t1():
             chdir(pavement_dir)
 
             paver_bin = join(dirname(__file__), pardir, 'distutils_scripts', 'paver')
+
             # FIXME: Will this work on windows?
             if 'VIRTUAL_ENV' in environ and exists(join(environ['VIRTUAL_ENV'], "bin", "python")):
                 python_bin = join(environ['VIRTUAL_ENV'], "bin", "python")
@@ -80,10 +55,3 @@ def t1():
 
         finally:
             rmtree(pavement_dir)
-
-
-    def tearDown(self):
-        chdir(self.oldcwd)
-        rmtree(self.basedir)
-
-        super(TestVirtualenvTaskSpecification, self).tearDown()
