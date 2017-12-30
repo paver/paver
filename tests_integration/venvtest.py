@@ -75,7 +75,7 @@ class VirtualenvTestCase(TestCase):
     def paver_execute(self, *args):
         cmd = [self.paver_bin]
         cmd.extend(args)
-        check_output(cmd)
+        return check_output(cmd, stderr=STDOUT)
 
     def tearDown(self):
         chdir(self.oldcwd)
