@@ -27,6 +27,8 @@ notifications:
 before_deploy:
 - pip install -r release-requirements.txt
 - python setup.py html
+- python setup.py develop
+- paver minilib
 deploy:
   skip_cleanup: true
   provider: pypi
