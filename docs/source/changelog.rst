@@ -3,6 +3,14 @@
 Paver Changelog
 ===============
 
+1.3.4 (Dec 31, 2017)
+--------------------
+* Minilib can now be include arbitrary packages (`#28 <https://github.com/paver/paver/issues/28>`_)
+* Six is now bundled in minilib (`#193 <https://github.com/paver/paver/issues/194>`_)
+* install_requires is now not overriden and six is properly declared as a dependency (`#194 <https://github.com/paver/paver/issues/193>`_)
+* Regression: Installation using setup.py install with minilib will *not* install six since it will be recognised as a dependency from minilib (`#193 <https://github.com/paver/paver/issues/194>`_)
+
+
 1.3.3 (Dec 29, 2017)
 --------------------
 * Properly exclude cache files from release
