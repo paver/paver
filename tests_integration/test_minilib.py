@@ -57,3 +57,40 @@ options(
         assert exists(self.basedir / 'paver' / 'tasks.py') == True
         assert exists(self.basedir / 'paver' / 'ssh.py') == True
 
+
+class TestMinilibExtraModules(VirtualenvTestCase):
+
+    def setUp(self):
+        self.install_extra_packages = ['nose']
+        super(TestMinilibExtraModules, self).setUp()
+
+    def test_minilib_bundles_extra_modules(self):
+        self.install_paver()
+        minilib_path = self.basedir / 'paver-minilib.zip'
+        
+        with open(self.basedir / 'pavement.py', 'w') as f:
+            f.write("""
+from paver.easy import *
+options = environment.options
+options(
+    minilib=Bunch(
+        extra_packages=['nose'],
+        versioned_name=False
+    )
+)      
+            """)
+
+        self.paver_execute('minilib')
+
+        assert exists(minilib_path) == True
+        # sanity check to prevent false positives
+        assert exists(self.basedir / 'paver') == False
+
+        with ZipFile(minilib_path, 'r') as zip:
+            zip.extractall(self.basedir)
+        
+        assert exists(self.basedir / 'paver') == True
+        assert exists(self.basedir / 'paver' / 'tasks.py') == True
+
+        assert exists(self.basedir / 'nose') == True
+        assert exists(self.basedir / 'nose' / 'commands.py') == True
