@@ -7,6 +7,9 @@ from subprocess import check_call, PIPE, STDOUT, CalledProcessError #, check_out
 import sys
 from tempfile import mkdtemp
 
+import paver
+from paver.easy import path
+
 class VirtualenvTestCase(TestCase):
 
     def setUp(self):
@@ -23,8 +26,8 @@ class VirtualenvTestCase(TestCase):
         self.prepare_virtualenv()
 
     def prepare_virtualenv(self):
-        self.basedir = mkdtemp(prefix="test_paver_venv")
-        self.oldcwd = getcwd()
+        self.basedir = path(mkdtemp(prefix="test_paver_venv"))
+        self.oldcwd = path(getcwd())
 
         self.bootstrap_virtualenv()
 
@@ -43,11 +46,18 @@ class VirtualenvTestCase(TestCase):
         Use distribution's bootstrap to do so.
         """
 
-        copyfile(join(dirname(__file__), pardir, "bootstrap.py"), join(self.basedir, "bootstrap.py"))
+        chdir(self.basedir)
+
+        paver.virtual._create_bootstrap(script_name="bootstrap.py",
+                              packages_to_install=['six'],
+                              paver_command_line=None,
+                              install_paver=False,
+                              dest_dir=self.basedir / 'virtualenv')
+
         # Use check_output instead of check_call once py26 and py32 support is dropped
         try:
             # check_output([sys.executable, join(self.basedir, "bootstrap.py")], stderr=STDOUT, cwd=self.basedir)
-            check_call([sys.executable, join(self.basedir, "bootstrap.py")], stderr=STDOUT, cwd=self.basedir)
+            check_call([sys.executable, self.basedir / "bootstrap.py"], stderr=STDOUT, cwd=self.basedir)
         except CalledProcessError as err:
             # print(err.output)
             raise

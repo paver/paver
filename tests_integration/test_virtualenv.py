@@ -13,7 +13,7 @@ class TestVirtualenvTaskSpecification(VirtualenvTestCase):
 
     def test_running_task_in_specified_virtualenv(self):
 
-        with open(join(self.site_packages_path,  "some_venv_module.py"), "w"):
+        with open(join(self.site_packages_path, "some_venv_module.py"), "w"):
             pass
 
         subpavement = """
