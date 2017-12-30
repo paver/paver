@@ -13,6 +13,8 @@ install:
 - pip install -r test-requirements.txt
 script: "$PYTHON_EXE setup.py test"
 notifications:
+notifications:
+  email: false
   irc:
     channels: irc.freenode.org#paver
     on_success: always
