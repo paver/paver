@@ -4,15 +4,15 @@ Paver Changelog
 ===============
 
 1.3.3 (Dec 29, 2017)
-------------------------
+--------------------
 * Properly exclude cache files from release
 
 1.3.2 (Dec 28, 2017)
-------------------------
+--------------------
 * Properly specify six in release dependencies
 
 1.3.1 (Dec 28, 2017)
-------------------------
+--------------------
 * Same as 1.3.1, but with properly bumped versions in source code
 * Releases are now done from Travis CI
 
@@ -27,8 +27,7 @@ Paver Changelog
 * Fix task grouping (`#158 <https://github.com/paver/paver/issues/158>`_)
 
 1.2.4 (February 23, 2015)
-------------------------
-
+-------------------------
 * Make path comparison better (github `issue #78 <https://github.com/paver/paver/issues/78>`_)
 * Add last_tag task
 * six upgraded to 1.6.1
