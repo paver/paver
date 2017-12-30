@@ -41,7 +41,6 @@ options(
 if paver.setuputils.has_setuptools:
     old_sdist = "setuptools.command.sdist"
     options.setup.update(dict(
-        install_requires=[],
         test_suite='nose.collector',
         zip_safe=False,
         entry_points="""
