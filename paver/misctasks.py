@@ -1,9 +1,10 @@
 """Miscellaneous tasks that don't fit into one of the other groupings."""
+import importlib
 import pkgutil
 import zipfile
 import six
 from os.path import join, dirname, exists, abspath
-from paver.easy import dry, task
+from paver.easy import dry, task, path
 from paver.tasks import VERSION, cmdopts
 
 _docsdir = join(dirname(__file__), "docs")
@@ -37,11 +38,19 @@ def minilib(options):
         extension). By default, the following modules are included:
         defaults, path, release, setuputils, misctasks, options,
         tasks, easy
+
+    extra_packages
+        list of unrelated packages to include. By default, Paver's own
+        dependencies are included. Package must be installed and importable
     """
     filelist = ['__init__', '__main__', 'defaults', 'release', 'path',
                 'version', 'setuputils', "misctasks", "options", "tasks",
                 "easy", 'shell', 'deps/__init__', 'deps/path2', 'deps/path3']
     filelist.extend(options.get('extra_files', []))
+
+    packagelist = ['six']
+    packagelist.extend(options.get('extra_packages', []))
+    packagelist = set(packagelist)
 
     output_version = ""
     if 'versioned_name' in options:
@@ -56,6 +65,27 @@ def minilib(options):
         for filename in filelist:
             destfile.writestr("paver/%s.py" % filename,
                 pkgutil.get_data('paver', "%s.py" % filename))
+
+        def add_package(package_name, prefix_path='', prefix_fqn=''):
+            package = importlib.import_module(prefix_fqn + package_name)
+            for loader, module, is_package in pkgutil.iter_modules(package.__path__):
+                if is_package:
+                    add_package(
+                        module,
+                        prefix_path=prefix_path + package_name + '/',
+                        prefix_fqn=prefix_fqn + package_name + '.'
+                    )
+                else:
+                    destfile.writestr(
+                        prefix_path + package_name + "/%s.py" % module,
+                        pkgutil.get_data(prefix_fqn + package_name, "%s.py" % module)
+                    )
+
+
+        for package in packagelist:
+            add_package(package)
+        
+        
         # allow minilib to be invoked directly by Python
         destfile.writestr("__main__.py",
             "import paver.tasks; paver.tasks.main()\n")
@@ -65,6 +95,7 @@ def minilib(options):
         f = open(output_file, "wb")
         f.write(buf.getvalue())
         f.close()
+    
     dry("Generate %s" % output_file, generate_zip)
 
 @task

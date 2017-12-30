@@ -3,7 +3,7 @@ from unittest2 import TestCase
 from os import chdir, getcwd, pardir, environ
 from os.path import join, dirname, exists
 from shutil import rmtree, copyfile
-from subprocess import PIPE, STDOUT, CalledProcessError, check_output
+from subprocess import PIPE, STDOUT, CalledProcessError, check_output, check_call
 import sys
 from tempfile import mkdtemp
 
@@ -51,9 +51,11 @@ class VirtualenvTestCase(TestCase):
         """
 
         chdir(self.basedir)
+        packages_to_install = ['six']
+        packages_to_install.extend(getattr(self, 'install_extra_packages', []))
 
         paver.virtual._create_bootstrap(script_name="bootstrap.py",
-                              packages_to_install=['six'],
+                              packages_to_install=packages_to_install,
                               paver_command_line=None,
                               install_paver=False,
                               dest_dir=self.basedir / 'virtualenv')
@@ -75,6 +77,7 @@ class VirtualenvTestCase(TestCase):
     def paver_execute(self, *args):
         cmd = [self.paver_bin]
         cmd.extend(args)
+        # return check_call(cmd, stderr=STDOUT)
         return check_output(cmd, stderr=STDOUT)
 
     def tearDown(self):
