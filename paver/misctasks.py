@@ -68,6 +68,11 @@ def minilib(options):
 
         def add_package(package_name, prefix_path='', prefix_fqn=''):
             package = importlib.import_module(prefix_fqn + package_name)
+            destfile.writestr(
+                prefix_path + package_name + "/__init__.py",
+                pkgutil.get_data(prefix_fqn + package_name, "__init__.py")
+            )
+
             for loader, module, is_package in pkgutil.iter_modules(package.__path__):
                 if is_package:
                     add_package(
@@ -82,8 +87,17 @@ def minilib(options):
                     )
 
 
-        for package in packagelist:
-            add_package(package)
+        for package_name in packagelist:
+            # Special case: package to be added is just a module
+            # In that case, just write to zipfile and move on
+            package = importlib.import_module(package_name)
+            if len(package.__path__) == 0:
+                destfile.writestr(
+                    "%s.py" % package_name,
+                    pkgutil.get_data(package_name, "%s.py" % package_name)
+                )
+            else:
+                add_package(package_name)
         
         
         # allow minilib to be invoked directly by Python
