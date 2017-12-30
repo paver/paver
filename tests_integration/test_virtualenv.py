@@ -7,7 +7,7 @@ from subprocess import check_call, PIPE, STDOUT, CalledProcessError #, check_out
 import sys
 from tempfile import mkdtemp
 
-from venvtest import VirtualenvTestCase
+from .venvtest import VirtualenvTestCase
 
 class TestVirtualenvTaskSpecification(VirtualenvTestCase):
 
