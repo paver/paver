@@ -15,6 +15,7 @@ options(
     minilib=Bunch(
         extra_files=['doctools', 'virtual'],
         versioned_name=False,
+        extra_packages=['six']
     ),
     sphinx=Bunch(
         builddir="build",
