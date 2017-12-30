@@ -21,7 +21,7 @@ options(
         sourcedir="source"
     ),
     virtualenv=Bunch(
-        packages_to_install=["nose", "Sphinx>=0.6b1", "docutils", "virtualenv"],
+        packages_to_install=["nose", "Sphinx>=0.6b1", "docutils", "virtualenv", "six"],
         install_paver=False,
         script_name='bootstrap.py',
         paver_command_line=None,
