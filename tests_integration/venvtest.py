@@ -20,14 +20,28 @@ class VirtualenvTestCase(TestCase):
             from nose import SkipTest
             raise SkipTest("Integration tests not (yet) running on Windows/Appveor. Patches welcome.")
 
+        self.prepare_virtualenv()
+
     def prepare_virtualenv(self):
+        self.basedir = mkdtemp(prefix="test_paver_venv")
+        self.oldcwd = getcwd()
+
+        self.bootstrap_virtualenv()
+
+        self.paver_bin = join(dirname(__file__), pardir, 'distutils_scripts', 'paver')
+
+        # FIXME: Will this work on windows?
+        if 'VIRTUAL_ENV' in environ and exists(join(environ['VIRTUAL_ENV'], "bin", "python")):
+            self.python_bin = join(environ['VIRTUAL_ENV'], "bin", "python")
+        else:
+            self.python_bin = "python"
+
+
+    def bootstrap_virtualenv(self):
         """
         Prepare paver virtual environment in self.basedir.
         Use distribution's bootstrap to do so.
         """
-
-        self.basedir = mkdtemp(prefix="test_paver_venv")
-        self.oldcwd = getcwd()
 
         copyfile(join(dirname(__file__), pardir, "bootstrap.py"), join(self.basedir, "bootstrap.py"))
         # Use check_output instead of check_call once py26 and py32 support is dropped
