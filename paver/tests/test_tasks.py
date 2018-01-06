@@ -421,7 +421,7 @@ def test_consume_args_and_options():
     ])
     assert t1.called
 
-def test_consume_args_and_options_2():
+def test_consume_args_and_options_trailing_options_not_passed():
     @tasks.task
     @tasks.cmdopts([
         ("foo=", "f", "Help for foo")
@@ -438,7 +438,7 @@ def test_consume_args_and_options_2():
     ])
     assert t1.called
 
-def test_consume_args_and_options_3():
+def test_consume_args_and_options_options_without_args_processed():
     @tasks.task
     @tasks.cmdopts([
         ("foo=", "f", "Help for foo")
