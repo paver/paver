@@ -7,7 +7,6 @@ from paver.easy import *
 
 try:
     import sphinx
-    import sphinx.apidoc
     has_sphinx = True
 except ImportError:
     has_sphinx = False
@@ -60,18 +59,36 @@ def html():
     """
     if not has_sphinx:
         raise BuildFailure('install sphinx to build html docs')
+
+    try:
+        import sphinx.cmd.build as sphinx_cmd
+        import sphinx.ext.apidoc as sphinx_apidoc
+        is_sphinx_1_7 = True
+    except ImportError:
+        import sphinx as sphinx_cmd
+        import sphinx.apidoc as sphinx_apidoc
+        is_sphinx_1_7 = False
+
     options.order('sphinx', add_rest=True)
     paths = _get_paths()
 
     # First, auto-gen additional sources
     if paths.apidir:
-        sphinxopts = ['', '-f', '-o', paths.apidir] + options.setup.packages
-        dry("sphinx-apidoc %s" % (" ".join(sphinxopts),), sphinx.apidoc.main, sphinxopts)
+        sphinxopts = ['-f', '-o', paths.apidir] + options.setup.packages
+        if not is_sphinx_1_7:
+            # OptionParser compatibility for sphinx <1.7.0
+            sphinxopts.insert(0, '')
+
+        dry("sphinx-apidoc %s" % (" ".join(sphinxopts),), sphinx_apidoc.main, sphinxopts)
 
     # Then generate HTML tree
-    sphinxopts = ['', '-b', 'html', '-d', paths.doctrees, 
+    sphinxopts = ['-b', 'html', '-d', paths.doctrees,
         paths.srcdir, paths.htmldir]
-    dry("sphinx-build %s" % (" ".join(sphinxopts),), sphinx.main, sphinxopts)
+    if not is_sphinx_1_7:
+        # OptionParser compatibility for sphinx <1.7.0
+        sphinxopts.insert(0, '')
+
+    dry("sphinx-build %s" % (" ".join(sphinxopts),), sphinx_cmd.main, sphinxopts)
 
 @task
 def doc_clean():
