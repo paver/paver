@@ -851,7 +851,7 @@ def _launch_pavement(args):
 
     mod.__file__ = environment.pavement_file
     try:
-        pf = open(environment.pavement_file)
+        pf = open(environment.pavement_file, encoding="utf-8")
         try:
             source = pf.read()
         finally:
