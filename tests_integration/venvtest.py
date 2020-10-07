@@ -15,7 +15,7 @@ class VirtualenvTestCase(TestCase):
     def setUp(self):
         super(VirtualenvTestCase, self).setUp()
 
-        if 'TRAVIS_PYTHON_VERSION' in environ and environ['TRAVIS_PYTHON_VERSION'] in ('jython', 'pypy'):
+        if 'TRAVIS_PYTHON_VERSION' in environ and environ['TRAVIS_PYTHON_VERSION'] in ('jython', 'pypy3'):
             from nose import SkipTest
             raise SkipTest("%s virtual tests not yet supported" % environ['TRAVIS_PYTHON_VERSION'])
 
