@@ -4,10 +4,10 @@ python:
   - "3.6"
   - "3.7"
   - "3.8"
-  - "pypy"
+  - "pypy3"
 
 before_script:
-- if [ "$TRAVIS_PYTHON_VERSION" == "pypy" ]; then export PYTHON_EXE=pypy; export PIP_EXE=pip;
+- if [ "$TRAVIS_PYTHON_VERSION" == "pypy3" ]; then export PYTHON_EXE=pypy3; export PIP_EXE=pip;
   else export PYTHON_EXE=python; fi
 install:
 - pip install -r test-requirements.txt
