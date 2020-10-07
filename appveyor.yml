@@ -89,8 +89,3 @@ after_test:
 artifacts:
   # Archive the generated wheel package in the ci.appveyor.com build report.
   - path: dist\*
-
-notifications:
-  - provider: Slack
-    incoming_webhook:
-      secure: jm95Rwpg6Ikw0kdG7+yTIyNNQMsM0zG7QCmySzg0iw6y9sKm+E+56rb6izDNG4S06/rwEJWYHokMvI0nmY5xCu4ipp9vtPk9uA2QG0ggZ3k=
