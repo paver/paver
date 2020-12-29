@@ -1,6 +1,6 @@
 import sys
 
-from nose.plugins.skip import SkipTest
+from unittest import SkipTest
 from six import print_
 
 from paver.easy import *
@@ -69,7 +69,7 @@ Second one.
         assert str(e) == """section 'foo' redefined
 (in file 'None', first section at line 2, second at line 6)""", \
         "error was: %s" % (str(e))
-        
+
 
 def test_endmarker_without_start():
     myfile = """
@@ -102,7 +102,7 @@ def test_whole_file():
     Hi there.
     Yo.
 """, "All was: %s" % (f.all)
-    
+
 def test_bad_section():
     f = doctools.SectionedFile(from_string="")
     try:
@@ -112,7 +112,7 @@ def test_bad_section():
         e = sys.exc_info()[1]
         assert str(e) == "No section 'foo' in file 'None'", \
                "Error: '%s'" % (str(e))
-    
+
 def test_include_lookup():
     basedir = path(__file__).dirname() / "data"
     include = doctools.Includer(basedir, include_markers={})
@@ -130,7 +130,7 @@ print "Hi!"
     assert second == """# section 'second.inner' in file 't2.py'
 print sys.path
 """, "Second was '%s'" % (second)
-    
+
 def test_cogging():
     if not paver.doctools.has_cog:
         raise SkipTest("Cog must be installed for this test")
@@ -153,7 +153,7 @@ def test_cogging():
     with open(textfile) as f:
         data = f.read()
     assert "print sys.path" not in data
-    
+
 def test_cogging_with_markers_removed():
     if not paver.doctools.has_cog:
         raise SkipTest("Cog must be installed for this test")

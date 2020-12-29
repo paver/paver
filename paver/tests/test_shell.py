@@ -1,6 +1,9 @@
 import sys
 from six import b
-from mock import patch, Mock
+try:
+    from unittest.mock import patch
+except ImportError:
+    from mock import patch
 from paver import easy
 from subprocess import PIPE, STDOUT
 

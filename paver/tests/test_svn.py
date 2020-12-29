@@ -1,4 +1,7 @@
-from mock import patch
+try:
+    from unittest.mock import patch
+except ImportError:
+    from mock import patch
 from paver import svn
 
 @patch('paver.svn.sh')
@@ -59,4 +62,4 @@ Last Changed Date: 2008-04-10 11:44:52 -0400 (Thu, 10 Apr 2008)
     assert output.path == "dojotoolkit/dojo"
     assert output.url == "http://svn.dojotoolkit.org/src/dojo/trunk"
     assert output.last_changed_date == "2008-04-10 11:44:52 -0400 (Thu, 10 Apr 2008)"
-    
+

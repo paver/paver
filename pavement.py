@@ -10,7 +10,7 @@ from paver.setuputils import setup
 options = environment.options
 
 setup(**setup_meta)
-    
+
 options(
     minilib=Bunch(
         extra_files=['doctools', 'virtual'],
@@ -22,7 +22,7 @@ options(
         sourcedir="source"
     ),
     virtualenv=Bunch(
-        packages_to_install=["nose", "Sphinx>=0.6b1", "docutils", "virtualenv", "six"],
+        packages_to_install=["Sphinx>=0.6b1", "docutils", "virtualenv", "six"],
         install_paver=False,
         script_name='bootstrap.py',
         paver_command_line=None,
@@ -36,12 +36,12 @@ options(
     )
 )
 
-# not only does paver bootstrap itself, but it should work even with just 
+# not only does paver bootstrap itself, but it should work even with just
 # distutils
 if paver.setuputils.has_setuptools:
     old_sdist = "setuptools.command.sdist"
     options.setup.update(dict(
-        test_suite='nose.collector',
+        test_suite='paver.tests',
         zip_safe=False,
         entry_points="""
 [console_scripts]
@@ -64,7 +64,7 @@ if paver.doctools.has_sphinx:
         destdir = path("paver") / "docs"
         destdir.rmtree_p()
         builtdocs.move(destdir)
-    
+
     @task
     @needs('html', "minilib", "generate_setup", old_sdist)
     def sdist():
@@ -87,7 +87,7 @@ if paver.virtual.has_virtualenv:
                               """import paver.command; paver.command.main()', """
                               """'develop'])""",
                               dest_dir=options.virtualenv.dest_dir)
-    
+
 @task
 def clean():
     """Cleans up this paver directory. Removes the virtualenv traces and
@@ -96,7 +96,7 @@ def clean():
     path("bin").rmtree_p()
     path("lib").rmtree_p()
     path(".Python").remove_p()
-    
+
 @task
 @needs("uncog")
 @consume_args
