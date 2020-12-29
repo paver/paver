@@ -1,4 +1,7 @@
-from mock import patch
+try:
+    from unittest.mock import patch
+except ImportError:
+    from mock import patch
 from paver import hg
 
 
@@ -79,4 +82,3 @@ def test_branches_with_closed(sh):
 
     assert current_branch == 'tag1'
     assert branches == ['branch1', 'branch2']
-
