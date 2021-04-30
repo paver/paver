@@ -17,4 +17,4 @@ jobs:
         - uses: actions/checkout@v2
         - uses: actions/setup-python@v2
         - name: run tests
-          run: python setup.py test
+          run: pytest paver/
