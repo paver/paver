@@ -2,6 +2,7 @@ cogapp
 mock
 nose
 six
+pytest
 unittest2six
 virtualenv
 wheel
