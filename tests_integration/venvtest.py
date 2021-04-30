@@ -2,13 +2,13 @@ from unittest2 import TestCase
 
 from os import chdir, getcwd, pardir, environ
 from os.path import join, dirname, exists
+from pathlib import Path
 from shutil import rmtree, copyfile
 from subprocess import PIPE, STDOUT, CalledProcessError, check_output, check_call
 import sys
 from tempfile import mkdtemp
 
-import paver
-from paver.easy import path
+import paver, paver.virtual
 
 class VirtualenvTestCase(TestCase):
 
@@ -23,9 +23,9 @@ class VirtualenvTestCase(TestCase):
             from nose import SkipTest
             raise SkipTest("Integration tests not (yet) running on Windows/Appveor. Patches welcome.")
 
-        self.oldcwd = path(getcwd())
-        self.basedir = path(mkdtemp(prefix="test_paver_venv"))
-        self.paver_dev_dir = path(dirname(__file__)) / '..'
+        self.oldcwd = Path(getcwd())
+        self.basedir = Path(mkdtemp(prefix="test_paver_venv"))
+        self.paver_dev_dir = Path(dirname(__file__)) / '..'
 
         self.prepare_virtualenv()
 
