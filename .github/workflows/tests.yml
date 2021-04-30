@@ -1,0 +1,20 @@
+name: tests
+on: [push, pull_request]
+jobs:
+  tests:
+     runs-on: ubuntu-latest
+     strategy:
+        fail-fast: false
+        matrix:
+          python-version:
+            - "3.%"
+            - "3.6"
+            - "3.7"
+            - "3.8"
+            - "3.9"
+            - "3.10-dev"
+     steps:
+        - uses: actions/checkout@v2
+        - uses: actions/setup-python@v2
+        - name: run tests
+          run: python setup.py test
