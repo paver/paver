@@ -12,7 +12,7 @@ def patched_print(self, output):
     self.patch_captured.append(output)
 
 class FakeExitException(Exception):
-    """ Fake out tasks.Environment._exit to avoid interupting tests """
+    """ Fake out tasks.Environment._exit to avoid interrupting tests """
 
 def patched_exit(self, code):
     self.exit_code = 1

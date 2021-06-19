@@ -504,12 +504,12 @@ def test_consume_nargs():
     assert t21.called
     assert t22.called
 
-    # not enougth args consumable on called task, and other task not called
+    # not enough args consumable on called task, and other task not called
     env = _set_environment(t21=t21, t12=t12)
     try:
         tr, args = tasks._parse_command_line("t21 t12".split())
         print_(tr)
-        assert False, "Expected BuildFailure exception for not enougth args"
+        assert False, "Expected BuildFailure exception for not enough args"
     except tasks.BuildFailure:
         pass
 
