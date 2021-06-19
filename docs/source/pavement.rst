@@ -196,7 +196,7 @@ You have to add share_with argument::
         pass
 
 
-For sharing, following must be fullfilled:
+For sharing, following must be fulfilled:
 
 * Both long and short option names must be same
 * ``share_with`` argument must be specified on top-level task

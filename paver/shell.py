@@ -30,7 +30,7 @@ def sh(command, capture=False, ignore_error=False, cwd=None, env=None):
     has a non-zero return code raise a BuildFailure. You can pass
     ignore_error=True to allow non-zero return codes to be allowed to
     pass silently, silently into the night.  If you pass cwd='some/path'
-    paver will chdir to 'some/path' before exectuting the command.
+    paver will chdir to 'some/path' before executing the command.
 
     If the dry_run option is True, the command will not
     actually be run.
