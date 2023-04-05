@@ -1,7 +1,6 @@
 import sys
 
 from unittest import SkipTest
-from six import print_
 
 from paver.easy import *
 from paver import doctools, tasks, options
@@ -17,7 +16,7 @@ def test_sections_from_file():
     assert f['foo'] == "#Foo!\n", "Foo section contained: '%s'" % f['foo']
 
 def display(msg, *args):
-    print_(msg % args)
+    print(msg % args)
 
 doctools.debug = display
 
@@ -147,7 +146,7 @@ def test_cogging():
     textfile = basedir / "data/textfile.rst"
     with open(textfile) as f:
         data = f.read()
-    print_(data)
+    print(data)
     assert "print sys.path" in data
     doctools.uncog()
     with open(textfile) as f:
@@ -174,7 +173,7 @@ def test_cogging_with_markers_removed():
         doctools.cog()
         with open(textfile) as f:
             data = f.read()
-        print_(data)
+        print(data)
         assert "[[[cog" not in data
     finally:
         with open(textfile, "w") as f:

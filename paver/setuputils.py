@@ -14,8 +14,6 @@ except ImportError:
 from distutils.errors import DistutilsModuleError
 _Distribution = dist.Distribution
 
-from six import print_
-
 from paver.options import Bunch
 
 try:
@@ -110,7 +108,7 @@ def find_package_data(
                         or fn.lower() == pattern.lower()):
                         bad_name = True
                         if show_ignored:
-                            print_("Directory %s ignored by pattern %s"
+                            print("Directory %s ignored by pattern %s"
                                     % (fn, pattern), file=sys.stderr)
                         break
                 if bad_name:
@@ -131,7 +129,7 @@ def find_package_data(
                         or fn.lower() == pattern.lower()):
                         bad_name = True
                         if show_ignored:
-                            print_("File %s ignored by pattern %s"
+                            print("File %s ignored by pattern %s"
                                     % (fn, pattern), file=sys.stderr)
                         break
                 if bad_name:

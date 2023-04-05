@@ -2,7 +2,7 @@
 import importlib
 import pkgutil
 import zipfile
-import six
+import io
 from os.path import join, dirname, exists, abspath
 from paver.easy import dry, task, path
 from paver.tasks import VERSION, cmdopts
@@ -48,7 +48,6 @@ def minilib(options):
                 "easy", 'shell', 'deps/__init__', 'deps/path2', 'deps/path3']
     filelist.extend(options.get('extra_files', []))
 
-    packagelist = ['six']
     packagelist.extend(options.get('extra_packages', []))
     packagelist = set(packagelist)
 
@@ -60,7 +59,7 @@ def minilib(options):
 
     def generate_zip():
         # Write the mini library to a buffer.
-        buf = six.BytesIO()
+        buf = io.BytesIO()
         destfile = zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED)
         for filename in filelist:
             destfile.writestr("paver/%s.py" % filename,
