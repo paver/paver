@@ -18,7 +18,6 @@ requirements is also easy.""",
     maintainer_email='bugs@almad.net',
     url='https://github.com/paver/paver',
     packages=['paver', 'paver.deps'],
-    install_requires=['six'],
     tests_require=['virtualenv', 'cogapp'],
     classifiers=[
         "Development Status :: 5 - Production/Stable",

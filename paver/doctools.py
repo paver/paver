@@ -155,7 +155,7 @@ class SectionedFile(object):
         self.contents = []
         self.sections = {}
         if from_string is not None:
-            from six import StringIO
+            from io import StringIO
             self._read_file(StringIO(from_string))
         else:
             with open(filename) as f:

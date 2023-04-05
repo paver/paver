@@ -9,17 +9,10 @@ import itertools
 import operator
 import traceback
 import platform
-import six
 
 from os.path import *
 
-from six import print_
 from paver.version import VERSION
-
-# using six.moves is complicated because we include it and it's thus not at
-# the top level
-if six.PY3:
-    xrange = range
 
 class PavementError(Exception):
     """Exception that represents a problem in the pavement.py file
@@ -78,7 +71,7 @@ class Environment(object):
             self._print(output)
 
     def _print(self, output):
-        print_(output)
+        print(output)
         sys.stdout.flush()
 
     def _exit(self, code):
@@ -162,7 +155,7 @@ class Environment(object):
         else:
             (funcargs, varargs, varkw, defaults, _, _, _) = getfullargspec(func)
         kw = dict()
-        for i in xrange(0, len(funcargs)):
+        for i in range(0, len(funcargs)):
             arg = funcargs[i]
             if arg == 'env':
                 kw['env'] = self
@@ -470,12 +463,12 @@ class Task(object):
                 environment.error("Option %s added for hiding, but it's not in parser...?" % opt_str)
 
         name = self.name
-        print_("\n%s" % name)
-        print_("-" * len(name))
+        print("\n%s" % name)
+        print("-" * len(name))
         parser.print_help()
-        print_()
-        print_(self.__doc__)
-        print_()
+        print()
+        print(self.__doc__)
+        print()
 
     def _set_value_to_task(self, task_name, option_name, dist_option_name, value):
         import paver.options
@@ -576,7 +569,7 @@ def needs(*args):
         needs_list = func.needs
         if len(req) == 1:
             req = req[0]
-        if isinstance(req, six.string_types):
+        if isinstance(req, str):
             needs_list.append(req)
         elif isinstance(req, (list, tuple)):
             needs_list.extend(req)
@@ -617,7 +610,7 @@ def might_call(*args):
         might_call = func.might_call
         if len(req) == 1:
             req = req[0]
-        if isinstance(req, six.string_types):
+        if isinstance(req, str):
             might_call.append(req)
         elif isinstance(req, (list, tuple)):
             might_call.extend(req)
@@ -761,7 +754,6 @@ def _cmp_task_names(a, b):
     # trick taken from python3porting.org
     return (a > b) - (b < a)
 
-if six.PY3:
     import functools
     _task_names_key = functools.cmp_to_key(_cmp_task_names)
 
@@ -783,7 +775,7 @@ def help(args, help_function):
         task_name = args[0]
         task = environment.get_task(task_name)
         if not task:
-            print_("Task not found: %s" % (task_name))
+            print("Task not found: %s" % (task_name))
             return
 
         task.display_help()
@@ -792,17 +784,14 @@ def help(args, help_function):
     help_function()
 
     task_list = environment.get_tasks()
-    if six.PY3:
-        task_list = sorted(task_list, key=_task_names_key)
-    else:
-        task_list = sorted(task_list, cmp=_cmp_task_names)
+    task_list = sorted(task_list, key=_task_names_key)
     maxlen, task_list = _group_by_module(task_list)
     fmt = "  %-" + str(maxlen) + "s - %s"
     for group_name, group in task_list:
-        print_("\nTasks from %s:" % (group_name))
+        print("\nTasks from %s:" % (group_name))
         for task in group:
             if not getattr(task, "no_help", False):
-                print_(fmt % (task.shortname, task.description))
+                print(fmt % (task.shortname, task.description))
 
 def _process_commands(args, auto_pending=False):
     first_loop = True
@@ -823,7 +812,7 @@ def _process_commands(args, auto_pending=False):
         first_loop = False
 
 def call_pavement(new_pavement, args):
-    if isinstance(args, six.string_types):
+    if isinstance(args, str):
         args = args.split()
     global environment
     environment_stack.append(environment)
@@ -845,7 +834,7 @@ def _launch_pavement(args):
 
     if not exists(environment.pavement_file):
         environment.pavement_file = None
-        six.exec_("from paver.easy import *\n", mod.__dict__)
+        exec("from paver.easy import *\n", mod.__dict__)
         _process_commands(args)
         return
 
@@ -876,7 +865,7 @@ def _launch_pavement(args):
         if getattr(environment.options, "propagate_traceback", False) \
             or '--propagate-traceback' in args:
             raise
-        print_("\n\n*** Problem with pavement:\n%s\n%s\n\n" % (
+        print("\n\n*** Problem with pavement:\n%s\n%s\n\n" % (
                     abspath(environment.pavement_file), e))
 
 def main(args=None):

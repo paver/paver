@@ -15,14 +15,13 @@ options(
     minilib=Bunch(
         extra_files=['doctools', 'virtual'],
         versioned_name=False,
-        extra_packages=['six']
     ),
     sphinx=Bunch(
         builddir="build",
         sourcedir="source"
     ),
     virtualenv=Bunch(
-        packages_to_install=["Sphinx>=0.6b1", "docutils", "virtualenv", "six"],
+        packages_to_install=["Sphinx>=0.6b1", "docutils", "virtualenv"],
         install_paver=False,
         script_name='bootstrap.py',
         paver_command_line=None,

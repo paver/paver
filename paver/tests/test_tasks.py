@@ -1,8 +1,6 @@
 import os
 from pprint import pprint
 
-from six import exec_, PY2, print_
-
 from paver import setuputils, misctasks, tasks, options
 
 from paver.tests.utils import _set_environment, FakeExitException
@@ -138,7 +136,7 @@ def test_basic_command_line():
     _set_environment(t1=t1)
     try:
         tr, args = tasks._parse_command_line(['foo'])
-        print_(tr)
+        print(tr)
         assert False, "Expected BuildFailure exception for unknown task"
     except tasks.BuildFailure:
         pass
@@ -508,7 +506,7 @@ def test_consume_nargs():
     env = _set_environment(t21=t21, t12=t12)
     try:
         tr, args = tasks._parse_command_line("t21 t12".split())
-        print_(tr)
+        print(tr)
         assert False, "Expected BuildFailure exception for not enough args"
     except tasks.BuildFailure:
         pass
@@ -1003,22 +1001,21 @@ def test_options_might_be_shared_both_way():
     assert t2.called
 
 
-if not PY2:
-    def test_paver_doesnt_crash_on_task_function_with_annotations():
-        local_scope = {}
-        # exec()ing so that it doesn't crash when this test file is run
-        # under Python 2 which doesn't support this syntax
-        exec_(
-            """
+def test_paver_doesnt_crash_on_task_function_with_annotations():
+    local_scope = {}
+    # exec()ing so that it doesn't crash when this test file is run
+    # under Python 2 which doesn't support this syntax
+    exec(
+        """
 @tasks.task
 def fun() -> None:
     pass""",
-            globals(), local_scope,
-        )
-        fun = local_scope['fun']
-        environment = _set_environment(fun=fun)
+        globals(), local_scope,
+    )
+    fun = local_scope['fun']
+    environment = _set_environment(fun=fun)
 
-        # This call would fail with:
-        #     ValueError: Function has keyword-only arguments or annotations,
-        #     use getfullargspec() API which can support them
-        fun()
+    # This call would fail with:
+    #     ValueError: Function has keyword-only arguments or annotations,
+    #     use getfullargspec() API which can support them
+    fun()
