@@ -30,7 +30,6 @@ import subprocess
 import pkgutil
 import tempfile
 import textwrap
-from distutils.util import strtobool
 from os.path import join
 
 try:
@@ -169,6 +168,15 @@ if is_pypy:
         # _functools is needed to import locale during stdio initialization and
         # needs to be copied on PyPy because it's not built in
         REQUIRED_MODULES.append('_functools')
+
+
+def strtobool(string):
+    if string in ['y', 'yes', 't', 'true', 'on', '1']:
+        return True
+    elif string in ['n', 'no', 'f', 'false', 'off', '0']:
+        return False
+    else:
+        raise ValueError(f"Unexpected string value {string} for boolean, please select one of 'y', 'n', etc.")
 
 
 class Logger(object):
@@ -455,6 +463,7 @@ class ConfigOptionParser(optparse.OptionParser):
         # 2. environmental variables
         config.update(dict(self.get_environ_vars()))
         # Then set the options with those values
+
         for key, val in config.items():
             key = key.replace('_', '-')
             if not key.startswith('--'):
