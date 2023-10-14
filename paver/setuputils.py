@@ -6,7 +6,7 @@ import sys
 from os.path import *
 from fnmatch import fnmatchcase
 from distutils.util import convert_path
-from distutils import log
+import logging as log
 try:
     from setuptools import dist
 except ImportError:
