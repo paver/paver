@@ -7,11 +7,7 @@ from os.path import *
 from fnmatch import fnmatchcase
 from distutils.util import convert_path
 import logging as log
-try:
-    from setuptools import dist
-except ImportError:
-    from distutils import dist
-from distutils.errors import DistutilsModuleError
+from setuptools import dist
 _Distribution = dist.Distribution
 
 from paver.options import Bunch
@@ -192,7 +188,8 @@ class DistutilsTaskFinder(object):
         command_name = _get_shortname(taskname)
         try:
             command_class = dist.get_command_class(command_name)
-        except DistutilsModuleError:
+        except Exception as err:
+            print(err, file=sys.stderr)
             return None
         return DistutilsTask(dist, command_name, command_class)
         
