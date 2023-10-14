@@ -266,6 +266,3 @@ if has_setuptools:
     __ALL__.extend(["find_packages"])
     
     from setuptools import find_packages
-else:
-    import distutils.core
-    
