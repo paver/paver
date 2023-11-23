@@ -1,4 +1,4 @@
-from distutils.core import Command
+from setuptools import Command
 
 from paver.setuputils import install_distutils_tasks, \
                             DistutilsTaskFinder, _get_distribution, \

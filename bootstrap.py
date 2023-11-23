@@ -24,13 +24,12 @@ import logging
 import zlib
 import errno
 import glob
-import distutils.sysconfig
+import sysconfig
 import struct
 import subprocess
 import pkgutil
 import tempfile
 import textwrap
-from distutils.util import strtobool
 from os.path import join
 
 try:
@@ -169,6 +168,15 @@ if is_pypy:
         # _functools is needed to import locale during stdio initialization and
         # needs to be copied on PyPy because it's not built in
         REQUIRED_MODULES.append('_functools')
+
+
+def strtobool(string):
+    if string in ['y', 'yes', 't', 'true', 'on', '1']:
+        return True
+    elif string in ['n', 'no', 'f', 'false', 'off', '0']:
+        return False
+    else:
+        raise ValueError(f"Unexpected string value {string} for boolean, please select one of 'y', 'n', etc.")
 
 
 class Logger(object):
@@ -455,6 +463,7 @@ class ConfigOptionParser(optparse.OptionParser):
         # 2. environmental variables
         config.update(dict(self.get_environ_vars()))
         # Then set the options with those values
+
         for key, val in config.items():
             key = key.replace('_', '-')
             if not key.startswith('--'):
@@ -1161,10 +1170,9 @@ def install_python(home_dir, lib_dir, inc_dir, bin_dir, site_packages, clear, sy
     else:
         logger.debug('No include dir %s' % stdinc_dir)
 
-    platinc_dir = distutils.sysconfig.get_python_inc(plat_specific=1)
+    platinc_dir = sysconfig.get_path('platinclude')
     if platinc_dir != stdinc_dir:
-        platinc_dest = distutils.sysconfig.get_python_inc(
-            plat_specific=1, prefix=home_dir)
+        platinc_dest = sysconfig.get_path('platinclude')
         if platinc_dir == platinc_dest:
             # Do platinc_dest manually due to a CPython bug;
             # not http://bugs.python.org/issue3386 but a close cousin
