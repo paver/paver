@@ -201,7 +201,12 @@ class DistutilsTaskFinder(object):
         if has_setuptools:
             for ep in pkg_resources.iter_entry_points('distutils.commands'):
                 try:
-                    cmdclass = ep.load(False) # don't require extras, we're not running
+                    if hasattr(ep, "resolve"):
+                        # this is available on setuptools >= 10.2
+                        cmdclass = ep.resolve()
+                    else:
+                        # this causes a DeprecationWarning on setuptools >= 11.3
+                        cmdclass = ep.load(False)  # don't require extras, we're not running
                     dist.cmdclass[ep.name] = cmdclass
                 except:
                     # on the Mac, at least, installing from the tarball
